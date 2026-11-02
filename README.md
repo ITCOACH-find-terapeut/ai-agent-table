@@ -35,7 +35,7 @@ Tallet skal være det samme som i `SHA256SUMS.txt`. På Windows (PowerShell): `G
 
 Programmet er ikke signeret endnu, så dit system advarer:
 
-- **Mac:** Træk appen til *Programmer*. Første gang: højreklik på appen → **Åbn** → **Åbn**.
+- **Mac:** Træk appen til *Programmer*, og åbn den. macOS siger, at appen ikke kan åbnes: tryk **Færdig**. Åbn så *Systemindstillinger → Anonymitet og sikkerhed*, rul ned til *Sikkerhed*, tryk **Åbn alligevel** ved Rundbordet, og bekræft med din adgangskode eller Touch ID. (På macOS før version 15 kan du i stedet højreklikke på appen → **Åbn** → **Åbn**.) Det er kun nødvendigt første gang.
 - **Windows:** Hvis SmartScreen advarer: **Flere oplysninger** → **Kør alligevel**.
 
 ## Rettigheder
@@ -71,7 +71,7 @@ Each release has a `SHA256SUMS.txt`. On Mac run `shasum -a 256 <file>`; on Windo
 
 The app is not signed yet, so your system will warn you:
 
-- **Mac:** drag the app to *Applications*, then right-click → **Open** → **Open** the first time.
+- **Mac:** drag the app to *Applications* and open it. macOS says the app cannot be opened: press **Done**. Then open *System Settings → Privacy & Security*, scroll down to *Security*, press **Open Anyway** next to Rundbordet, and confirm with your password or Touch ID. (On macOS before version 15 you can instead right-click the app → **Open** → **Open**.) You only need to do this the first time.
 - **Windows:** if SmartScreen warns, choose **More info** → **Run anyway**.
 
 ### Rights
