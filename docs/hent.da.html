@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="da"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark"><title>Hent Rundbordet til din computer</title><link rel="icon" href="icon.png">
+<style>
+:root{--bg:#DBD9CE;--surface:#F2F0E7;--line:#D8D4C6;--ink:#26201A;--ink2:#5C5548;--accent:#2E5C4E;--on:#F4F2E9;--warn:#8C3A2B;}
+@media (prefers-color-scheme: dark){:root{--bg:#171613;--surface:#23211D;--line:#39362F;--ink:#ECE8DC;--ink2:#B9B2A2;--accent:#4F9C85;--on:#0F1F1A;--warn:#E5826D;}}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,sans-serif;}
+main{max-width:860px;margin:0 auto;padding:2rem 16px 4rem;}
+h1{font:600 28px Georgia,serif;margin:.2rem 0 .4rem;} h2{font-size:17px;margin:1.6rem 0 .4rem;}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1rem 1.1rem;margin:1rem 0;}
+table{width:100%;border-collapse:collapse;font-size:14px;} td,th{padding:.5rem .4rem;border-top:1px solid var(--line);text-align:left;vertical-align:top;}
+code{font:12px ui-monospace,monospace;word-break:break-all;color:var(--ink2);}
+.btn{display:inline-block;background:var(--accent);color:var(--on);padding:.3rem .8rem;border-radius:8px;text-decoration:none;font-weight:600;}
+.soon{color:var(--ink2);font-size:13px;} tr.me{background:color-mix(in srgb,var(--accent) 14%,transparent);}
+.warn{color:var(--warn);} a{color:var(--ink2);} p{color:var(--ink2);} .top{display:flex;justify-content:space-between;gap:12px;}
+</style></head><body><main>
+<p class="top"><a href="./">← Prøv Rundbordet i browseren</a><a href="hent.html" hreflang="en">English</a></p>
+<h1>Hent Rundbordet til din computer</h1>
+<p>Version 0.41.0. Skrivebordsversionen har det, browseren ikke har: dine egne mapper (IN og OUT), nøgler i computerens nøglering, Gem i git og oplæsning.</p>
+<div class="card"><table><thead><tr><th>Til</th><th>Størrelse</th><th>Kontrolsum (SHA-256)</th><th></th></tr></thead><tbody>
+<tr data-os="mac"><td>Mac (Apple-chip)</td><td>130 MB</td><td><code>77c37e8be3e10aefb6958880f3265a612d1274bcc101090d12a9ef2640266e8b</code></td><td><a class="btn" href="https://github.com/ITCOACH-find-terapeut/ai-agent-table/releases/download/v0.41.0/Rundbordet-0.41.0-arm64.dmg" download>Hent</a></td></tr>
+<tr data-os="mac"><td>Mac (Intel)</td><td>134 MB</td><td><code>c9882094a88f5180c84df514ec38730800accc74eec01575a1ade24e8d42865b</code></td><td><a class="btn" href="https://github.com/ITCOACH-find-terapeut/ai-agent-table/releases/download/v0.41.0/Rundbordet-0.41.0-x64.dmg" download>Hent</a></td></tr>
+<tr data-os="win"><td>Windows (installationsprogram)</td><td>113 MB</td><td><code>f836e37f99a7965dbf065b051c932794d1ee76211773b8eeb4c4b0740659046e</code></td><td><a class="btn" href="https://github.com/ITCOACH-find-terapeut/ai-agent-table/releases/download/v0.41.0/Rundbordet-0.41.0-x64.exe" download>Hent</a></td></tr>
+<tr data-os="win"><td>Windows (zip, uden installationsprogram)</td><td>159 MB</td><td><code>94ed6ce452d40f6ca4b0e4c2bb34599d9391071b94efce7e76931829046cebec</code></td><td><a class="btn" href="https://github.com/ITCOACH-find-terapeut/ai-agent-table/releases/download/v0.41.0/Rundbordet-0.41.0-win-x64-uden-installer.zip" download>Hent</a></td></tr>
+<tr data-os="linux"><td>Linux (arkiv)</td><td>89 MB</td><td><code>65fce2070c80174ccd3d70a4adcf4757003ee03798eec1d3c22d04f437908a94</code></td><td><a class="btn" href="https://github.com/ITCOACH-find-terapeut/ai-agent-table/releases/download/v0.41.0/Rundbordet-0.41.0-x64.tar.xz" download>Hent</a></td></tr>
+</tbody></table></div>
+<h2>Læs før du installerer</h2>
+<div class="card"><p><b class="warn">Programmerne er endnu ikke signeret.</b> Mac viser en advarsel første gang: på macOS 15 og nyere åbner du Systemindstillinger → Anonymitet og sikkerhed og vælger Åbn alligevel; på ældre versioner højreklikker du på appen og vælger Åbn. Windows kan vise SmartScreen: vælg Flere oplysninger og Kør alligevel. <b class="warn">Windows-versionen er ikke afprøvet af os på en Windows-maskine endnu.</b> Linux-arkivet (x64) er afprøvet på Omarchy (Arch med Hyprland) og virker der. Det er ikke dokumentation for andre Linux-distributioner. Kontrollér filens kontrolsum, før du åbner den.</p></div>
+<h2>Gratis brug, dine egne udgifter, licens og introduktionsforløb</h2>
+<div class="card"><p><b>Gratis at hente og bruge.</b> Programmet kan hentes og bruges gratis, også uden licens. Der er en indspillet demo, som ikke bruger nøgle.</p>
+<p><b>Din egen API-nøgle og dine udgifter.</b> Du bruger din egen API-nøgle og betaler modeludbyderen direkte for forbruget. Et ChatGPT- eller Claude-abonnement giver ikke i sig selv en API-nøgle. Prisen afhænger af model, materiale og antal kald; flere stole og gentagelser kan øge den.</p>
+<p><b>Opdateringslicens.</b> En engangsbetalt licens giver adgang til opdateringsfunktionen i appen (tjek og hent nye versioner; appen henter og kontrollerer filen, men installerer den ikke for dig). Programmet virker uden licens. Pris og betalingsmåde er ikke offentliggjort her endnu.</p>
+<p><b>Introduktionsforløb.</b> Der tilbydes betalte introduktionsforløb, hvor deltagerne arbejder med egne opgaver og får et genbrugeligt bord med hjem. Tilmelding og pris er ikke offentliggjort her endnu.</p></div>
+</main>
+<script>
+(function(){var ua=navigator.userAgent||"",os=/Windows/i.test(ua)?"win":/Mac/i.test(ua)?"mac":/Linux/i.test(ua)?"linux":"";
+if(!os)return;document.querySelectorAll("tr[data-os='"+os+"']").forEach(function(r){r.classList.add("me")});})();
+</script></body></html>

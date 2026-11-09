@@ -1,0 +1,2326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="color-scheme" content="light dark">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="icon.png">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:; media-src data: blob:; connect-src https: http://localhost:* http://127.0.0.1:*; base-uri 'none'; form-action 'none'; frame-src 'none'; object-src 'none'">
+<title>Rundbordet</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+/* Et element med hidden skal altid være skjult. Klassernes display (flex, grid) slog før hidden ihjel, så fx en tom API-linje og en tom Indbakke-flise stod synlige. */
+[hidden]{display:none !important;}
+:root{
+  --bg:#DBD9CE;
+  --surface:#F2F0E7;
+  --surface-line:#D8D4C6;
+  --wood-1:#6B4226;
+  --wood-2:#54331E;
+  --brass:#AD8A50;
+  --ink:#26201A;
+  --ink-secondary:#5C5548;
+  --ink-muted:#8A8272;
+  --accent:#2E5C4E;
+  --accent-text:#F4F2E9;
+  --accent-strong:#1F4237;
+  --danger:#8C3A2B;
+  --attn:#8A6410;
+  --attn-bg:rgba(173,138,80,.2);
+  --ok:#2E6B3E;
+  --on-danger:#fff;
+  --pass-bg:#DDE8E0;
+  --drop-bg:#e8efe9;
+  --seat-denim:#D6336C; --seat-denim-text:#F4F2E9;
+  --seat-moss:#A69042; --seat-moss-text:#26201A;
+  --seat-plum:#6B3A5E; --seat-plum-text:#F4F2E9;
+  --seat-ochre:#E8B923; --seat-ochre-text:#26201A;
+  --seat-brick:#2FA8B8; --seat-brick-text:#26201A;
+  --seat-slate:#3D5A73; --seat-slate-text:#F4F2E9;
+  --font-display:'Fraunces',Georgia,serif;
+  --font-body:'Work Sans',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,monospace;
+  /* designtokens: afstande, radier, tekststørrelser og bordets mål, så de enkelte visninger bruger de samme værdier */
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:24px;
+  --radius-s:6px; --radius-m:10px; --radius-l:14px;
+  --fs-xs:11px; --fs-s:12.5px; --fs-m:14px;
+  --table-max:560px; --table-compact-max:380px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#171613;
+    --surface:#23211D;
+    --surface-line:#39362F;
+    --ink:#ECE8DC;
+    --ink-secondary:#B9B2A2;
+    --ink-muted:#938C7B;
+    --accent:#4F9C85;
+    --accent-text:#0F1F1A;
+    --accent-strong:#7CC4AC;
+    --danger:#E5826D;
+    --attn:#E0B866;
+    --attn-bg:rgba(224,184,102,.16);
+    --ok:#74C48A;
+    --on-danger:#1A0E0B;
+    --pass-bg:rgba(79,156,133,.18);
+    --drop-bg:rgba(79,156,133,.14);
+  }
+}
+:root[data-theme="dark"]{
+    color-scheme:dark;
+    --bg:#171613;
+    --surface:#23211D;
+    --surface-line:#39362F;
+    --ink:#ECE8DC;
+    --ink-secondary:#B9B2A2;
+    --ink-muted:#938C7B;
+    --accent:#4F9C85;
+    --accent-text:#0F1F1A;
+    --accent-strong:#7CC4AC;
+    --danger:#E5826D;
+    --attn:#E0B866;
+    --attn-bg:rgba(224,184,102,.16);
+    --ok:#74C48A;
+    --on-danger:#1A0E0B;
+    --pass-bg:rgba(79,156,133,.18);
+    --drop-bg:rgba(79,156,133,.14);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
+.stage{padding:1.75rem 1.25rem 3rem;max-width:1040px;margin:0 auto;}
+.eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-muted);margin:0 0 .6rem;}
+.table-box{position:relative;width:min(calc(100% - 130px),var(--table-max));aspect-ratio:1/1;margin:4.5rem auto 2rem;}
+.table-top{position:absolute;inset:11%;border-radius:50%;background:repeating-radial-gradient(circle at 50% 50%, var(--wood-2) 0 2px, var(--wood-1) 2px 14px);border:6px solid var(--brass);box-shadow:0 10px 22px -12px rgba(20,14,8,.55);}
+.plaque{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64%;text-align:center;background:var(--surface);border:1px solid var(--brass);border-radius:10px;padding:.85rem .6rem .75rem;cursor:pointer;}
+.plaque h1{font-family:var(--font-display);font-weight:600;font-size:clamp(16px,4.4vw,20px);line-height:1.15;margin:0;}
+.plaque .gh{font-family:var(--font-mono);font-size:10px;color:var(--accent);margin:.35rem 0 0;word-break:break-all;}
+.plaque .centre-status{font-family:var(--font-mono);font-size:10.5px;margin:.3rem 0 0;color:var(--ink-secondary);}
+.plaque .centre-status.state-running{color:var(--accent);}
+.plaque .centre-status.state-pause{color:var(--danger);font-weight:500;}
+.plaque .centre-spend{font-family:var(--font-mono);font-size:10px;margin:.15rem 0 0;color:var(--ink-muted);}
+.plaque .gh.connected::before{content:"● ";}
+.plaque .hint.gh-off{text-transform:none;letter-spacing:0;font-size:10px;}
+.plaque .centre-shield{font-family:var(--font-mono);font-size:10px;margin:.3rem 0 0;color:var(--accent);}
+.table-box[data-view="compact"] .plaque .centre-spend,.table-box[data-view="compact"] .plaque .centre-shield{display:none;}
+.table-box[data-view="compact"] .plaque .centre-status{font-size:10px;margin-top:.15rem;}
+.table-box[data-view="list"] .plaque .centre-status,.table-box[data-view="list"] .plaque .centre-spend,.table-box[data-view="list"] .plaque .gh,.table-box[data-view="list"] .plaque .hint,.table-box[data-view="list"] .plaque .centre-shield{display:inline-block;margin:.2rem .8rem 0 0;}
+.plaque .hint{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);margin:.35rem 0 0;}
+.seat{position:absolute;width:118px;transform:translate(-50%,-50%);text-align:center;}
+.coaster{position:relative;background:var(--surface);border:1px solid var(--surface-line);border-radius:12px;padding:.55rem .55rem .5rem;cursor:pointer;}
+.coaster::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:12px 0 0 12px;background:var(--seat-color,var(--accent));opacity:.55;}
+.coaster .role{font-weight:600;font-size:13.5px;line-height:1.2;margin:0 0 2px;padding-left:4px;}
+.coaster .llm{font-family:var(--font-mono);font-size:10px;color:var(--ink-secondary);padding-left:4px;display:block;}
+.coaster .status-word{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-secondary);padding-left:4px;margin:1px 0 0;}
+.coaster .status-word{font-weight:500;}
+.coaster .status-word.st-working,.coaster .status-word.st-handing,.coaster .status-word.st-receiving{color:var(--ok);animation:pulse 1.8s ease-in-out infinite;}
+.coaster .status-word.st-turn,.coaster .status-word.st-next{color:var(--accent-strong);}
+.coaster .status-word.st-need,.coaster .status-word.st-check-failed{color:var(--attn);}
+.coaster .status-word.st-failed{color:var(--danger);}
+.coaster .status-word.st-waiting,.coaster .status-word.st-paused,.coaster .status-word.st-done{color:var(--ink-muted);}
+.seat-activity{font-size:11.5px;line-height:1.3;color:var(--ink-secondary);margin:2px 0 0;padding-left:4px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+.coaster.sv-decide{border-color:var(--brass);box-shadow:0 0 0 2px var(--attn-bg);}
+.coaster.sv-failed{border-color:var(--danger);}
+.coaster.sv-choosing{border-color:var(--accent);box-shadow:0 0 0 2px var(--attn-bg);}
+.coaster.sv-unused{opacity:.6;}
+.coaster.sv-working{border-color:var(--accent);}
+.seat-detail{display:none;position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);z-index:30;width:max-content;max-width:320px;text-align:left;background:var(--surface);border:1px solid var(--ink-muted);border-radius:var(--radius-m);padding:var(--space-2) var(--space-3);box-shadow:0 6px 22px rgba(0,0,0,.25);pointer-events:none;}
+.seat:hover .seat-detail,.seat:focus-within .seat-detail{display:block;}
+.seat-detail p{margin:2px 0;font-size:var(--fs-xs);line-height:1.4;color:var(--ink);}
+.seat-detail .sd-k{color:var(--ink-muted);}
+.seat-detail .sd-on{color:var(--ink);}
+.seat-detail .sd-off{color:var(--ink-muted);}
+.seat-detail .sd-mono{font-family:var(--font-mono);font-size:10.5px;}
+@media (prefers-reduced-motion:reduce){.coaster .status-word.st-working,.coaster .status-word.st-handing,.coaster .status-word.st-receiving{animation:none;}}
+.seat-status-row{display:flex;align-items:center;gap:1px;padding-left:4px;margin-top:4px;font-size:12px;opacity:.8;}
+.seat-status-more{font-family:var(--font-mono);font-size:10px;color:var(--ink-muted);margin-left:3px;}
+.seat-status-row .icon-sep{height:11px;margin:0 4px;}
+.seat-status-row .msg-icons{display:inline-flex;gap:3px;}
+.status-dot{position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--ink-muted);}
+.status-dot.ok{background:var(--ok);}
+.status-dot.fail{background:var(--danger);}
+.seat-icons{position:absolute;left:50%;top:100%;transform:translateX(-50%);display:none;align-items:center;gap:2px;background:var(--surface);border:1px solid var(--surface-line);border-radius:8px;padding:8px 4px 3px;white-space:nowrap;z-index:6;}
+.seat:hover .seat-icons,.seat:focus-within .seat-icons{display:flex;}
+/* Rollernes startindstillinger: konsekvensgennemgang (popup) og menuen under Hele programmet */
+.config-problem{position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:70;max-width:min(640px,calc(100vw - 32px));display:flex;gap:12px;align-items:flex-start;padding:.75rem 1rem;border-radius:10px;background:var(--attn-bg);color:var(--ink);border:1px solid var(--attn);box-shadow:0 8px 28px rgba(0,0,0,.25);font-size:13px;line-height:1.5;}
+.config-problem[hidden]{display:none;}
+.config-problem p{margin:0;word-break:break-word;}
+.role-preset-overlay{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;padding:16px;}
+.role-preset-overlay[hidden]{display:none;}
+.role-preset-card{background:var(--surface);color:var(--ink);border:1px solid var(--surface-line);border-radius:14px;max-width:520px;width:100%;max-height:calc(100vh - 32px);overflow:auto;padding:1.1rem 1.2rem;box-shadow:0 12px 40px rgba(0,0,0,.3);}
+.role-preset-card h2{font-size:17px;margin:0 0 .4rem;}
+.role-preset-list{margin:.5rem 0;padding-left:1.2rem;font-size:13px;line-height:1.55;}
+.role-preset-warn{margin:.5rem 0;padding:.5rem .65rem;border-radius:8px;background:var(--attn-bg);color:var(--ink);font-size:12.5px;line-height:1.5;border:1px solid var(--attn);}
+.role-preset-sent{margin:.4rem 0;padding:.5rem .65rem;border-radius:8px;background:var(--bg);border:1px solid var(--surface-line);font-family:var(--font-mono);font-size:11.5px;line-height:1.5;white-space:pre-wrap;max-height:180px;overflow:auto;}
+.role-preset-eye{margin:.6rem 0;display:grid;gap:.4rem;}
+.roledef-editor{display:grid;gap:.4rem;margin:.6rem 0;}
+.roledef-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+.roledef-label{flex:1 1 11rem;font-size:13px;}
+.roledef-row select{width:auto;max-width:100%;}
+/* Ikonknapper med tekst ved hover og fokus (bruges til bordets handlinger) */
+.icon-action{position:relative;width:36px;height:36px;padding:0;display:inline-flex;align-items:center;justify-content:center;}
+.icon-action svg{pointer-events:none;width:18px;height:18px;flex:none;}
+.icon-action::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:0;width:max-content;max-width:220px;padding:.35rem .55rem;border-radius:6px;background:var(--ink);color:var(--surface);font-size:12px;font-weight:500;line-height:1.35;text-align:left;white-space:normal;box-shadow:0 4px 14px rgba(0,0,0,.25);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .12s;z-index:30;}
+.icon-action:hover::after,.icon-action:focus-visible::after{opacity:1;visibility:visible;}
+.icon-action.boards-delete-btn:not(:disabled):hover{color:var(--danger);border-color:var(--danger);}
+.icon-action:disabled{opacity:.45;cursor:not-allowed;}
+.board-actions{gap:.4rem;position:relative;}
+.board-actions .icon-action{position:static;}
+.board-actions .icon-action::after{left:0;max-width:min(260px,100%);}
+/* Tekst ved hover og fokus på stolens ikoner (✓ ? ⏸, 🧠 ♥ 👣, ● ▤ ✂): kommer med det samme og kan tastaturstyres, i stedet for browserens forsinkede tip */
+.seat-icons .icon-btn{position:relative;}
+.seat-icons .icon-btn::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);width:max-content;max-width:230px;padding:.35rem .55rem;border-radius:6px;background:var(--ink);color:var(--surface);font-family:var(--font-body);font-size:12px;font-weight:500;line-height:1.35;white-space:normal;text-align:left;box-shadow:0 4px 14px rgba(0,0,0,.25);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .12s;z-index:40;}
+.seat-icons .icon-btn:hover::after,.seat-icons .icon-btn:focus-visible::after{opacity:1;visibility:visible;}
+.seat-icons .icon-btn:first-child::after{left:0;transform:none;}
+.seat-icons .icon-btn:last-child::after{left:auto;right:0;transform:none;}
+.icon-btn{font-size:12px;line-height:1;width:20px;height:20px;padding:0;border:none;background:none;cursor:pointer;opacity:.3;border-radius:4px;color:var(--ink);}
+.icon-btn:hover{opacity:.7;}
+.icon-btn.active{opacity:1;background:var(--bg);}
+.icon-btn.auto{opacity:.75;background:none;outline:1px dashed var(--ink-muted);outline-offset:-2px;}
+.icon-sep{width:1px;height:14px;background:var(--surface-line);margin:0 2px;}
+.crown-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);font-size:18px;line-height:1;filter:drop-shadow(0 1px 1px rgba(0,0,0,.25));cursor:pointer;animation:crownIn .3s ease;}
+@keyframes crownIn{0%{opacity:0;}100%{opacity:1;}}
+@media (prefers-reduced-motion:reduce){.crown-badge{animation:none;}}
+.seat-drag-handle{position:absolute;top:-6px;left:-6px;width:18px;height:18px;cursor:move;opacity:.45;border-radius:50%;background-color:var(--surface);border:1px solid var(--surface-line);background-image:radial-gradient(var(--ink-muted) 1px, transparent 1.3px);background-size:5px 5px;background-position:center;z-index:8;}
+.seat-drag-handle:hover{opacity:1;}
+.turn-line{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:12px;color:var(--ink-secondary);margin:0 0 1rem;cursor:pointer;background:none;border:none;padding:0;text-align:left;}
+.turn-line[hidden]{display:none;}
+.turn-line:hover{color:var(--ink);}
+.turn-empty{color:var(--ink-muted);font-style:normal;}
+.turn-give-row{display:flex;gap:8px;flex-wrap:wrap;margin:.7rem 0;}
+.turn-give-row select,.turn-give-row input{font-family:var(--font-body);font-size:13px;color:var(--ink);background:var(--bg);border:1px solid var(--surface-line);border-radius:8px;padding:.45rem .55rem;}
+.turn-give-row select{flex:1;min-width:140px;}
+.seat-empty{width:82px;height:82px;border-radius:50%;border:1.5px dashed var(--ink-muted);background:transparent;color:var(--ink-muted);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.seat-empty:hover{border-color:var(--accent);color:var(--accent);}
+.full-note{text-align:center;font-size:12.5px;color:var(--ink-muted);margin:-.75rem 0 1.5rem;}
+.panel{background:var(--surface);border:1px solid var(--surface-line);border-radius:12px;padding:1rem 1.1rem 1.1rem;margin:0 0 1.5rem;}
+.side-panel{position:fixed;top:0;right:0;bottom:0;width:380px;max-width:92vw;border-radius:0;margin:0;overflow-y:auto;box-shadow:-12px 0 30px -12px rgba(20,14,8,.35);z-index:20;}
+.panel h2{font-family:var(--font-body);font-weight:500;font-size:14px;margin:0 0 .8rem;}
+.field{margin:0 0 .7rem;}
+.field-label-row{display:flex;align-items:baseline;justify-content:space-between;gap:8px;}
+.field-hint-link{font-size:11px;color:var(--ink-secondary);text-decoration:none;white-space:nowrap;}
+.field-hint-link:hover{color:var(--accent);text-decoration:underline;}
+.field label{display:block;font-size:12px;color:var(--ink-secondary);margin:0 0 .3rem;}
+.field input[type=text],.field input[type=password],.field select{width:100%;font-family:var(--font-body);font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--surface-line);border-radius:8px;padding:.5rem .6rem;}
+.model-row{display:flex;gap:8px;}
+.model-row input{flex:1;min-width:0;}
+.model-combo{position:relative;flex:1;min-width:0;}
+.model-combo input{width:100%;}
+.model-drop{position:absolute;z-index:30;left:0;right:0;top:calc(100% + 4px);max-height:15rem;overflow-y:auto;background:var(--surface);border:1px solid var(--surface-line);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.18);padding:4px;}
+.model-opt{padding:.35rem .55rem;border-radius:7px;font-family:var(--font-mono);font-size:12px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.model-opt b{font-weight:600;color:var(--accent);}
+.model-opt.active{background:var(--attn-bg);}
+.model-opt.current::after{content:" ✓";color:var(--ink-muted);}
+.model-more{padding:.3rem .55rem;font-size:11px;color:var(--ink-muted);}
+.help-q{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;border:1px solid var(--surface-line);font-size:11px;line-height:1;color:var(--ink-secondary);text-decoration:none;flex:none;}
+.help-q:hover{border-color:var(--accent);color:var(--accent);}
+.model-row button{white-space:nowrap;}
+.field .note{font-size:11px;color:var(--ink-muted);margin:.3rem 0 0;}
+.seat-adv{margin:0 0 .8rem;font-size:12.5px;}
+.seat-adv > summary{cursor:pointer;color:var(--accent);font-weight:600;}
+.seat-behaviour .note,.seat-adv .note{font-size:11.5px;line-height:1.45;color:var(--ink-muted);margin:.2rem 0 .5rem;}
+.seat-sec-h{font-family:var(--font-display);font-size:16px;margin:var(--space-4) 0 var(--space-1);}
+.seat-sub-h{font-family:var(--font-mono);font-size:var(--fs-xs);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);margin:var(--space-3) 0 var(--space-1);}
+.dial-group{border:1px solid var(--surface-line);border-radius:var(--radius-m);margin:0 0 var(--space-2);background:var(--surface);}
+.dial-group > summary{cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:2px var(--space-2);padding:var(--space-2) var(--space-3);list-style:none;}
+.dial-group > summary::-webkit-details-marker{display:none;}
+.dg-title{font-weight:600;font-size:13px;}
+.dg-count{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-muted);align-self:center;}
+.dg-sum{grid-column:1/-1;font-size:11.5px;color:var(--ink-secondary);}
+.dial-group[open] > summary{border-bottom:1px solid var(--surface-line);}
+.dial-group .dial-row{padding:.5rem var(--space-3);}
+.dial-row{display:flex;align-items:center;gap:8px;padding:.5rem 0;border-bottom:1px solid var(--surface-line);flex-wrap:wrap;}
+.dial-row:last-child{border-bottom:none;}
+.pause-answer{margin:.6rem 0;padding:.6rem .7rem;border:1px solid var(--surface-line);border-radius:10px;background:var(--surface);}
+.pause-answer[hidden]{display:none;}
+.pause-answer-text{max-height:min(40vh,320px);overflow:auto;white-space:pre-wrap;font-size:14px;line-height:1.55;}
+.pause-answer-text:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.pause-panel.pause-framed{outline:3px solid var(--accent);outline-offset:3px;}
+.dial-row.dial-focus{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px;}
+.dial-name{flex:1;min-width:140px;font-size:12.5px;}
+.dial-name .dial-icon{margin-right:5px;}
+.dial-explain{flex-basis:100%;width:100%;margin:.1rem 0 .3rem;font-size:11px;line-height:1.35;color:var(--ink-muted);}
+.dial-states{display:flex;gap:4px;}
+.dial-state-btn{font-family:var(--font-mono);font-size:10.5px;padding:.3rem .5rem;border-radius:6px;border:1px solid var(--surface-line);background:var(--bg);color:var(--ink-secondary);cursor:pointer;}
+.dial-state-btn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-text);}
+.dial-strength{display:flex;align-items:center;gap:4px;width:100%;margin-top:2px;}
+.dial-strength input[type=range]{flex:1;}
+.dial-strength span{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-secondary);min-width:28px;text-align:right;}
+.dial-note{width:100%;margin-top:4px;font-family:var(--font-body);font-size:12px;color:var(--ink);background:var(--bg);border:1px solid var(--surface-line);border-radius:6px;padding:.35rem .5rem;}
+.instruction-preview{font-family:var(--font-mono);font-size:11px;line-height:1.5;white-space:pre-wrap;background:var(--bg);border:1px solid var(--surface-line);border-radius:8px;padding:.6rem .7rem;color:var(--ink-secondary);max-height:180px;overflow-y:auto;}
+.swatches{display:flex;gap:8px;flex-wrap:wrap;}
+.swatch{width:26px;height:26px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0;}
+.swatch[aria-pressed="true"]{border-color:var(--ink);}
+.error-text{font-size:12px;color:var(--danger);margin:.3rem 0 0;}
+.test-result{font-size:12px;margin:.5rem 0 0;}
+.test-result.ok{color:var(--ok);}
+.test-result.fail{color:var(--danger);}
+.row{display:flex;gap:8px;margin-top:.9rem;flex-wrap:wrap;}
+button.btn{font-family:var(--font-body);font-size:13px;font-weight:500;padding:.5rem 1rem;border-radius:8px;border:1px solid var(--surface-line);background:var(--surface);color:var(--ink);cursor:pointer;}
+/* Fire knapper (Gem/Test API/Slet stol/Annullér) i det 380px brede sidepanel
+   ombrød tidligere til to linjer — lidt mindre vandret padding + gap holder
+   dem samlet på én, uden at røre .row/.btn andre steder i appen. */
+#seatPanel .row{gap:6px;}
+#seatPanel .row .btn{padding:.5rem .7rem;}
+button.btn:hover{border-color:var(--ink-secondary);}
+button.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--accent-text);}
+button.btn-primary:hover{background:var(--accent-strong);border-color:var(--accent-strong);}
+button.btn-danger{color:var(--danger);border-color:var(--danger);background:var(--surface);}
+.empty-hint{text-align:center;font-size:13px;color:var(--ink-muted);margin:0 0 2rem;}
+.board-bar{display:flex;align-items:center;gap:8px;margin:0 0 1.5rem;flex-wrap:wrap;}
+.locale-select{margin-left:auto;font-family:var(--font-mono);font-size:12px;color:var(--ink-secondary);background:var(--bg);border:1px solid var(--surface-line);border-radius:8px;padding:.4rem .5rem;}
+.board-bar select{font-family:var(--font-body);font-size:13.5px;color:var(--ink);background:var(--surface);border:1px solid var(--surface-line);border-radius:8px;padding:.45rem .6rem;flex:1;min-width:140px;}
+.regning{font-family:var(--font-mono);font-size:12px;color:var(--ink-secondary);margin:0 0 1.25rem;}
+.price-details{margin:0 0 .7rem;font-size:12.5px;color:var(--ink-secondary);}
+.price-details summary{cursor:pointer;color:var(--accent);}
+.price-row{display:flex;gap:10px;margin-top:.6rem;}
+.price-row .field{flex:1;margin-bottom:0;}
+.usage-line{font-family:var(--font-mono);font-size:12px;color:var(--ink-secondary);margin:0 0 .7rem;}
+.price-item{display:flex;align-items:center;gap:8px;padding:.5rem 0;border-bottom:1px solid var(--surface-line);font-size:12.5px;}
+.price-item:last-child{border-bottom:none;}
+.price-item .model{flex:1;font-family:var(--font-mono);color:var(--ink);word-break:break-all;}
+.price-item .nums{font-family:var(--font-mono);color:var(--ink-secondary);white-space:nowrap;}
+.price-item .src{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-muted);}
+.price-item button{background:none;border:none;color:var(--ink-muted);cursor:pointer;font-size:14px;padding:0 4px;}
+.price-item button:hover{color:var(--danger);}
+.price-empty{font-size:12.5px;color:var(--ink-muted);padding:.5rem 0;}
+.price-add-row{display:flex;gap:6px;margin:.8rem 0;flex-wrap:wrap;}
+.price-add-row input{flex:1;min-width:110px;font-family:var(--font-body);font-size:13px;color:var(--ink);background:var(--bg);border:1px solid var(--surface-line);border-radius:8px;padding:.45rem .55rem;}
+.log-head-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:.6rem;}
+.log-head-row #logHeading{margin:0;}
+.log-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-top:.7rem;}
+.trash-btn{min-width:30px;height:30px;border:1px solid var(--surface-line);border-radius:8px;background:none;color:var(--ink-secondary);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:5px;padding:0 .4rem;font-family:var(--font-mono);font-size:11px;}
+.trash-btn:hover{color:var(--danger);border-color:var(--danger);}
+.trash-btn .lbl{display:none;}
+.trash-btn.armed{background:var(--danger);border-color:var(--danger);color:var(--accent-text);}
+.trash-btn.armed .lbl{display:inline;}
+.thirdeye-controls{display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap;}
+.talk-thread .note{font-size:13px;margin:0;}
+.talk-actions{align-items:center;}
+.talk-spacer{flex:1;}
+.talk-jump-btn{padding:.15rem .5rem;font-size:12px;margin-left:.3rem;}
+.talk-voice-btn{padding:.15rem .5rem;font-size:12px;}
+.thirdeye-with{font-family:var(--font-mono);font-size:10px;color:var(--ink-muted);}
+.thirdeye-select{font-family:var(--font-mono);font-size:11px;color:var(--ink-secondary);background:var(--bg);border:1px solid var(--surface-line);border-radius:8px;padding:.35rem .4rem;max-width:120px;}
+.thirdeye-explain{font-size:11px;color:var(--ink-muted);line-height:1.4;margin:.3rem 0 .6rem;}
+.role-group{margin:0 0 .8rem;}
+.role-group-heading{font-family:var(--font-mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);margin:0 0 .4rem;}
+.role-chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+.role-chip-btn{font-family:var(--font-body);font-size:12.5px;padding:.35rem .65rem;border-radius:999px;border:1px solid var(--surface-line);background:var(--bg);color:var(--ink);cursor:pointer;}
+.role-chip-btn:hover{border-color:var(--accent);color:var(--accent);}
+.start-confirm-seat{font-family:var(--font-mono);font-size:12.5px;color:var(--ink);margin:0 0 .3rem;}
+.start-confirm-seat .missing-key{color:var(--danger);}
+.start-confirm-seat .order-btns{margin-left:.5rem;display:inline-flex;gap:2px;}
+.order-btn{font-family:var(--font-mono);font-size:11px;line-height:1;padding:.15rem .4rem;border:1px solid var(--surface-line);border-radius:6px;background:var(--surface);color:var(--ink-secondary);cursor:pointer;}
+.btn-small{padding:.25rem .6rem;font-size:12px;}
+.order-btn:disabled{opacity:.35;cursor:default;}
+.seat-order-row{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;}
+.seat-order-text{font-family:var(--font-mono);font-size:12.5px;}
+.log{max-height:280px;overflow-y:auto;border:1px solid var(--surface-line);border-radius:12px;background:var(--surface);padding:.85rem .9rem;margin:0 0 1rem;}
+.msg{border-left:3px solid var(--seat-color,var(--accent));padding:.1rem 0 .1rem .65rem;margin:0 0 .8rem;}
+.msg-live .msg-text::after{content:"▍";animation:blink 1s step-start infinite;color:var(--seat-color,var(--accent));}
+.live-dot{color:var(--seat-color,var(--accent));animation:pulse 1.1s ease-in-out infinite;}
+@keyframes blink{50%{opacity:0;}}
+@keyframes pulse{0%,100%{opacity:.3;}50%{opacity:1;}}
+@media (prefers-reduced-motion:reduce){.msg-live .msg-text::after,.live-dot{animation:none;}}
+.msg:last-child{margin-bottom:0;}
+.msg-meta{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;margin:0 0 .1rem;}
+.msg-who{font-weight:600;font-size:13px;}
+.msg-llm{font-family:var(--font-mono);font-size:10px;color:var(--ink-secondary);}
+.msg-icons{display:inline-flex;gap:2px;font-size:12px;line-height:1;}
+.msg-time{font-family:var(--font-mono);font-size:10px;color:var(--ink-muted);margin-left:auto;}
+.msg-text{font-size:13px;line-height:1.5;color:var(--ink);white-space:pre-wrap;}
+.msg-expand-btn{display:block;font-family:var(--font-mono);font-size:11px;background:none;border:none;color:var(--ink-secondary);cursor:pointer;padding:.15rem 0;margin:.1rem 0 .2rem;text-decoration:underline;}
+.msg-expand-btn:hover{color:var(--accent);}
+.msg-text-rest{margin-top:.1rem;}
+.badge{display:inline-block;min-width:16px;padding:0 4px;margin-left:5px;border-radius:8px;background:var(--danger);color:var(--on-danger);font-family:var(--font-mono);font-size:10px;line-height:16px;text-align:center;}
+.msg-act{font-family:var(--font-body);font-size:var(--fs-s);background:none;border:1px solid transparent;border-radius:var(--radius-s);color:var(--ink-secondary);cursor:pointer;padding:.2rem .5rem;}
+.msg-act:hover{color:var(--accent);border-color:var(--surface-line);}
+.msg-act:disabled{opacity:.6;cursor:default;}
+.msg-act-primary{border-color:var(--surface-line);background:var(--surface);color:var(--ink);font-weight:500;}
+.msg-out-saved-btn{border-color:var(--accent-strong);color:var(--accent-strong);}
+.msg-relay-select{font-size:var(--fs-s);}
+.msg-more{display:inline-block;}
+.msg-more summary{list-style:none;display:inline-block;}
+.msg-more summary::-webkit-details-marker{display:none;}
+.msg-more[open] summary{color:var(--ink);border-color:var(--surface-line);}
+.msg-more-menu{display:flex;flex-wrap:wrap;gap:var(--space-1);margin-top:var(--space-1);}
+.msg-question{background:rgba(173,138,80,.14);border-radius:8px;padding:.5rem .6rem .6rem;margin-left:-.6rem;}
+.msg-question-badge{display:block;font-family:var(--font-mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--brass);margin:0 0 .3rem;}
+.msg-needs{margin-top:.5rem;padding:.5rem .6rem;border-left:2px solid var(--seat-color,var(--accent));background:var(--bg);border-radius:0 8px 8px 0;}
+.msg-needs p{margin:0 0 .25rem;font-size:12px;line-height:1.4;}
+.msg-needs p:last-child{margin-bottom:0;}
+.msg-needs-label{font-family:var(--font-mono);font-size:10px;letter-spacing:.03em;text-transform:uppercase;color:var(--ink-muted);margin-right:.3rem;}
+.msg-needs-open-btn{font-family:var(--font-mono);font-size:10.5px;background:var(--surface);border:1px solid var(--surface-line);border-radius:6px;padding:.1rem .4rem;margin-left:.4rem;cursor:pointer;color:var(--ink-secondary);}
+.msg-needs-open-btn:hover{color:var(--accent);border-color:var(--accent);}
+.msg-needs-apply-btn{font-family:var(--font-mono);font-size:10.5px;font-weight:600;background:var(--accent);border:1px solid var(--accent);border-radius:6px;padding:.1rem .4rem;margin-left:.4rem;cursor:pointer;color:var(--accent-text);}
+.msg-needs-apply-btn:hover{opacity:.88;}
+.msg-needs-resolved{opacity:.7;}
+.msg-needs-resolved-badge{font-family:var(--font-mono);font-size:10.5px;font-weight:600;color:var(--ok,var(--accent));margin-left:.4rem;}
+.msg-needs-resolve-inline-btn{font-family:var(--font-mono);font-size:10.5px;background:none;border:none;color:var(--ink-muted);cursor:pointer;padding:.1rem .2rem;margin-left:.4rem;}
+.msg-needs-resolve-inline-btn:hover{color:var(--accent);}
+.needs-wrap{position:relative;}
+.open-needs-panel{position:absolute;top:100%;left:0;margin-top:6px;padding:.6rem .7rem;background:var(--surface);border:1px solid var(--surface-line);border-radius:10px;display:flex;flex-direction:column;gap:.45rem;width:300px;max-width:calc(100vw - 2.5rem);max-height:340px;overflow-y:auto;z-index:12;box-shadow:0 10px 22px -12px rgba(20,14,8,.35);}
+.open-needs-panel[hidden]{display:none;}
+.open-needs-empty{margin:0;font-size:12px;color:var(--ink-muted);}
+.open-needs-panel.is-empty{width:auto;padding:.3rem;border-radius:999px;flex-direction:row;}
+.open-needs-ok{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;color:var(--ok);}
+.open-needs-priority-heading{font-family:var(--font-mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;margin:.3rem 0 0;color:var(--ink-muted);}
+.open-needs-priority-heading.priority-high{color:var(--danger);}
+.open-needs-priority-heading.priority-low{color:var(--ok);}
+.open-needs-item{padding:.5rem .6rem;border-left:2px solid var(--accent);background:var(--bg);border-radius:0 8px 8px 0;}
+.open-needs-item p{margin:0 0 .25rem;font-size:12px;line-height:1.4;}
+.open-needs-item-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.3rem;}
+.open-needs-from{font-family:var(--font-mono);font-size:11px;font-weight:600;color:var(--ink-secondary);}
+.open-needs-jump-btn{font-family:var(--font-mono);font-size:10px;background:none;border:none;color:var(--ink-muted);cursor:pointer;text-decoration:underline;padding:0;}
+.open-needs-jump-btn:hover{color:var(--accent);}
+.open-needs-item-actions{margin-top:.3rem;}
+.open-needs-resolve-btn{font-family:var(--font-mono);font-size:10.5px;background:var(--surface);border:1px solid var(--surface-line);border-radius:6px;padding:.1rem .4rem;cursor:pointer;color:var(--ink-secondary);}
+.open-needs-resolve-btn:hover{color:var(--accent);border-color:var(--accent);}
+/* Add-ons: hvad slags ønske det er (Stil, Kontrol, Regel), forudindstillinger og et blindt med/uden */
+.kind-tag{display:inline-block;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;padding:0 .4rem;border-radius:999px;border:1px solid var(--surface-line);color:var(--ink-secondary);vertical-align:middle;cursor:help;}
+.kind-tag[data-kind="check"]{border-color:var(--accent);color:var(--accent);}
+.kind-tag[data-kind="rule"]{border-color:var(--ink-secondary);color:var(--ink);font-weight:600;}
+.preset-row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2);margin:6px 0;}
+.preset-label{font-family:var(--font-mono);font-size:11px;color:var(--ink-secondary);}
+.preset-btn[aria-pressed="true"]{border-color:var(--accent);background:var(--accent);color:var(--accent-text);}
+.dial-tune{margin:8px 0;}
+.dial-tune > summary{cursor:pointer;font-family:var(--font-mono);font-size:11.5px;color:var(--ink-secondary);}
+.try-out{border:1px dashed var(--surface-line);border-radius:8px;padding:var(--space-3);margin:6px 0;}
+.try-col{margin:6px 0;}
+.dg-kind{margin-left:.4rem;}
+/* Bordets data: Hukommelse, Beskyttelse, Målinger og Bordfil som faner i ét sted. Hvert panel er uændret; fanerne åbner det samme panel som knapperne under Dette bords data. */
+.data-hub{margin:var(--space-3) 0;}
+.data-hub[hidden]{display:none;}
+.data-tabs{display:flex;flex-wrap:wrap;gap:2px;margin-bottom:-1px;position:relative;z-index:1;}
+.data-tab{font-family:var(--font-mono);font-size:11.5px;background:var(--surface);border:1px solid var(--surface-line);border-bottom-color:transparent;border-radius:8px 8px 0 0;padding:.35rem .8rem;cursor:pointer;color:var(--ink-secondary);}
+.data-tab:hover{color:var(--accent);}
+.data-tab[aria-selected="true"]{color:var(--ink);font-weight:600;background:var(--surface-raised,var(--surface));border-color:var(--accent);border-bottom-color:var(--surface-raised,var(--surface));box-shadow:0 -2px 0 var(--accent) inset;}
+.data-hub > .panel{margin-top:0;border-top-left-radius:0;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+/* Hukommelse, Målinger og Bordfil har deres ✕ øverst; den nederste Luk-knap er overflødig i fanerne (den virker stadig, hvis ✕ eller et klik udenfor bruger den). Beskyttelse har ingen ✕ (den lukkes ikke af et klik udenfor), så dens Luk-knap bliver. */
+#closeMemoryBtn,#closeMetricsBtn,#closeTableBtn{display:none;}
+/* Visningsniveau: Enkel viser kun det nødvendige, Mere tilføjer værktøjerne, Avanceret viser alt. Intet er fjernet. */
+body[data-ui-level="simple"] [data-level="more"],
+body[data-ui-level="simple"] [data-level="advanced"],
+body[data-ui-level="more"] [data-level="advanced"]{display:none !important;}
+.ui-level-wrap{display:inline-flex;align-items:center;}
+.ui-level-select{font-family:var(--font-mono);font-size:11px;background:var(--surface);border:1px solid var(--surface-line);border-radius:6px;padding:.15rem .3rem;color:var(--ink-secondary);}
+/* Næste skridt-kortet under det seneste svar: ét kort, én handling, resten bag "Flere forslag" */
+.nextcard{margin:var(--space-2) 0;padding:var(--space-3);background:var(--surface);border:1px solid var(--accent);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+.nextcard-eyebrow{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 6px;}
+.nextcard .inbox-item{border:0;padding:0;margin:0;background:transparent;}
+.nextcard .inbox-line{display:block;-webkit-line-clamp:unset;overflow:visible;overflow-wrap:anywhere;}
+.nextcard .inbox-answer{flex-direction:column;align-items:stretch;flex-wrap:nowrap;}
+.nextcard .inbox-answer-field{flex:0 0 auto;}
+.nextcard .inbox-answer .btn{align-self:flex-end;}
+.nextcard .inbox-actions .msg-needs-apply-btn{margin-left:0;font-size:12px;padding:.4rem .6rem;white-space:normal;text-align:left;line-height:1.35;}
+.nextcard-foot{display:flex;justify-content:flex-end;margin-top:6px;}
+.open-needs-resolve-btn.inbox-quiet{background:transparent;border-color:transparent;text-decoration:underline;text-underline-offset:2px;}
+.inbox-answer{display:flex;flex-wrap:wrap;gap:var(--space-2);margin:4px 0;}
+.inbox-answer-field{flex:1 1 14rem;min-width:0;display:flex;}
+.inbox-answer input,.inbox-answer textarea{flex:1 1 auto;min-width:0;width:100%;font-family:var(--font-body);font-size:13px;color:var(--ink);background:var(--bg);border:1px solid var(--surface-line);border-radius:8px;padding:.45rem .6rem;}
+.inbox-answer textarea{resize:vertical;min-height:3.2rem;}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+.proposal-rewrite-row{align-items:center;margin:4px 0;}
+.proposal-hint{margin:2px 0 4px;}
+.msg-flash{animation:msgFlash 1.6s ease-out;}
+.wait-layer{position:relative;height:88px;margin:.35rem 0 .15rem;border:1px solid var(--surface-line);border-radius:10px;overflow:hidden;background:var(--surface);}
+.wait-layer canvas{position:absolute;inset:0;width:100%;height:100%;}
+.wait-word{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:600;letter-spacing:.01em;color:var(--ink);-webkit-text-stroke:5px var(--surface);paint-order:stroke fill;text-shadow:0 0 6px var(--surface);animation:waitWordIn .4s ease-out;}
+.wait-layer[data-style="particles"]{height:104px;background:#060914;border-color:rgba(120,160,220,.28);}
+.wait-layer[data-style="particles"] .wait-word{color:#eaf2ff;-webkit-text-stroke:5px #060914;text-shadow:0 0 14px rgba(120,190,255,.55);}
+.wait-layer[data-style="swarm"] .wait-word{width:1px;height:1px;inset:auto;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);animation:none;}
+@keyframes waitWordIn{0%{opacity:0;}100%{opacity:1;}}
+@media (prefers-reduced-motion:reduce){.wait-word{animation:none;}}
+.guide-row{display:grid;gap:.25rem;margin:.7rem 0;}
+.guide-row label{font-weight:600;font-size:13px;}
+.guide-row select{margin-left:0;justify-self:start;max-width:100%;}
+#guideTask{width:100%;box-sizing:border-box;min-height:7.5rem;resize:vertical;font-family:var(--font-body);font-size:14px;line-height:1.5;color:var(--ink);background:var(--bg);border:1px solid var(--surface-line);border-radius:8px;padding:.6rem .7rem;}
+.guide-row .note,#guideProposal .note,#welcomeGuide .note,.guide-preview .note{font-size:11.5px;color:var(--ink-muted);margin:0;line-height:1.5;}
+#guideProposal > .note{margin:.2rem 0 .6rem;}
+.guide-preview{border:1px solid var(--surface-line);border-radius:10px;padding:.5rem .75rem;margin:.5rem 0;background:var(--surface);}
+.eye-float{position:fixed;left:16px;bottom:16px;z-index:18;width:42px;height:42px;padding:0;border-radius:50%;border:1px solid var(--surface-line);background:var(--surface);color:var(--ink-muted);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.14);opacity:.78;transition:opacity .15s,color .15s,border-color .15s;}
+.eye-float:hover,.eye-float:focus-visible{opacity:1;}
+.eye-float .eye-dot{position:absolute;top:2px;right:2px;width:11px;height:11px;border-radius:50%;background:var(--attn);border:2px solid var(--surface);display:none;}
+.eye-float[data-state="you"]{opacity:1;color:var(--attn);border-color:var(--brass);}
+.eye-float[data-state="block"]{opacity:1;color:var(--on-danger);background:var(--danger);border-color:var(--danger);}
+.eye-float[data-state="you"] .eye-dot,.eye-float[data-state="block"] .eye-dot{display:block;}
+.eye-float[data-state="block"] .eye-dot{background:var(--on-danger);border-color:var(--danger);}
+.eye-float::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:2px solid currentColor;opacity:0;pointer-events:none;}
+.eye-float.pulse::after{animation:eye-ring 1.6s ease-out 4;}
+@keyframes eye-ring{0%{transform:scale(1);opacity:.65;}100%{transform:scale(1.9);opacity:0;}}
+/* Efter introduktionen: roligt øje er grønt og blinker blidt, så man kan se, at Tredje øje er med. Øjets tilstande «kræver dig» og «stopper» er uændrede. */
+.eye-float[data-state="calm"][data-intro="done"]{opacity:1;color:#1f9d6b;border-color:#1f9d6b;box-shadow:0 0 0 3px rgba(31,157,107,.18),0 2px 10px rgba(0,0,0,.14);}
+.eye-float[data-state="calm"][data-intro="done"] svg{animation:eye-blink 7s ease-in-out infinite;transform-origin:center;}
+@keyframes eye-blink{0%,90%,100%{transform:scaleY(1);}94%{transform:scaleY(.08);}}
+.eye-float[data-intro="pending"]{opacity:1;color:#1f9d6b;border-color:#1f9d6b;box-shadow:0 0 0 4px rgba(31,157,107,.22),0 2px 10px rgba(0,0,0,.14);}
+.eye-intro{position:fixed;left:16px;bottom:72px;z-index:19;width:min(340px,calc(100vw - 32px));background:var(--surface);color:var(--ink);border:1px solid var(--accent);border-radius:12px;padding:.9rem 1rem;box-shadow:0 8px 28px rgba(0,0,0,.22);}
+.eye-intro h2{font-size:15px;margin:0 0 .35rem;}
+.eye-intro p{font-size:13px;line-height:1.5;margin:0 0 .7rem;color:var(--ink-muted);}
+.eye-intro .row{display:flex;gap:.5rem;flex-wrap:wrap;}
+@media (prefers-reduced-motion:reduce){.eye-float.pulse::after{animation:none;}.eye-float[data-state="calm"][data-intro="done"] svg{animation:none;}}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;padding:0;}
+@keyframes msgFlash{0%{background:rgba(173,138,80,.28);}100%{background:transparent;}}
+.msg-actions{display:flex;align-items:center;gap:8px;margin-top:.4rem;flex-wrap:wrap;}
+.msg-relay-select{font-family:var(--font-mono);font-size:11px;color:var(--ink-secondary);background:var(--bg);border:1px solid var(--surface-line);border-radius:6px;padding:.2rem .35rem;}
+.proposal-item{background:var(--bg);border:1px solid var(--surface-line);border-radius:10px;padding:.75rem .8rem;margin:0 0 .8rem;}
+.proposal-item .meta{font-family:var(--font-mono);font-size:11px;color:var(--ink-secondary);margin:0 0 .5rem;}
+.proposal-item textarea{width:100%;font-family:var(--font-body);font-size:13px;color:var(--ink);background:var(--surface);border:1px solid var(--surface-line);border-radius:8px;padding:.5rem .6rem;resize:vertical;min-height:60px;}
+.proposal-item .row{margin-top:.6rem;}
+.proposals-empty{font-size:12.5px;color:var(--ink-muted);padding:.5rem 0;}
+.log-empty{font-size:12.5px;color:var(--ink-muted);text-align:center;padding:.5rem 0;}
+.composer{background:var(--surface);border:1px solid var(--surface-line);border-radius:12px;padding:.85rem .9rem 1rem;margin:0 0 1.75rem;}
+.variant-toggle-btn{margin-top:.5rem;font-size:12px;padding:.35rem .6rem;}
+.variant-setup{margin-top:.6rem;padding:.7rem .8rem;background:var(--bg);border:1px solid var(--surface-line);border-radius:10px;}
+.variant-setup select{width:100%;padding:.4rem .5rem;border-radius:8px;border:1px solid var(--surface-line);background:var(--surface);color:var(--ink);font-family:inherit;font-size:13px;}
+.variant-state-picks{display:flex;flex-wrap:wrap;gap:10px;margin:.6rem 0;}
+.variant-compare-note{margin:.6rem 0;font-family:var(--font-mono);font-size:12.5px;color:var(--ink-secondary);}
+.variant-state-check{display:flex;align-items:center;gap:5px;font-size:12.5px;cursor:pointer;}
+.variant-results{display:flex;flex-wrap:wrap;gap:10px;margin-top:.7rem;}
+.variant-results[hidden]{display:none;}
+.variant-results-heading{width:100%;margin:0 0 .2rem;}
+.variant-card{flex:1 1 220px;min-width:220px;background:var(--bg);border:1px solid var(--surface-line);border-left:3px solid var(--seat-color,var(--accent));border-radius:10px;padding:.6rem .7rem;}
+.variant-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.35rem;}
+.variant-card-label{font-weight:600;font-size:12.5px;}
+.variant-card-text{font-size:13px;line-height:1.45;white-space:pre-wrap;margin:0 0 .5rem;}
+.variant-use-btn{font-size:12px;padding:.3rem .6rem;}
+.speaker-pick{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 .7rem;}
+.speaker-chip{font-family:var(--font-mono);font-size:11px;padding:.3rem .6rem;border-radius:999px;border:1px solid var(--surface-line);background:var(--bg);color:var(--ink-secondary);cursor:pointer;}
+.speaker-chip[aria-pressed="true"]{background:var(--seat-color,var(--accent));border-color:var(--seat-color,var(--accent));color:var(--seat-text-color,var(--accent-text));}
+.composer-row{display:flex;gap:8px;align-items:flex-end;}
+.composer-row textarea{flex:1;font-family:var(--font-body);font-size:13.5px;color:var(--ink);background:var(--bg);border:1px solid var(--surface-line);border-radius:8px;padding:.5rem .6rem;resize:vertical;}
+.run-bar{background:var(--surface);border:1px solid var(--brass);border-radius:12px;padding:.85rem .9rem;margin:0 0 1.25rem;}
+.run-row{display:flex;gap:8px;}
+.run-row input{flex:1;font-family:var(--font-body);font-size:13.5px;color:var(--ink);background:var(--bg);border:1px solid var(--surface-line);border-radius:8px;padding:.5rem .6rem;}
+.run-status{font-family:var(--font-mono);font-size:11.5px;color:var(--ink-secondary);margin:.55rem 0 0;}
+.run-progress{display:flex;gap:6px;margin:.7rem 0 0;flex-wrap:wrap;}
+.run-progress[hidden]{display:none;}
+.run-step{display:flex;align-items:center;gap:5px;font-family:var(--font-mono);font-size:11px;padding:.3rem .55rem;border-radius:999px;border:1px solid var(--surface-line);background:var(--bg);color:var(--ink-muted);}
+.run-step .dot{width:7px;height:7px;border-radius:50%;background:var(--ink-muted);flex-shrink:0;}
+.run-step.done{color:var(--ink);border-color:var(--ok);}
+.run-step.done .dot{background:var(--ok);}
+.run-step.active{color:var(--ink);border-color:var(--accent);}
+.run-step.active .dot{background:var(--accent);animation:pulse 1.1s ease-in-out infinite;}
+.run-step.failed{color:var(--danger);border-color:var(--danger);}
+.run-step.failed .dot{background:var(--danger);}
+@media (prefers-reduced-motion:reduce){.run-step.active .dot{animation:none;}}
+.msg-system{border-left-color:var(--brass) !important;}
+.msg-system .msg-who{color:var(--brass);}
+.msg-thirdeye{background:rgba(173,138,80,.12);border:1px solid rgba(173,138,80,.4);border-radius:10px;padding:.65rem .75rem .7rem;margin-left:-.65rem;}
+
+/* --- Fase A: project bar / to-kolonne layout / unificeret inputfelt --- */
+.project-bar{display:flex;align-items:center;gap:10px;margin:0 0 1rem;flex-wrap:wrap;position:relative;}
+.project-select{font-family:var(--font-display);font-weight:600;font-size:15px;color:var(--ink);background:none;border:none;padding:.2rem 0;cursor:pointer;max-width:220px;}
+.gh-status{font-family:var(--font-mono);font-size:11px;color:var(--ink-muted);display:inline-flex;align-items:center;gap:4px;}
+.gh-status::before{content:"●";font-size:8px;}
+.gh-status.connected{color:var(--accent);}
+.gh-status.connected::before{color:var(--ok);}
+.inbox-btn{font-family:var(--font-mono);font-size:12px;color:var(--ink-secondary);background:none;border:1px solid var(--surface-line);border-radius:8px;padding:.3rem .55rem;cursor:pointer;}
+.inbox-btn:hover{border-color:var(--ink-secondary);}
+.inbox-btn .badge{position:static;margin-left:5px;}
+.badge[hidden]{display:none;}
+.overview-menu{position:absolute;top:100%;left:0;margin-top:6px;min-width:270px;max-width:calc(100vw - 2.5rem);padding:.35rem;background:var(--surface);border:1px solid var(--surface-line);border-radius:10px;display:flex;flex-direction:column;gap:2px;z-index:12;}
+.overview-menu[hidden]{display:none;}
+.overview-row{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;font:inherit;color:var(--ink);background:none;border:0;border-radius:8px;padding:.5rem .6rem;cursor:pointer;}
+.overview-row:hover,.overview-row:focus-visible{background:var(--attn-bg);}
+.ov-title{display:block;font-weight:600;font-size:14px;}
+.ov-sub{display:block;font-size:12px;color:var(--ink-secondary);}
+.ov-mark{margin-left:0;flex:none;}
+.needs-wrap{margin-left:auto;}
+.spend-btn{font-family:var(--font-mono);font-size:12px;color:var(--ink-secondary);background:none;border:1px solid var(--surface-line);border-radius:8px;padding:.3rem .55rem;cursor:pointer;}
+.spend-btn:hover{border-color:var(--ink-secondary);}
+.spend-popover{position:absolute;top:100%;right:44px;margin-top:6px;background:var(--surface);border:1px solid var(--surface-line);border-radius:10px;padding:.6rem .7rem;min-width:220px;max-width:calc(100vw - 2.5rem);z-index:12;box-shadow:0 10px 22px -12px rgba(20,14,8,.35);}
+.spend-popover .usage-line{margin:0 0 .4rem;}
+.spend-popover .usage-line:last-child{margin-bottom:0;}
+.project-menu-wrap{position:relative;}
+.help-btn{font:600 14px var(--font-display);line-height:1;width:30px;height:30px;border-radius:50%;border:1px solid var(--surface-line);background:var(--surface);cursor:pointer;color:var(--ink-secondary);}
+.help-btn:hover,.help-link:hover{color:var(--accent);border-color:var(--accent);}
+.help-more{margin:-.4rem 0 .8rem;}
+.help-link{font-family:var(--font-mono);font-size:11px;color:var(--ink-secondary);}
+.project-menu-btn{font-size:16px;line-height:1;width:30px;height:30px;border-radius:8px;border:1px solid var(--surface-line);background:var(--surface);cursor:pointer;color:var(--ink-secondary);}
+.project-menu-btn:hover{border-color:var(--ink-secondary);}
+.project-menu{position:absolute;top:100%;right:0;margin-top:6px;background:var(--surface);border:1px solid var(--surface-line);border-radius:10px;padding:.6rem;display:flex;flex-direction:column;gap:6px;z-index:12;min-width:170px;box-shadow:0 10px 22px -12px rgba(20,14,8,.35);}
+.project-menu[hidden]{display:none;}
+.project-menu .btn{width:100%;text-align:left;}
+/* --- Lukning af paneler: ✕ øverst, "Ikke gemt", blink ved klik udenfor --- */
+.panel-bar{position:sticky;top:0;height:0;z-index:6;display:flex;justify-content:flex-end;align-items:flex-start;gap:var(--space-2);}
+.panel-x{width:28px;height:28px;margin:-2px -2px 0 0;border-radius:50%;border:1px solid var(--surface-line);background:var(--surface);color:var(--ink-secondary);font-size:13px;line-height:1;cursor:pointer;}
+.panel-x:hover{border-color:var(--ink-secondary);color:var(--ink);}
+.panel-dirty{display:none;margin-top:4px;font-family:var(--font-mono);font-size:11px;color:var(--attn);background:var(--attn-bg);border-radius:4px;padding:2px 6px;}
+.panel[data-dirty="1"] > .panel-bar .panel-dirty{display:inline-block;}
+.pause-q{margin:var(--space-3) 0 var(--space-1);font-weight:600;font-size:14px;}
+.pause-a{width:100%;font-family:var(--font-body);font-size:13.5px;color:var(--ink);background:var(--bg);border:1px solid var(--surface-line);border-radius:8px;padding:.5rem .6rem;resize:vertical;}
+.panel-attn{animation:panel-attn .7s ease-in-out;}
+@keyframes panel-attn{0%,100%{transform:translateX(0);}20%{transform:translateX(-6px);}40%{transform:translateX(6px);}60%{transform:translateX(-4px);}80%{transform:translateX(3px);}}
+@media (prefers-reduced-motion:reduce){.panel-attn{animation:none;outline:2px solid var(--attn);}}
+/* --- Arbejdsgraf og strategibibliotek --- */
+.work-graph{margin:var(--space-2) 0;overflow-x:auto;}
+.wg-svg{width:100%;max-width:720px;height:auto;display:block;}
+.wg-node rect{fill:var(--surface);stroke:var(--accent-strong);stroke-width:1.6;}
+.wg-node.wg-idle rect{stroke:var(--ink-muted);stroke-dasharray:4 3;stroke-width:1.2;}
+.wg-node.wg-nomatch rect{stroke:var(--ink-muted);stroke-dasharray:2 3;stroke-width:1.2;fill:transparent;}
+.wg-node.wg-unplanned rect{stroke:var(--attn);}
+.wg-name{font:600 12px var(--font-body);fill:var(--ink);}
+.wg-sub{font:10px var(--font-mono);fill:var(--ink-muted);}
+.wg-edge{fill:none;stroke-width:1.6;}
+.wg-edge.wg-plan{stroke:var(--ink-muted);stroke-dasharray:4 4;opacity:.7;}
+.wg-edge.wg-handoff{stroke:var(--accent-strong);}
+.wg-edge.wg-sequence{stroke:var(--accent-strong);stroke-dasharray:6 3;}
+.wg-edge.wg-rework{stroke:var(--danger);}
+.wg-arrow{fill:var(--ink-secondary);}
+.wg-elabel{font:600 10px var(--font-mono);fill:var(--ink-secondary);}
+.wg-elabel-rework{fill:var(--danger);}
+#workGraphNotes .note,.strategy-item .note{font-size:11.5px;color:var(--ink-muted);line-height:1.5;margin:0 0 .5rem;}
+#strategyPanel h3.eyebrow{margin-top:var(--space-5);}
+.inbox-older{margin-top:var(--space-3);}
+.inbox-older summary{cursor:pointer;font-size:12px;color:var(--ink-muted);margin-bottom:var(--space-2);}
+.proposal-target-label{display:block;margin:.4rem 0;font-size:12px;color:var(--ink-secondary);}
+.wg-devs{margin:0 0 var(--space-3);padding-left:1.1rem;font-size:13px;line-height:1.5;}
+.wg-dev-warn::marker{color:var(--attn);}
+.wg-dev-info{color:var(--ink-secondary);}
+.strategy-item{border:1px solid var(--surface-line);border-radius:var(--radius-m);padding:var(--space-2) var(--space-3);margin:0 0 var(--space-2);}
+.strategy-item.on{border-color:var(--accent-strong);}
+.strategy-head{display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap;}
+.strategy-text{margin:var(--space-1) 0;font-family:var(--font-mono);font-size:11.5px;white-space:pre-wrap;color:var(--ink-secondary);}
+.io-file-badge.on{color:var(--accent-text);background:var(--accent-strong);border-color:var(--accent-strong);}
+/* --- Indstillinger: to faner (bordet / hele programmet), omfangsbånd, faresone --- */
+.board-add-wrap .project-menu{right:auto;left:0;}
+.settings-tabs{display:flex;gap:2px;margin:0 0 var(--space-3);border-bottom:1px solid var(--surface-line);}
+.settings-tab{font-family:var(--font-body);font-size:var(--fs-s);font-weight:600;color:var(--ink-secondary);background:none;border:0;border-bottom:2px solid transparent;padding:.5rem .8rem;margin-bottom:-1px;cursor:pointer;}
+.settings-tab:hover{color:var(--ink);}
+.settings-tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);}
+.settings-pane[hidden]{display:none;}
+.scope-banner{margin:0 0 var(--space-3);padding:.45rem .7rem;border-left:3px solid var(--accent);background:var(--surface-alt, rgba(128,128,128,.08));font-size:var(--fs-s);color:var(--ink-secondary);border-radius:0 var(--radius-s) var(--radius-s) 0;}
+.scope-banner.scope-app{border-left-color:var(--ink-muted);}
+.settings-heading{margin:var(--space-4) 0 var(--space-2);}
+#maxRunCostInput{width:100%;}
+.settings-tools{display:flex;flex-wrap:wrap;gap:var(--space-2);margin:0 0 var(--space-3);}
+.danger-zone{margin-top:var(--space-5);padding:var(--space-3);border:1px solid var(--danger, #b3422f);border-radius:var(--radius-m);}
+.danger-zone .settings-heading{margin-top:0;color:var(--danger, #b3422f);}
+.danger-zone input{width:100%;margin:var(--space-1) 0 var(--space-2);}
+.danger-zone .btn[disabled]{opacity:.45;cursor:not-allowed;}
+.metrics-scroll{overflow-x:auto;margin:0 0 .8rem;}
+.metrics-table{border-collapse:collapse;font-family:var(--font-mono);font-size:11.5px;min-width:100%;}
+.metrics-table th{font-weight:500;color:var(--ink-muted);text-align:right;padding:.25rem .5rem;border-bottom:1px solid var(--surface-line);white-space:nowrap;}
+.metrics-table td{text-align:right;padding:.3rem .5rem;border-bottom:1px solid var(--surface-line);white-space:nowrap;}
+.metrics-table th:first-child,.metrics-table td:first-child{text-align:left;}
+.metrics-line{font-family:var(--font-mono);font-size:12px;color:var(--ink-secondary);margin:0 0 .5rem;}
+.msg-handoff{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-muted);margin:.3rem 0 0 !important;}
+.msg-handoff-btn{background:none;border:none;padding:0;font:inherit;color:inherit;text-align:left;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;}
+.msg-handoff-btn:hover{color:var(--accent);}
+.panel > .note,#quickStartResult > .note,#welcomeDetail > .note,#welcomeResult > .note{font-size:11.5px;color:var(--ink-muted);margin:0 0 .8rem;line-height:1.5;}
+#ioPanel h3.eyebrow{margin:1rem 0 .3rem;}
+#ioPanel .row{margin-top:.8rem;}
+.shield-chip{display:inline-flex;align-items:center;gap:4px;}
+.shield-chip.on{border-color:var(--accent);color:var(--accent);font-weight:600;}
+.shield-restored{border-bottom:1px dotted currentColor;cursor:help;}
+.shield-row{display:flex;gap:8px;align-items:center;margin:0 0 6px;font-size:13px;}
+.shield-val{font-weight:600;}
+.shield-hint{color:var(--ink-secondary);font-size:12px;}
+.shield-preview{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:6px 0;}
+.shield-preview pre{white-space:pre-wrap;word-break:break-word;margin:0;padding:.5rem;border:1px solid var(--surface-line);border-radius:8px;background:var(--bg);font:12px var(--font-mono);min-height:3em;}
+@media (max-width:700px){.shield-preview{grid-template-columns:1fr;}}
+.secrets-warning{color:var(--danger);}
+.mic-btn{padding:.35rem .6rem;}
+.mic-btn.recording{background:var(--danger);color:var(--on-danger);border-color:var(--danger);}
+.voice-test p{margin:.2rem 0;font-size:12.5px;}
+.voice-test .ok{color:var(--ok);} .voice-test .bad{color:var(--danger);}
+.talk-thread{max-height:300px;overflow-y:auto;border:1px solid var(--surface-line);border-radius:10px;background:var(--bg);padding:.6rem .75rem;margin:0 0 .7rem;}
+.talk-msg{margin:0 0 .7rem;padding-left:.6rem;border-left:3px solid var(--surface-line);}
+.talk-msg.talk-eye{border-left-color:rgba(173,138,80,.8);}
+.talk-who{font-family:var(--font-mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);}
+.talk-msg p{margin:.15rem 0 0;font-size:13.5px;line-height:1.5;white-space:pre-wrap;}
+#talkInput{width:100%;font-family:var(--font-body);font-size:13.5px;color:var(--ink);background:var(--bg);border:1px solid var(--surface-line);border-radius:8px;padding:.5rem .6rem;resize:vertical;}
+.speak-indicator{position:fixed;right:18px;bottom:18px;z-index:50;display:flex;align-items:center;gap:.8rem;max-width:min(440px,calc(100vw - 36px));background:var(--surface);border:1px solid rgba(173,138,80,.6);border-radius:14px;padding:.65rem .8rem;box-shadow:0 6px 24px rgba(0,0,0,.18);}
+.speak-indicator[hidden]{display:none;}
+.speak-bars{display:inline-flex;align-items:center;gap:3px;height:26px;flex:none;}
+.speak-bars i{display:block;width:4px;height:100%;border-radius:2px;background:var(--accent);transform-origin:center;animation:speakbar 1s ease-in-out infinite;}
+.speak-bars i:nth-child(2){animation-delay:.15s;} .speak-bars i:nth-child(3){animation-delay:.3s;} .speak-bars i:nth-child(4){animation-delay:.45s;} .speak-bars i:nth-child(5){animation-delay:.6s;}
+@keyframes speakbar{0%,100%{transform:scaleY(.25);}50%{transform:scaleY(1);}}
+@media (prefers-reduced-motion:reduce){.speak-bars i{animation:none;transform:scaleY(.6);}}
+.speak-text{display:flex;flex-direction:column;min-width:0;gap:.1rem;}
+.speak-who{font-family:var(--font-mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);}
+.speak-caption{font-size:13px;line-height:1.4;color:var(--ink);}
+.speak-stop{flex:none;padding:.3rem .6rem;font-size:12px;}
+.te-chip{display:inline-block;font-size:var(--fs-xs);font-weight:500;border-radius:999px;padding:1px 9px;border:1px solid var(--surface-line);color:var(--ink-secondary);}
+.te-chip-obs{border-color:var(--ink-muted);}
+.te-chip-assess{border-color:var(--brass);background:var(--attn-bg);color:var(--attn);}
+.te-chip-act{border-color:var(--accent);color:var(--accent-strong);}
+.te-legend{display:flex;flex-wrap:wrap;gap:var(--space-2);margin:0 0 var(--space-2);}
+.te-layer{margin:0 0 .35rem !important;display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+.te-note{font-size:var(--fs-xs);color:var(--ink-muted);}
+.te-obs{margin:0 0 var(--space-3);font-size:var(--fs-s);}
+.te-obs-title{font-family:var(--font-mono);font-size:var(--fs-xs);letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);margin:0 0 var(--space-1);}
+.te-obs-item{display:flex;gap:var(--space-2);align-items:baseline;margin:2px 0;}
+.te-obs-none{color:var(--ink-muted);margin:0;}
+.inbox-sec{border-left:3px solid var(--surface-line);padding:0 0 0 var(--space-3);margin:0 0 var(--space-4);}
+.inbox-decide{border-left-color:var(--brass);}
+.inbox-adjust{border-left-color:var(--ink-muted);}
+.inbox-approve{border-left-color:var(--accent);}
+.inbox-observe{border-left-style:dashed;border-left-color:var(--ink-muted);}
+.inbox-h{display:flex;justify-content:space-between;align-items:center;gap:var(--space-2);margin:0;font-size:13px;font-weight:600;}
+.inbox-decide .inbox-h{color:var(--attn);}
+.inbox-n{font-family:var(--font-mono);font-size:var(--fs-xs);font-weight:500;color:var(--ink-muted);}
+.inbox-sub{margin:2px 0 var(--space-2);font-size:var(--fs-xs);color:var(--ink-muted);}
+.inbox-item{padding:var(--space-2) 0;border-bottom:1px solid var(--surface-line);}
+.inbox-item:last-child{border-bottom:none;}
+.inbox-line{margin:0 0 var(--space-1);font-size:var(--fs-s);line-height:1.4;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;}
+.inbox-actions{display:flex;flex-wrap:wrap;gap:var(--space-2);margin:2px 0;}
+.inbox-details summary{cursor:pointer;font-size:var(--fs-xs);color:var(--ink-secondary);margin:2px 0;}
+.inbox-details p{margin:2px 0;font-size:var(--fs-s);}
+.inbox-blocking{background:var(--attn-bg);border-radius:var(--radius-s);padding-left:var(--space-2);padding-right:var(--space-2);}
+.inbox-block-chip{display:inline-block;font-size:var(--fs-xs);font-weight:600;color:var(--attn);border:1px solid var(--brass);border-radius:999px;padding:0 7px;margin-right:4px;}
+.inbox-btn.needs-you{border-color:var(--brass);color:var(--attn);}
+.inbox-btn.blocking{background:var(--attn-bg);font-weight:600;}
+.nextsteps-sub{font-size:var(--fs-xs);color:var(--ink-muted);margin:-.2rem 0 .5rem;}
+.nextstep-conseq{color:var(--ink-secondary);}
+.nextstep-conseq-k{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-muted);}
+.talk-chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 .6rem;}
+.voice-item{display:flex;align-items:center;gap:.6rem;}
+.voice-play-btn{padding:.2rem .55rem;font-size:12px;}
+.msg-asked{font-size:12px;color:var(--ink-secondary);margin:0 0 .3rem;}
+.menu-field{display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:var(--ink-muted);}
+#shieldPanel h3.eyebrow{margin-top:1.1rem;}
+.egress-summary{font-size:12.5px;margin:.2rem 0 .5rem;}
+.egress-warn{color:var(--danger);font-weight:600;}
+.egress-row{display:grid;grid-template-columns:8.5em 1fr 9em 1.4fr;gap:8px;font-size:12px;padding:.3rem 0;border-top:1px solid var(--surface-line);}
+.egress-row.clear .egress-status{color:var(--danger);}
+.egress-when{color:var(--ink-muted);}
+.egress-found{color:var(--ink-secondary);}
+.dataflow-list{margin:.2rem 0 .6rem 1.1rem;padding:0;font-size:12.5px;line-height:1.55;}
+@media (max-width:700px){.egress-row{grid-template-columns:1fr 1fr;}}
+.nextsteps{border:1px solid var(--accent);border-radius:10px;padding:.6rem .7rem;margin:.5rem 0;background:var(--surface);}
+.nextsteps.done{border-color:var(--surface-line);color:var(--ink-secondary);}
+.nextsteps-title{font-weight:600;font-size:12.5px;margin:0 0 .4rem;}
+.nextstep{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:flex-start;margin:0 0 .5rem;}
+.nextstep-id{flex:none;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--accent-text);display:grid;place-items:center;font:600 12px var(--font-display);}
+.nextstep-body{flex:1 1 150px;min-width:0;}
+.nextstep-body p{margin:0 0 2px;font-size:12.5px;line-height:1.4;}
+.nextstep-text{color:var(--ink-secondary);font-style:italic;}
+.nextstep-why{color:var(--ink-muted);font-size:11.5px !important;}
+.addition-text{flex:1;font-size:12.5px;}
+.seat-history{margin:.6rem 0;}
+.seat-history .note,#tableImportPreview .note{font-size:11.5px;color:var(--ink-muted);margin:.3rem 0 .6rem;line-height:1.5;}
+.seat-history summary{cursor:pointer;font-size:12.5px;font-weight:600;}
+.history-entry{border-top:1px solid var(--surface-line);padding:.45rem 0;font-size:12.5px;}
+.history-head{display:flex;gap:8px;justify-content:space-between;align-items:baseline;color:var(--ink-muted);font-size:11.5px;}
+.history-entry ul{margin:.25rem 0 .35rem 1.1rem;padding:0;}
+.check-panel{border-color:var(--danger);}
+.route-panel{border-color:var(--accent);}
+.route-why{font-family:var(--font-body);font-size:14px;margin:.2rem 0 .5rem;}
+.route-why .route-src{font-family:var(--font-mono);font-size:11px;color:var(--ink-secondary);display:block;margin-top:.25rem;}
+.route-pause{color:var(--danger);}
+.route-offer{margin-top:.9rem;padding-top:.7rem;border-top:1px solid var(--surface-line);}
+.route-offer p{font-size:13px;margin:0 0 .5rem;}
+.qs-row{display:grid;grid-template-columns:6.5rem 1fr auto;gap:.5rem;align-items:baseline;font-family:var(--font-mono);font-size:12px;padding:.35rem 0;border-bottom:1px solid var(--surface-line);}
+.qs-row .qs-role{font-weight:600;}
+.qs-row .qs-price{color:var(--ink-secondary);}
+.qs-row.qs-missing .qs-model{color:var(--danger);}
+#stuckPanel textarea{width:100%;box-sizing:border-box;}
+#stuckReport{font-family:var(--font-mono);font-size:12px;line-height:1.45;}
+#compareStep2[hidden],#compareChoices[hidden],.welcome-cards[hidden],#welcomePanel .row[hidden],#welcomePanel .field[hidden]{display:none;}
+.key-explain{margin:.2rem 0 .8rem;padding:.55rem .75rem;border:1px solid var(--surface-line);border-radius:8px;background:var(--bg);font-size:12.5px;line-height:1.5;color:var(--ink-secondary);}
+.key-explain strong{display:block;margin-bottom:.2rem;color:var(--ink);}
+.key-explain ul{margin:0;padding-left:1.1rem;}
+.guide-plan{margin:.2rem 0 .8rem;padding:.6rem .8rem;border:1px solid var(--surface-line);border-radius:8px;background:var(--bg);}
+.guide-plan p{margin:.2rem 0;font-size:13.5px;line-height:1.5;}
+.guide-plan .note{font-size:12.5px;}
+.welcome-ask{display:grid;gap:.4rem;margin:.4rem 0 .6rem;}
+.welcome-ask textarea{width:100%;box-sizing:border-box;}
+.welcome-ask .eyebrow{margin:.6rem 0 0;}
+.welcome-demo{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:.6rem 0 1rem;padding:.7rem .9rem;border:1px dashed var(--surface-line);border-radius:10px;background:var(--bg);}
+.welcome-demo p{margin:.15rem 0 0;}
+.welcome-demo .btn{flex:none;}
+.welcome-ask[hidden],.welcome-demo[hidden],.role-preset-eye[hidden]{display:none;}
+.result-text{white-space:pre-wrap;word-break:break-word;max-height:22rem;overflow:auto;padding:.6rem .75rem;border:1px solid var(--surface-line);border-radius:8px;background:var(--bg);font-size:13.5px;line-height:1.55;}
+.result-list{margin:.3rem 0 .6rem;padding-left:1.2rem;font-size:13px;line-height:1.55;}
+.result-reuse{margin-top:.6rem;padding:.6rem .8rem;border:1px dashed var(--surface-line);border-radius:8px;}
+.welcome-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:.6rem;margin:0 0 .8rem;}
+.welcome-card{display:flex;flex-direction:column;align-items:flex-start;gap:.3rem;text-align:left;white-space:normal;height:auto;padding:.8rem .9rem;}
+.welcome-card-title{font-weight:600;font-size:14px;}
+.welcome-card-line{font-size:12px;color:var(--ink-secondary);line-height:1.45;}
+.welcome-task{white-space:pre-wrap;font-family:var(--font-mono);font-size:12px;line-height:1.5;border:1px solid var(--surface-line);border-radius:8px;padding:.6rem .7rem;margin:0 0 .8rem;}
+#welcomeExample{margin:0 0 .8rem;}
+#welcomeRows{margin:0 0 .8rem;}
+#welcomeExample .history-entry p{margin:.2rem 0 0;font-size:12.5px;line-height:1.5;}
+.check-reason{font-size:14px;margin:.2rem 0 .6rem;padding:.5rem .7rem;background:color-mix(in srgb,var(--danger) 9%,transparent);border-radius:8px;}
+.msg-verdict{font-family:var(--font-mono);font-size:11.5px;margin:.5rem 0 0;padding:.35rem .6rem;border-radius:8px;}
+.msg-verdict.pass{background:var(--pass-bg);color:var(--accent-strong);}
+.msg-verdict.fail{background:color-mix(in srgb,var(--danger) 14%,transparent);color:var(--danger);}
+.msg-verdict.unclear{background:var(--bg);color:var(--ink-secondary);}
+.msg-out-force-btn{font-family:var(--font-mono);font-size:10.5px;background:none;border:none;color:var(--danger);cursor:pointer;text-decoration:underline;padding:0;margin-left:.5rem;}
+.memory-item{display:flex;gap:6px;margin:0 0 6px;}
+.voice-item{font-family:var(--font-mono);font-size:12.5px;padding:.3rem 0;border-bottom:1px solid var(--surface-line);}
+.memory-item input{flex:1;min-width:0;font-family:var(--font-body);font-size:13px;padding:.4rem .5rem;border:1px solid var(--surface-line);border-radius:8px;background:var(--bg);color:var(--ink);}
+.memory-item button{font-size:12px;}
+.memory-item select{font-family:var(--font-body);font-size:13px;padding:.4rem .5rem;border:1px solid var(--surface-line);border-radius:8px;background:var(--bg);color:var(--ink);}
+.observation{border-left:3px solid var(--brass);padding:.3rem .6rem;margin:.4rem 0;font-size:13px;background:var(--bg);border-radius:0 8px 8px 0;}
+.observation.sev-high{border-left-color:var(--danger);}
+.observation.sev-low{border-left-color:var(--ink-muted);}
+.observation details{font-family:var(--font-mono);font-size:11px;color:var(--ink-secondary);margin-top:.3rem;}
+.observation .obs-actions{margin-top:.3rem;}
+.observation button{background:none;border:none;color:var(--ink-secondary);cursor:pointer;font-size:11px;text-decoration:underline;padding:0;}
+.io-band{display:flex;gap:8px;margin:.8rem 0 0;}
+.io-tile{flex:1;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:.55rem .7rem;border:1.5px dashed var(--surface-line);border-radius:10px;background:var(--surface);color:var(--ink);cursor:pointer;text-align:left;font-family:var(--font-mono);}
+.io-tile:hover{border-color:var(--accent);}
+.io-name{font-size:12.5px;font-weight:600;}
+.io-in{border-left:4px solid var(--accent);}
+.io-out{border-style:solid;border-left:4px solid var(--brass);}
+.io-note{font-size:10.5px;color:var(--ink-secondary);}
+.io-in[data-state="unread"] .io-note{color:var(--danger);}
+.io-out[data-state="empty"] .io-note{color:var(--ink-muted);}
+.io-count{font-size:10.5px;color:var(--ink-muted);}
+.io-inbox[data-state="new"] .io-count{color:var(--accent-strong);font-weight:600;}
+.io-inbox[data-state="missing"] .io-count{color:var(--danger);}
+.inbox-path{word-break:break-all;font-family:var(--font-mono);}
+.io-file.inbox-new .io-file-name{font-weight:600;}
+.io-drop{display:none;font-size:10.5px;color:var(--accent);}
+body.drag-files .io-in{border-color:var(--accent);background:var(--drop-bg);}
+body.drag-files .io-in .io-drop{display:block;}
+.io-in.drag-over{border-style:solid;box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 25%,transparent);}
+.io-file{display:flex;justify-content:space-between;gap:10px;font-family:var(--font-mono);font-size:11.5px;padding:.25rem 0;border-bottom:1px solid var(--surface-line);}
+.io-file .io-file-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.io-file .io-file-meta{color:var(--ink-muted);white-space:nowrap;}
+.io-file.unreadable .io-file-name{color:var(--ink-muted);}
+.io-file-badge{font-size:10px;color:var(--accent);border:1px solid var(--accent);border-radius:6px;padding:0 .35rem;line-height:1.5;flex:none;}
+.check-row{display:flex;align-items:center;gap:8px;font-size:13px;}
+.msg-out-open-btn{font-family:var(--font-mono);font-size:10.5px;background:none;border:none;color:var(--ink-secondary);cursor:pointer;text-decoration:underline;padding:0;margin-left:.5rem;}
+.app-version{margin:.2rem 0 0;font-family:var(--font-mono);font-size:10.5px;color:var(--ink-muted);}
+.layout-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,300px);gap:1.25rem;align-items:start;margin:0 0 1.25rem;}
+.table-col{min-width:0;container-type:inline-size;container-name:tablecol;}
+.table-col .table-box{margin-top:1.5rem;}
+.activity-panel{background:var(--surface);border:1px solid var(--surface-line);border-radius:12px;padding:.85rem .9rem;min-width:0;}
+.activity-panel .log{margin:0;max-height:min(70vh,560px);}
+.layout-grid.full-log{grid-template-columns:minmax(0,1fr);}
+.layout-grid.full-log .activity-panel .log{max-height:min(75vh,760px);}
+.layout-grid.full-log .msg-text{max-width:84ch;font-size:14px;line-height:1.55;}
+.log-view-toggle-btn{font-size:11px;}
+.activity-item{position:relative;display:flex;flex-direction:column;gap:3px;padding:.55rem 0;border-bottom:1px solid var(--surface-line);}
+.activity-head{display:flex;align-items:center;flex-wrap:wrap;gap:6px;padding-right:28px;}
+.activity-chip{font-size:10.5px;font-weight:500;border-radius:999px;padding:1px 7px;border:1px solid var(--surface-line);color:var(--ink-secondary);}
+.activity-chip.chip-attn{color:var(--attn);border-color:var(--brass);background:var(--attn-bg);}
+.activity-chip.chip-ok{color:var(--ok);border-color:var(--ok);}
+.activity-chip.chip-bad{color:var(--danger);border-color:var(--danger);}
+.activity-item:last-child{border-bottom:none;}
+.activity-time{font-family:var(--font-mono);font-size:10px;color:var(--ink-muted);white-space:nowrap;}
+.activity-dot{width:7px;height:7px;border-radius:50%;background:var(--seat-color,var(--ink-muted));flex-shrink:0;}
+.activity-who{font-weight:600;font-size:12.5px;white-space:nowrap;}
+.activity-phrase{margin:0;font-size:13px;line-height:1.45;color:var(--ink);min-width:0;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow-wrap:anywhere;}
+.activity-view-btn{position:absolute;right:0;top:.55rem;font-family:var(--font-mono);font-size:10.5px;background:none;border:none;color:var(--ink-secondary);cursor:pointer;white-space:nowrap;padding:0;}
+.activity-view-btn:hover{color:var(--accent);}
+.ask-bar{background:var(--surface);border:1px solid var(--surface-line);border-radius:12px;padding:.85rem .9rem 1rem;margin:0 0 1.75rem;}
+.ask-to{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2);margin:0 0 var(--space-2);}
+.ask-to-label{font-family:var(--font-mono);font-size:var(--fs-xs);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);}
+.ask-caption{font-size:var(--fs-s);color:var(--ink-secondary);flex:1;min-width:200px;}
+.ask-input{display:flex;gap:var(--space-2);align-items:flex-end;}
+.ask-actions{display:flex;flex-direction:column;gap:6px;flex:none;}
+.ask-actions .btn{height:36px;white-space:nowrap;}
+.ask-actions .btn[hidden]{display:none;}
+.ask-tools{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-2);margin-top:var(--space-2);}
+.ask-tools .tool-btn{margin:0;font-size:var(--fs-s);padding:.3rem .6rem;}
+.shield-state{font-size:var(--fs-xs);color:var(--ink-muted);flex:1;min-width:140px;}
+.shield-state.on{color:var(--accent-strong);}
+.help-circle{align-self:center;margin-left:auto;display:grid;place-items:center;width:26px;height:26px;border-radius:50%;border:1px solid var(--surface-line);background:var(--surface);font:600 12px var(--font-display);text-decoration:none;color:var(--ink-secondary);}
+.recipient-select{font-family:var(--font-mono);font-size:12px;color:var(--ink-secondary);background:var(--bg);border:1px solid var(--surface-line);border-radius:8px;padding:.5rem .5rem;max-width:240px;min-width:190px;}
+.ask-input textarea{flex:1;min-width:160px;min-height:3.2rem;max-height:16rem;font-family:var(--font-body);font-size:13.5px;color:var(--ink);background:var(--bg);border:1px solid var(--surface-line);border-radius:8px;padding:.5rem .6rem;resize:vertical;}
+@media (max-width:760px){.layout-grid{grid-template-columns:1fr;}.activity-panel{order:2;}}
+/* Fase F: bordet forsøges ikke vist som et miniature-cirkel-desktop på en
+   telefon — under 480px reflowes stolene til en almindelig liste, samme
+   kort-indhold (rolle/status/symboler), bare uden den cirkulære grafik der
+   ikke kan skaleres ned uden at blive ulæselig. */
+@media (max-width:480px){
+  .stage{padding-left:.9rem;padding-right:.9rem;}
+  .ask-input{flex-direction:column;align-items:stretch;}
+  .ask-actions{flex-direction:row;}
+  .ask-actions .btn{flex:1;}
+}
+}
+/* Bordets tre visninger (renderer/21-tableview.js sætter data-view på #tableBox):
+   rundt = fuld cirkel, kompakt = mindre cirkel med små stole, liste = stole under hinanden i rækkefølge.
+   Valget kommer fra brugeren eller, i automatisk visning, fra kolonnens faktiske bredde (ikke vinduets). */
+.view-switch{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:var(--space-2);margin:0 0 var(--space-2);}
+.view-switch .vs-auto{margin-right:var(--space-1);font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--ink-muted);}
+.view-switch .vs-seg{display:inline-flex;border:1px solid var(--surface-line);border-radius:var(--radius-s);overflow:hidden;background:var(--surface);}
+.view-switch .vs-seg button{font-family:var(--font-body);font-size:var(--fs-xs);font-weight:500;padding:.3rem .6rem;border:0;border-right:1px solid var(--surface-line);background:none;color:var(--ink-secondary);cursor:pointer;}
+.view-switch .vs-seg button:last-child{border-right:0;}
+.view-switch .vs-seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-text);}
+.table-box .table-top{z-index:0;}
+.table-box .plaque{z-index:2;}
+.table-box .seat{z-index:3;}
+.handoff-links{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;overflow:visible;}
+.handoff-edge{fill:none;stroke:var(--ink-muted);stroke-width:1.2;stroke-dasharray:3 4;opacity:.55;}
+.handoff-edge.ho-done{stroke:var(--accent-strong);stroke-width:1.8;stroke-dasharray:none;opacity:.85;}
+.handoff-edge.ho-live{stroke:var(--accent-strong);stroke-width:2.6;stroke-dasharray:none;opacity:1;}
+.handoff-hit{fill:none;stroke:transparent;stroke-width:12;pointer-events:stroke;cursor:pointer;}
+.handoff-packet{fill:var(--accent-strong);stroke:var(--surface);stroke-width:.6;visibility:hidden;}
+.handoff-packet.on{visibility:visible;}
+#tableTemplates .btn{display:inline-flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;}
+.tpl-tag{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-muted);}
+.tpl-tag.tpl-high{color:var(--accent-strong);}
+.handoff-chip{position:absolute;z-index:4;width:20px;height:20px;padding:0;border-radius:50%;border:1px solid var(--surface-line);background:var(--surface);color:var(--ink-muted);display:grid;place-items:center;cursor:pointer;transform:translate(-50%,-50%);}
+.handoff-chip svg{width:11px;height:11px;}
+.ho-q-badge{position:absolute;top:-6px;right:-6px;min-width:13px;height:13px;padding:0 3px;border-radius:7px;font-family:var(--font-mono);font-size:9px;line-height:13px;text-align:center;background:var(--attn);color:var(--surface);}
+.ho-q-badge.ho-q-blocking{background:var(--danger);}
+.ho-q-badge.ho-q-clear{background:var(--accent-strong);}
+.handoff-chip.ho-q-open{border-color:var(--attn);}
+.handoff-chip.ho-q-blocking{border-color:var(--danger);}
+.handoff-edge.ho-q-open{stroke:var(--attn);}
+.handoff-edge.ho-q-blocking{stroke:var(--danger);}
+.handoff-row-btn{position:relative;}
+.ho-q{display:grid;gap:var(--space-2);}
+#compareNote,#ownTakeInput,#envelopeText,#reflectQuestions,#reflectTopicInput,#reflectExtra{width:100%;box-sizing:border-box;}
+#envelopeText{font-family:var(--font-mono);font-size:var(--fs-sm,13px);}
+.handoff-chip.ho-env{border-color:var(--danger);}
+.handoff-chip.ho-edge-pause{border-color:var(--ink-secondary);}
+.ho-q-badge.ho-q-pause{background:var(--ink-secondary);}
+.models-row{display:flex;justify-content:space-between;align-items:center;gap:var(--space-2);flex-wrap:wrap;border-top:1px solid var(--line);padding:var(--space-2) 0;}
+.models-main{min-width:0;}
+.api-missing-bar{display:flex;align-items:center;gap:var(--space-2);flex-wrap:wrap;border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:var(--space-2) var(--space-3);margin:var(--space-2) 0;background:var(--surface);}
+.api-missing-bar span{flex:1 1 16rem;min-width:0;}
+#modelForm input,#modelForm select{width:100%;box-sizing:border-box;}
+.diff-item{border-top:1px solid var(--line);padding-top:var(--space-2);}
+.diff-item .row{align-items:center;}
+.diff-item .diff-answer{flex:1;min-width:0;}
+.compare-cols{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);}
+@media (max-width:640px){.compare-cols{grid-template-columns:1fr;}}
+.compare-text{white-space:pre-wrap;background:var(--surface-2,var(--attn-bg));border-radius:var(--radius-sm,6px);padding:var(--space-2);max-height:40vh;overflow:auto;}
+.handoff-chip:hover{border-color:var(--ink-secondary);color:var(--ink);}
+.handoff-chip.ho-seq{border-style:dashed;background:transparent;}
+.handoff-chip.ho-manual{border-style:dotted;border-width:2px;}
+.handoff-edge.ho-seq{stroke:var(--ink-secondary);stroke-width:1.4;stroke-dasharray:6 3;opacity:.7;}
+.handoff-edge.ho-manual,.handoff-edge.ho-shortcut{stroke-dasharray:8 3 1 3;}
+.handoff-chip.ho-shortcut{border-style:dotted;border-width:2px;}
+.handoff-legend{position:absolute;left:8px;bottom:6px;display:flex;flex-wrap:wrap;gap:4px 12px;font-size:10.5px;line-height:1.2;color:var(--ink-muted);pointer-events:none;z-index:1;}
+.handoff-legend span{display:inline-flex;align-items:center;gap:5px;}
+.handoff-legend svg{width:22px;height:6px;flex:none;}
+.handoff-legend line{stroke:currentColor;stroke-width:1.6;}
+.handoff-chip.ho-done{color:var(--accent-strong);border-color:var(--accent-strong);}
+.handoff-chip.ho-live{color:var(--accent-text);background:var(--accent-strong);border-color:var(--accent-strong);animation:chip-pulse 1s ease-in-out infinite;}
+.table-box[data-view="compact"] .handoff-chip{width:16px;height:16px;}
+.table-box[data-view="compact"] .handoff-chip svg{width:9px;height:9px;}
+@keyframes chip-pulse{0%,100%{box-shadow:0 0 0 0 rgba(79,156,133,.5);}50%{box-shadow:0 0 0 5px rgba(79,156,133,0);}}
+.handoff-row{display:flex;align-items:center;gap:var(--space-2);padding:0 0 0 var(--space-4);font-size:var(--fs-xs);color:var(--ink-muted);min-height:20px;}
+.handoff-row .ho-arrow{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;border:1px solid var(--surface-line);background:var(--surface);font-size:12px;line-height:1;}
+.handoff-row.ho-done{color:var(--accent-strong);} .handoff-row.ho-done .ho-arrow{border-color:var(--accent-strong);}
+.handoff-row.ho-live{color:var(--accent-strong);font-weight:600;} .handoff-row.ho-live .ho-arrow{border-color:var(--accent-strong);animation:nudge .9s ease-in-out infinite;}
+@keyframes nudge{0%,100%{transform:translateY(-2px);}50%{transform:translateY(3px);}}
+.handoff-row-btn{background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;display:inline-flex;}
+.handoff-row-btn:hover .ho-arrow{border-color:var(--ink-secondary);}
+.ho-mode{display:inline-block;font-family:var(--font-mono);font-size:10.5px;border-radius:4px;padding:1px 6px;background:var(--attn-bg);color:var(--attn);}
+.ho-mode.ho-mode-str{background:rgba(79,156,133,.18);color:var(--accent-strong);}
+.ho-h{font-family:var(--font-mono);font-size:var(--fs-xs);letter-spacing:.04em;text-transform:uppercase;color:var(--ink-muted);margin:var(--space-3) 0 var(--space-1);}
+#handoffBody ul{margin:0;padding-left:1.1rem;font-size:13px;line-height:1.5;}
+@media (prefers-reduced-motion:reduce){.handoff-row.ho-live .ho-arrow,.handoff-chip.ho-live{animation:none;}}
+.table-box[data-view="compact"]{width:min(calc(100% - 96px),var(--table-compact-max));margin:3rem auto 1.5rem;}
+.table-box[data-view="compact"] .table-top{inset:17%;border-width:4px;}
+.table-box[data-view="compact"] .plaque{width:58%;padding:.5rem .4rem;}
+.table-box[data-view="compact"] .plaque h1{font-size:14px;}
+.table-box[data-view="compact"] .plaque .gh,.table-box[data-view="compact"] .plaque .hint{display:none;}
+.seat-compact{width:auto;}
+.seat-compact .coaster{display:flex;align-items:center;gap:6px;padding:.4rem .6rem .4rem .75rem;white-space:nowrap;max-width:132px;}
+.seat-compact .coaster .role{margin:0;padding-left:0;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;}
+.seat-compact .cglyph{font-family:var(--font-mono);font-size:11px;color:var(--ink-muted);flex:none;}
+.seat-compact .cglyph.st-working,.seat-compact .cglyph.st-handing,.seat-compact .cglyph.st-receiving{color:var(--ok);animation:pulse 1.8s ease-in-out infinite;}
+.seat-compact .cglyph.st-need,.seat-compact .cglyph.st-check-failed{color:var(--attn);}
+.seat-compact .cglyph.st-failed{color:var(--danger);}
+.seat-compact .cglyph.st-next{color:var(--accent-strong);}
+.seat-compact .crown-badge{top:-12px;font-size:15px;}
+.seat-compact .seat-empty{width:40px;height:40px;font-size:18px;}
+.table-box[data-view="list"]{position:static;width:auto;aspect-ratio:auto;margin:0 0 var(--space-4);display:flex;flex-direction:column;gap:var(--space-2);}
+.table-box[data-view="list"] .table-top{display:none;}
+.table-box[data-view="list"] .plaque{position:static;transform:none;width:auto;margin:0 0 var(--space-1);text-align:left;}
+.table-box[data-view="list"] .seat{position:relative;left:auto !important;top:auto !important;width:auto;transform:none;text-align:left;margin:0;}
+.table-box[data-view="list"] .seat-empty{width:100%;height:auto;min-height:48px;border-radius:var(--radius-m);font-size:var(--fs-m);}
+.seat-row .coaster{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:var(--space-3);align-items:center;padding:.6rem .7rem .6rem .9rem;}
+.seat-row .row-no{font-family:var(--font-mono);font-size:var(--fs-xs);color:var(--ink-muted);}
+.seat-row .row-main{min-width:0;}
+.seat-row .role{padding-left:0;margin:0;font-size:var(--fs-m);}
+.seat-row .status-word{padding-left:0;}
+.seat-row .seat-activity{padding-left:0;-webkit-line-clamp:3;}
+.seat-row .row-model{font-family:var(--font-mono);font-size:10px;color:var(--ink-muted);white-space:nowrap;}
+.seat-row .crown-badge{position:static;transform:none;display:inline-block;font-size:14px;margin-right:4px;}
+@media (prefers-reduced-motion:reduce){.seat-compact .cglyph.st-working,.seat-compact .cglyph.st-handing,.seat-compact .cglyph.st-receiving{animation:none;}}
+</style>
+</head>
+<body>
+<div class="stage">
+  <h2 class="sr-only" data-i18n="srIntro"></h2>
+  <p class="eyebrow">Rundbordet</p>
+
+  <div class="project-bar">
+    <select id="boardSelect" class="project-select" data-i18n-aria-label="boardSelectAriaLabel"></select>
+    <div class="project-menu-wrap board-add-wrap">
+      <button type="button" class="project-menu-btn" id="boardAddBtn" aria-haspopup="true" aria-expanded="false" data-i18n-title="boardAddTitle" data-i18n-aria-label="boardAddTitle">+</button>
+      <div class="project-menu board-add-menu" id="projectMenu" hidden>
+      </div>
+    </div>
+    <span class="gh-status" id="ghStatus"></span>
+    <div class="needs-wrap overview-wrap">
+      <button type="button" class="inbox-btn" id="overviewBtn" aria-haspopup="menu" aria-expanded="false" aria-controls="overviewMenu" data-i18n-title="overviewTitle"><span data-i18n="overviewBtn"></span><span id="overviewBadge" class="badge" hidden></span></button>
+      <div class="overview-menu" id="overviewMenu" role="menu" hidden>
+        <button type="button" class="overview-row" role="menuitem" data-ov="needs"><span class="ov-main"><span class="ov-title" data-i18n="overviewNeeds"></span><span class="ov-sub" id="ovSubNeeds"></span></span><span class="badge ov-mark" id="ovMarkNeeds" hidden></span></button>
+        <button type="button" class="overview-row" role="menuitem" data-ov="reflect" data-level="more"><span class="ov-main"><span class="ov-title" data-i18n="overviewReflect"></span><span class="ov-sub" data-i18n="overviewReflectSub"></span></span></button>
+        <button type="button" class="overview-row" role="menuitem" data-ov="diff" data-level="more"><span class="ov-main"><span class="ov-title" data-i18n="overviewDiff"></span><span class="ov-sub" data-i18n="overviewDiffSub"></span></span></button>
+        <button type="button" class="overview-row" role="menuitem" data-ov="spend"><span class="ov-main"><span class="ov-title" data-i18n="overviewSpend"></span><span class="ov-sub" id="ovSubSpend"></span></span></button>
+        <button type="button" class="overview-row" role="menuitem" data-ov="stuck"><span class="ov-main"><span class="ov-title" data-i18n="overviewStuck"></span><span class="ov-sub" data-i18n="overviewStuckSub"></span></span></button>
+      </div>
+      <button type="button" class="inbox-btn" id="openNeedsToggleBtn" hidden></button>
+      <div class="open-needs-panel" id="openNeedsPanel" hidden></div>
+    </div>
+    <button type="button" class="inbox-btn" id="reflectBtn" hidden data-i18n="reflectBtn" data-i18n-title="reflectBtnTitle" data-level="more"></button>
+    <button type="button" class="inbox-btn" id="diffBtn" hidden data-i18n="diffBtn" data-i18n-title="diffBtnTitle" data-level="more"></button>
+    <button type="button" class="inbox-btn" id="openProposalsBtn" hidden><span data-i18n="openProposalsBtn"></span><span id="proposalBadge" class="badge" hidden></span></button>
+    <button type="button" class="spend-btn" id="boardSpend"></button>
+    <div class="spend-popover" id="spendPopover" hidden></div>
+    <label class="ui-level-wrap"><span class="sr-only" data-i18n="uiLevelLabel"></span><select id="uiLevelSelect" class="ui-level-select" data-i18n-title="uiLevelTitle">
+      <option value="simple" data-i18n="uiLevelSimple"></option>
+      <option value="more" data-i18n="uiLevelMore"></option>
+      <option value="advanced" data-i18n="uiLevelAdvanced"></option>
+    </select></label>
+    <button type="button" class="inbox-btn" id="stuckBtn" data-i18n="stuckBtn" data-i18n-title="stuckBtnTitle"></button>
+    <button type="button" class="help-btn" id="openHelpBtn" data-i18n-title="helpBtnTitle" data-i18n-aria-label="helpBtnTitle">?</button>
+    <div class="project-menu-wrap">
+      <button type="button" class="project-menu-btn" id="settingsBtn" aria-expanded="false" data-i18n-title="settingsBtnTitle" data-i18n-aria-label="settingsBtnTitle">⚙</button>
+    </div>
+  </div>
+
+  <div class="panel" id="proposalsPanel" hidden>
+    <h2 data-i18n="proposalsTitle"></h2>
+    <p class="help-more"><a href="#" class="help-link" data-help="needs" data-i18n="helpReadMore"></a></p>
+    <p class="note" data-i18n="proposalsDesc"></p>
+    <div id="proposalsList"></div>
+    <div class="row">
+      <button type="button" class="btn" id="closeProposalsBtn" data-i18n="close"></button>
+    </div>
+  </div>
+
+  <p class="run-status" id="runStatus" data-i18n="runStatus"></p>
+  <div class="run-progress" id="runProgress" hidden></div>
+  <button type="button" class="turn-line" id="turnLine"></button>
+
+  <div class="panel" id="turnPanel" hidden>
+    <h2 data-i18n="turnPanelTitle"></h2>
+    <p class="help-more"><a href="#" class="help-link" data-help="turn" data-i18n="helpReadMore"></a></p>
+    <p class="note" id="turnDetail"></p>
+    <div class="turn-give-row">
+      <select id="turnSeatSelect"></select>
+      <input type="text" id="turnReasonInput" data-i18n-placeholder="turnReasonPlaceholder" style="flex:2;min-width:160px;">
+      <button type="button" class="btn btn-primary" id="giveTurnBtn" data-i18n="giveTurnBtn"></button>
+    </div>
+    <div class="row">
+      <button type="button" class="btn" id="clearTurnBtn" data-i18n="clearTurnBtn"></button>
+      <button type="button" class="btn" id="closeTurnBtn" data-i18n="close"></button>
+    </div>
+  </div>
+
+  <div class="panel" id="pricePanel" hidden>
+    <h2 data-i18n="priceTitle"></h2>
+    <p class="help-more"><a href="#" class="help-link" data-help="prices" data-i18n="helpReadMore"></a></p>
+    <p class="note" data-i18n="priceDesc"></p>
+    <div id="priceList"></div>
+    <div class="price-add-row">
+      <input type="text" id="priceModelInput" data-i18n-placeholder="priceModelPlaceholder">
+      <input type="text" id="priceInNewInput" inputmode="decimal" data-i18n-placeholder="priceInputPlaceholder">
+      <input type="text" id="priceOutNewInput" inputmode="decimal" data-i18n-placeholder="priceOutputPlaceholder">
+      <button type="button" class="btn" id="addPriceBtn" data-i18n="addPriceBtn"></button>
+    </div>
+    <div class="row">
+      <button type="button" class="btn" id="autoPriceBtn" data-i18n="autoPriceBtn"></button>
+      <button type="button" class="btn" id="recomputeBtn" data-i18n="recomputeBtn"></button>
+      <button type="button" class="btn" id="closePricesBtn" data-i18n="close"></button>
+    </div>
+    <p class="note" id="priceStatus"></p>
+  </div>
+
+  <div class="panel" id="addSeatPanel" hidden>
+    <h2 data-i18n="addSeatPanelTitle"></h2>
+    <p class="help-more"><a href="#" class="help-link" data-help="roles" data-i18n="helpReadMore"></a></p>
+    <p class="note" id="addSeatDesc" data-i18n="addSeatPanelDesc"></p>
+    <div id="roleGroups"></div>
+    <div class="field" id="addSeatOutField" hidden>
+      <label class="check-row"><input type="checkbox" id="addSeatOutCheck"> <span data-i18n="addSeatOutLabel"></span></label>
+      <p class="note" data-i18n="addSeatOutHint"></p>
+    </div>
+    <div class="row">
+      <button type="button" class="btn" id="addCustomRoleBtn" data-i18n="addCustomRoleBtn"></button>
+      <button type="button" class="btn" id="closeAddSeatPanelBtn" data-i18n="close"></button>
+    </div>
+  </div>
+
+  <div class="panel" id="resultPanel" hidden>
+    <h2 data-i18n="resultTitle"></h2>
+    <p class="note" id="resultTask"></p>
+    <h3 class="ho-h" data-i18n="resultConclusion"></h3>
+    <p class="note" id="resultFrom"></p>
+    <div class="result-text" id="resultText"></div>
+    <div id="resultDecisionsBox" hidden>
+      <h3 class="ho-h" data-i18n="resultDecisions"></h3>
+      <ul class="result-list" id="resultDecisions"></ul>
+    </div>
+    <div id="resultOpenBox" hidden>
+      <h3 class="ho-h" data-i18n="resultOpen"></h3>
+      <ul class="result-list" id="resultOpenList"></ul>
+    </div>
+    <p class="note" data-i18n="resultFootnote"></p>
+    <div class="row">
+      <button type="button" class="btn btn-primary" id="resultCopyBtn" data-i18n="resultCopyBtn"></button>
+      <button type="button" class="btn" id="resultSaveBtn" data-i18n="resultSaveBtn"></button>
+      <button type="button" class="btn" id="resultReuseBtn" data-i18n="resultReuseBtn"></button>
+      <button type="button" class="btn" id="resultCloseBtn" data-i18n="close"></button>
+    </div>
+    <p class="note" id="resultStatus" role="status" aria-live="polite"></p>
+    <div class="result-reuse" id="resultReuse" hidden>
+      <h3 class="ho-h" data-i18n="resultReuseTitle"></h3>
+      <p class="note" data-i18n="resultReuseCarries"></p>
+      <p class="note" data-i18n="resultReuseDropped"></p>
+      <div class="row">
+        <button type="button" class="btn btn-primary" id="resultReuseGoBtn" data-i18n="resultReuseGoBtn"></button>
+        <button type="button" class="btn" id="resultReuseCancelBtn" data-i18n="cancel"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="apiNeededPanel" hidden>
+    <h2 data-i18n="apiNeededTitle"></h2>
+    <p class="note" id="apiNeededText"></p>
+    <ul id="apiNeededList"></ul>
+    <p class="note" data-i18n="apiNeededHint"></p>
+    <div class="key-explain" data-key-explain></div>
+    <div class="row">
+      <button type="button" class="btn btn-primary" id="apiNeededSetupBtn" data-i18n="apiNeededSetupBtn"></button>
+      <button type="button" class="btn" id="apiNeededCloseBtn" data-i18n="cancel"></button>
+    </div>
+  </div>
+
+  <div class="panel" id="startConfirmPanel" hidden>
+    <h2 data-i18n="startConfirmTitle"></h2>
+    <p class="help-more"><a href="#" class="help-link" data-help="run" data-i18n="helpReadMore"></a></p>
+    <p class="note" id="startConfirmTaskNote"></p>
+    <p class="note" data-i18n="startConfirmSeatsHeading"></p>
+    <div id="startConfirmSeatList"></div>
+    <p class="note" id="startConfirmSpendNote"></p>
+    <p class="note" id="startConfirmEstimateNote"></p>
+    <p class="note" id="startConfirmSendsNote"></p>
+    <p class="note" id="startConfirmInNote" hidden></p>
+    <p class="note" id="startConfirmImagesNote" hidden></p>
+    <p class="note" id="startConfirmLimitNote" hidden></p>
+    <p class="note" id="startConfirmRoundsNote" hidden></p>
+    <p class="note" id="startConfirmFreshNote"></p>
+    <div class="field" id="ownTakeField" hidden>
+      <label for="ownTakeInput" data-i18n="ownTakeLabel"></label>
+      <textarea id="ownTakeInput" rows="3" data-i18n-placeholder="ownTakePlaceholder"></textarea>
+      <p class="note" data-i18n="ownTakeHint"></p>
+    </div>
+    <div class="row">
+      <button type="button" class="btn btn-primary" id="confirmStartBtn" data-i18n="confirmStartBtn"></button>
+      <button type="button" class="btn" id="adjustStartBtn" data-i18n="adjustStartBtn"></button>
+    </div>
+  </div>
+
+  <div class="panel check-panel envelope-panel" id="envelopePanel" role="alertdialog" aria-labelledby="envelopeTitle" hidden>
+    <h2 id="envelopeTitle"></h2>
+    <p class="help-more"><a href="#" class="help-link" data-help="participate" data-i18n="helpReadMore"></a></p>
+    <p class="note" id="envelopeNote"></p>
+    <textarea id="envelopeText" rows="14" spellcheck="false"></textarea>
+    <p class="note" id="envelopeCount"></p>
+    <div class="row">
+      <button type="button" class="btn btn-primary" id="envelopeSendBtn" data-i18n="envelopeSendBtn"></button>
+      <button type="button" class="btn" id="envelopeResetBtn" data-i18n="envelopeResetBtn"></button>
+      <button type="button" class="btn" id="envelopeStopBtn"></button>
+    </div>
+  </div>
+
+  <div class="panel" id="modelsPanel" hidden>
+    <h2 data-i18n="modelsTitle"></h2>
+    <p class="help-more"><a href="#" class="help-link" data-help="settings" data-i18n="helpReadMore"></a></p>
+    <p class="note" data-i18n="modelsNote"></p>
+    <div id="modelsList"></div>
+    <div class="row"><button type="button" class="btn" id="modelsAddBtn" data-i18n="modelsAddBtn"></button></div>
+    <div class="field" id="modelForm" hidden>
+      <label for="modelFormName" data-i18n="modelsFormName"></label>
+      <input type="text" id="modelFormName" maxlength="60" data-i18n-placeholder="modelsFormNamePlaceholder">
+      <label for="modelFormProvider" data-i18n="providerLabel"></label>
+      <select id="modelFormProvider"></select>
+      <div id="modelFormBaseField" hidden>
+        <label for="modelFormBaseUrl" data-i18n="baseUrlLabel"></label>
+        <input type="text" id="modelFormBaseUrl" data-i18n-placeholder="baseUrlPlaceholder">
+      </div>
+      <label for="modelFormModel" data-i18n="modelsFormModel"></label>
+      <input type="text" id="modelFormModel" data-i18n-placeholder="modelPlaceholder" autocomplete="off" spellcheck="false">
+      <label for="modelFormKey" data-i18n="apiKeyLabel"></label>
+      <input type="password" id="modelFormKey" data-i18n-placeholder="apiKeyPlaceholder">
+      <p class="note" id="modelFormKeyNote"></p>
+      <p class="note" id="modelFormStatus"></p>
+      <div class="row">
+        <button type="button" class="btn btn-primary" id="modelFormSaveBtn" data-i18n="modelsSaveBtn"></button>
+        <button type="button" class="btn" id="modelFormTestBtn" data-i18n="modelsTestBtn"></button>
+        <button type="button" class="btn" id="modelFormCancelBtn" data-i18n="modelsCancelBtn"></button>
+      </div>
+    </div>
+    <div class="row"><button type="button" class="btn" id="closeModelsBtn" data-i18n="close"></button></div>
+  </div>
+
+  <div class="panel" id="diffPanel" hidden>
+    <h2 data-i18n="diffTitle"></h2>
+    <p class="help-more"><a href="#" class="help-link" data-help="participate" data-i18n="helpReadMore"></a></p>
+    <p class="note" data-i18n="diffNote"></p>
+    <p class="note" id="diffNeed" data-i18n="diffNeed" hidden></p>
+    <div id="diffBody">
+      <div class="compare-cols">
+        <div>
+          <label for="diffASelect" data-i18n="diffALabel"></label>
+          <select id="diffASelect"></select>
+          <div class="compare-text" id="diffAText"></div>
+        </div>
+        <div>
+          <label for="diffBSelect" data-i18n="diffBLabel"></label>
+          <select id="diffBSelect"></select>
+          <div class="compare-text" id="diffBText"></div>
+        </div>
+      </div>
+      <p class="note" id="diffSame" data-i18n="diffSame" hidden></p>
+      <div class="field">
+        <label for="diffJudgeSelect" data-i18n="diffJudgeLabel"></label>
+        <select id="diffJudgeSelect"></select>
+        <p class="note" id="diffCost"></p>
+        <button type="button" class="btn btn-primary" id="diffRunBtn" data-i18n="diffRunBtn"></button>
+      </div>
+      <p class="note" id="diffStatus"></p>
+      <div id="diffResult"></div>
+    </div>
+    <div class="row"><button type="button" class="btn" id="closeDiffBtn" data-i18n="close"></button></div>
+  </div>
+
+  <div class="panel" id="reflectPanel" hidden>
+    <h2 data-i18n="reflectTitle"></h2>
+    <p class="help-more"><a href="#" class="help-link" data-help="participate" data-i18n="helpReadMore"></a></p>
+    <p class="note" data-i18n="reflectNote"></p>
+    <div class="field">
+      <span class="eyebrow" data-i18n="reflectWhenLabel"></span>
+      <label class="check-row"><input type="radio" name="reflectPreset" value="1w"> <span data-i18n="reflectPreset1w"></span></label>
+      <label class="check-row"><input type="radio" name="reflectPreset" value="2w" checked> <span data-i18n="reflectPreset2w"></span></label>
+      <label class="check-row"><input type="radio" name="reflectPreset" value="1m"> <span data-i18n="reflectPreset1m"></span></label>
+      <p class="note" id="reflectWhen"></p>
+    </div>
+    <div class="field">
+      <label class="check-row"><input type="checkbox" id="reflectTopicCheck"> <span data-i18n="reflectTopicLabel"></span></label>
+      <input type="text" id="reflectTopicInput" disabled>
+      <p class="note" data-i18n="reflectTopicHint"></p>
+    </div>
+    <div class="field">
+      <label class="check-row"><input type="checkbox" id="reflectOpenCheck"> <span data-i18n="reflectOpenLabel"></span></label>
+      <label class="check-row"><input type="checkbox" id="reflectDecidedCheck"> <span data-i18n="reflectDecidedLabel"></span></label>
+      <textarea id="reflectExtra" rows="5" hidden data-i18n-aria-label="reflectExtraAria"></textarea>
+      <p class="note" data-i18n="reflectExtraHint"></p>
+    </div>
+    <div class="field">
+      <label for="reflectQuestions" data-i18n="reflectQuestionsLabel"></label>
+      <textarea id="reflectQuestions" rows="6"></textarea>
+      <p class="note" data-i18n="reflectQuestionsHint"></p>
+    </div>
+    <p class="note" id="reflectStatus"></p>
+    <div class="row">
+      <button type="button" class="btn btn-primary" id="reflectSaveBtn" data-i18n="reflectSaveBtn"></button>
+      <button type="button" class="btn" id="closeReflectBtn" data-i18n="close"></button>
+    </div>
+  </div>
+
+  <div class="panel" id="comparePanel" hidden>
+    <h2 data-i18n="compareTitle"></h2>
+    <p class="help-more"><a href="#" class="help-link" data-help="participate" data-i18n="helpReadMore"></a></p>
+    <p class="note" data-i18n="compareIntro"></p>
+    <div class="compare-cols">
+      <div>
+        <h3 class="ho-h" data-i18n="compareYours"></h3>
+        <div class="compare-text" id="compareYours"></div>
+      </div>
+      <div>
+        <h3 class="ho-h" data-i18n="compareTable"></h3>
+        <p class="note" id="compareFrom"></p>
+        <div class="compare-text" id="compareResult"></div>
+      </div>
+    </div>
+    <p data-i18n="compareAsk"></p>
+    <div class="row" id="compareChoices">
+      <button type="button" class="btn" id="compareKeepBtn" data-i18n="compareKeepBtn"></button>
+      <button type="button" class="btn" id="compareAdjustBtn" data-i18n="compareAdjustBtn"></button>
+      <button type="button" class="btn" id="compareSwitchBtn" data-i18n="compareSwitchBtn"></button>
+    </div>
+    <div id="compareStep2" hidden>
+      <p class="note" id="compareChosen"></p>
+      <div class="field" id="compareAdjustField" hidden>
+        <label for="compareAdjusted" data-i18n="compareAdjustedLabel"></label>
+        <textarea id="compareAdjusted" rows="5"></textarea>
+        <p class="note" data-i18n="compareAdjustedHint"></p>
+      </div>
+      <div class="field">
+        <label for="compareNote" data-i18n="compareNoteLabel"></label>
+        <textarea id="compareNote" rows="2"></textarea>
+        <p class="note" data-i18n="compareNoteHint"></p>
+      </div>
+      <div class="row">
+        <button type="button" class="btn btn-primary" id="compareSaveBtn" data-i18n="compareSaveBtn"></button>
+        <button type="button" class="btn" id="compareBackBtn" data-i18n="compareBackBtn"></button>
+      </div>
+    </div>
+    <div class="row"><button type="button" class="btn" id="closeCompareBtn" data-i18n="close"></button></div>
+  </div>
+
+  <div class="data-hub" id="dataHub" hidden>
+    <div class="data-tabs" id="dataTabs" role="tablist" data-i18n-aria-label="dataHubLabel">
+      <button type="button" class="data-tab" role="tab" id="dataTabMemory" data-panel="memoryPanel" data-open="openMemoryBtn" data-level="more" data-i18n="memoryBtn"></button>
+      <button type="button" class="data-tab" role="tab" id="dataTabShield" data-panel="shieldPanel" data-open="openShieldBtn" data-i18n="shieldBtn"></button>
+      <button type="button" class="data-tab" role="tab" id="dataTabMetrics" data-panel="metricsPanel" data-open="openMetricsBtn" data-level="advanced" data-i18n="metricsBtn"></button>
+      <button type="button" class="data-tab" role="tab" id="dataTabTable" data-panel="tablePanel" data-open="openTableBtn" data-level="advanced" data-i18n="tableBtn"></button>
+    </div>
+    <div class="panel" id="memoryPanel" hidden>
+      <h2 data-i18n="memoryTitle"></h2>
+      <p class="help-more"><a href="#" class="help-link" data-help="memory" data-i18n="helpReadMore"></a></p>
+      <p class="note" data-i18n="memoryDesc"></p>
+      <p class="metrics-line" id="memoryTokens"></p>
+      <div id="memoryList"></div>
+      <div class="field">
+        <label for="memoryNewInput" data-i18n="memoryNewLabel"></label>
+        <textarea id="memoryNewInput" rows="2" maxlength="300" data-i18n-placeholder="memoryNewPlaceholder"></textarea>
+      </div>
+      <div class="row">
+        <button type="button" class="btn btn-primary" id="memoryAddBtn" data-i18n="memoryAddBtn"></button>
+        <button type="button" class="btn" id="closeMemoryBtn" data-i18n="close"></button>
+      </div>
+    </div>
+
+    <div class="panel" id="shieldPanel" hidden>
+      <h2 data-i18n="shieldTitle"></h2>
+      <p class="help-more"><a href="#" class="help-link" data-help="shield" data-i18n="helpReadMore"></a></p>
+      <p class="note" data-i18n="shieldDesc"></p>
+      <label class="shield-row"><input type="checkbox" id="shieldEnabledCheckbox"> <span data-i18n="shieldEnabledLabel"></span></label>
+      <label class="shield-row"><input type="checkbox" id="shieldShowRawCheckbox"> <span data-i18n="shieldShowRawLabel"></span></label>
+      <h3 class="eyebrow" data-i18n="shieldPreviewHeading"></h3>
+      <div class="shield-preview">
+        <div><span class="shield-hint" data-i18n="shieldPreviewOrig"></span><pre id="shieldPreviewOriginal"></pre></div>
+        <div><span class="shield-hint" data-i18n="shieldPreviewProt"></span><pre id="shieldPreviewProtected"></pre></div>
+      </div>
+      <p class="note" id="shieldPreviewNote"></p>
+      <h3 class="eyebrow" data-i18n="shieldTermsHeading"></h3>
+      <p class="note" data-i18n="shieldTermsDesc"></p>
+      <div id="shieldTermList"></div>
+      <div class="memory-item">
+        <input type="text" id="shieldTermInput" data-i18n-placeholder="shieldTermPlaceholder" autocomplete="off" spellcheck="false">
+        <select id="shieldTermKind">
+          <option value="PERSON" data-i18n="shieldKindPERSON"></option>
+          <option value="ORG" data-i18n="shieldKindORG"></option>
+          <option value="STED" data-i18n="shieldKindSTED"></option>
+          <option value="ANDET" data-i18n="shieldKindANDET"></option>
+        </select>
+        <button type="button" class="btn" id="shieldTermAddBtn" data-i18n="shieldTermAddBtn"></button>
+      </div>
+      <h3 class="eyebrow" data-i18n="egressHeading"></h3>
+      <p class="note" data-i18n="egressDesc"></p>
+      <p class="egress-summary" id="egressSummary"></p>
+      <div id="egressList"></div>
+      <h3 class="eyebrow" data-i18n="dataflowHeading"></h3>
+      <ul class="dataflow-list" id="dataflowList"></ul>
+      <p class="note" id="shieldStorageNote"></p>
+      <p class="note" id="shieldMappingLine"></p>
+      <p class="note" data-i18n="shieldLimits"></p>
+      <div class="row">
+        <button type="button" class="btn" id="shieldClearMappingBtn" data-i18n="shieldClearMappingBtn"></button>
+        <button type="button" class="btn" id="closeShieldBtn" data-i18n="close"></button>
+      </div>
+    </div>
+
+    <div class="panel" id="metricsPanel" hidden>
+      <h2 data-i18n="metricsTitle"></h2>
+      <p class="help-more"><a href="#" class="help-link" data-help="metrics" data-i18n="helpReadMore"></a></p>
+      <p class="note" data-i18n="metricsNote"></p>
+      <div id="metricsBody"></div>
+      <p class="note" id="metricsStatus"></p>
+      <div class="row">
+        <button type="button" class="btn" id="exportMetricsBtn" data-i18n="metricsExportBtn"></button>
+        <button type="button" class="btn" id="closeMetricsBtn" data-i18n="close"></button>
+      </div>
+    </div>
+
+    <div class="panel" id="tablePanel" hidden>
+      <h2 data-i18n="tableTitle"></h2>
+      <p class="help-more"><a href="#" class="help-link" data-help="table" data-i18n="helpReadMore"></a></p>
+      <p class="note" data-i18n="tableDesc"></p>
+      <div class="row">
+        <button type="button" class="btn btn-primary" id="tableExportBtn" data-i18n="tableExportBtn"></button>
+        <button type="button" class="btn" id="tableDocBtn" data-i18n="tableDocBtn"></button>
+        <button type="button" class="btn" id="tableImportBtn" data-i18n="tableImportBtn"></button>
+      </div>
+      <p class="note" id="tableStatus"></p>
+      <h3 class="eyebrow" data-i18n="tableTemplatesHeading"></h3>
+      <p class="note" data-i18n="tableTemplatesNote"></p>
+      <div class="row" id="tableTemplates"></div>
+      <div id="tableImportPreview" hidden></div>
+      <div class="row">
+        <button type="button" class="btn" id="closeTableBtn" data-i18n="close"></button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="panel" id="voicePanel" hidden>
+    <h2 data-i18n="voiceTitle"></h2>
+    <p class="help-more"><a href="#" class="help-link" data-help="voice" data-i18n="helpReadMore"></a></p>
+    <p class="note" data-i18n="voiceDesc"></p>
+    <div class="field">
+      <label for="elevenLabsKeyInput" data-i18n="voiceKeyLabel"></label>
+      <a href="#" class="field-hint-link" id="elevenLabsKeyLink" data-url="https://elevenlabs.io/app/settings/api-keys" data-i18n="voiceKeyGetLink"></a>
+      <input type="password" id="elevenLabsKeyInput" autocomplete="off" spellcheck="false" data-i18n-placeholder="voiceKeyPlaceholder">
+      <p class="note" id="elevenLabsKeyNote"></p>
+    </div>
+    <div class="row">
+      <button type="button" class="btn btn-primary" id="saveVoiceKeyBtn" data-i18n="save"></button>
+      <button type="button" class="btn" id="fetchVoicesBtn" data-i18n="voiceFetchBtn"></button>
+    </div>
+    <p class="note" id="voiceFetchStatus"></p>
+    <div class="row">
+      <button type="button" class="btn" id="testVoiceKeyBtn" data-i18n="voiceTestBtn"></button>
+    </div>
+    <div class="voice-test" id="voiceTestResult" aria-live="polite"></div>
+    <div class="field">
+      <label for="thirdEyeVoiceSelect" data-i18n="thirdEyeVoiceLabel"></label>
+      <select id="thirdEyeVoiceSelect"><option value="" data-i18n="thirdEyeVoiceNone"></option></select>
+      <p class="note" data-i18n="thirdEyeVoiceHint"></p>
+    </div>
+    <div id="voiceList"></div>
+    <div class="row">
+      <button type="button" class="btn" id="closeVoiceBtn" data-i18n="close"></button>
+    </div>
+  </div>
+
+  <div class="speak-indicator" id="speakIndicator" role="status" aria-live="polite" hidden>
+    <span class="speak-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+    <span class="speak-text"><span class="speak-who" id="speakWho"></span><span class="speak-caption" id="speakCaption"></span></span>
+    <button type="button" class="btn speak-stop" id="speakStopBtn" data-i18n="speakStop"></button>
+  </div>
+
+  <div class="panel" id="handoffPanel" hidden>
+    <h2 id="handoffTitle"></h2>
+    <p class="help-more"><a href="#" class="help-link" data-help="table" data-i18n="helpReadMore"></a></p>
+    <div id="handoffBody"></div>
+    <div class="row"><button type="button" class="btn" id="closeHandoffBtn" data-i18n="close"></button></div>
+  </div>
+
+  <div class="panel" id="talkPanel" hidden>
+    <h2 data-i18n="talkTitle"></h2>
+    <p class="help-more"><a href="#" class="help-link" data-help="third-eye" data-i18n="helpReadMore"></a></p>
+    <p class="note" data-i18n="talkDesc"></p>
+    <div class="te-legend" role="list" aria-label="">
+      <span class="te-chip te-chip-obs" role="listitem" data-i18n="teLegendObs" data-i18n-title="teLegendObsTip"></span>
+      <span class="te-chip te-chip-assess" role="listitem" data-i18n="teLegendAssess" data-i18n-title="teLegendAssessTip"></span>
+      <span class="te-chip te-chip-act" role="listitem" data-i18n="teLegendAction" data-i18n-title="teLegendActionTip"></span>
+    </div>
+    <div class="te-obs" id="talkObservations"></div>
+    <p class="thirdeye-with" id="talkWith"></p>
+    <div class="talk-thread" id="talkThread" aria-live="polite"></div>
+    <p class="note" id="talkError" hidden></p>
+    <div class="row">
+      <button type="button" class="btn btn-primary" id="talkReviewBtn" data-i18n="talkReviewBtn"></button>
+    </div>
+    <div class="talk-chips" id="talkChips"></div>
+    <textarea id="talkInput" rows="2" data-i18n-placeholder="talkInputPlaceholder" data-i18n-aria-label="talkInputLabel"></textarea>
+    <div class="row talk-actions">
+      <button type="button" class="btn btn-primary" id="talkSendBtn" data-i18n="talkSendBtn"></button>
+      <button type="button" class="btn mic-btn" id="talkMicBtn" data-i18n-title="micBtnTitle" data-i18n-aria-label="micBtnTitle">🎤</button>
+      <span class="talk-spacer"></span>
+      <button type="button" class="btn" id="talkClearBtn" data-i18n="talkClearBtn"></button>
+      <button type="button" class="btn" id="closeTalkBtn" data-i18n="close"></button>
+    </div>
+    <p class="note" id="talkSoundHint" hidden></p>
+  </div>
+
+  <div class="panel check-panel" id="shieldReviewPanel" role="alertdialog" aria-labelledby="shieldReviewTitle" hidden>
+    <h2 id="shieldReviewTitle" data-i18n="shieldReviewTitle"></h2>
+    <p class="check-reason" data-i18n="shieldReviewDesc"></p>
+    <div id="shieldReviewList"></div>
+    <div class="row">
+      <button type="button" class="btn btn-primary" id="shieldReviewSendBtn" data-i18n="shieldReviewSendBtn"></button>
+      <button type="button" class="btn btn-danger" id="shieldReviewCancelBtn" data-i18n="shieldReviewCancelBtn"></button>
+    </div>
+  </div>
+
+  <div class="panel check-panel" id="checkPanel" role="alertdialog" aria-labelledby="checkTitle" hidden>
+    <h2 id="checkTitle"></h2>
+    <p class="check-reason" id="checkReason"></p>
+    <p class="note" id="checkLimitNote"></p>
+    <p class="help-more"><a href="#" class="help-link" data-help="verify" data-i18n="helpReadMore"></a></p>
+    <div class="row">
+      <button type="button" class="btn btn-primary" id="checkReworkBtn"></button>
+      <button type="button" class="btn" id="checkContinueBtn" data-i18n="checkContinueBtn"></button>
+      <button type="button" class="btn btn-danger" id="checkStopBtn" data-i18n="checkStopBtn"></button>
+    </div>
+  </div>
+
+  <div class="panel check-panel pause-panel" id="pausePanel" role="alertdialog" aria-labelledby="pauseTitle" hidden>
+    <h2 id="pauseTitle"></h2>
+    <p class="help-more"><a href="#" class="help-link" data-help="participate" data-i18n="helpReadMore"></a></p>
+    <p class="note" id="pauseReason"></p>
+    <div id="pauseQuestions"></div>
+    <p class="note" id="pauseMore" hidden></p>
+    <div class="pause-answer" id="pauseAnswer" hidden>
+      <p class="eyebrow" id="pauseAnswerWho"></p>
+      <div class="pause-answer-text" id="pauseAnswerText" tabindex="0"></div>
+    </div>
+    <div class="row">
+      <button type="button" class="btn btn-primary" id="pauseContinueBtn" data-i18n="pauseContinueBtn"></button>
+      <button type="button" class="btn" id="pauseSkipBtn" data-i18n="pauseSkipBtn"></button>
+      <button type="button" class="btn" id="pauseSeeBtn" aria-expanded="false" aria-controls="pauseAnswer" data-i18n="pauseSeeBtn"></button>
+      <button type="button" class="btn btn-danger" id="pauseStopBtn" data-i18n="pauseStopBtn"></button>
+    </div>
+  </div>
+
+  <div class="panel route-panel" id="routePanel" role="alertdialog" aria-labelledby="routeTitle" hidden>
+    <h2 id="routeTitle"></h2>
+    <p class="route-why" id="routeWhy"></p>
+    <p class="note route-pause" id="routePause" hidden></p>
+    <p class="note" id="routeEstimate"></p>
+    <div class="row">
+      <button type="button" class="btn btn-primary" id="routeApproveBtn"></button>
+      <select id="routeSeatSelect" aria-label=""></select>
+      <button type="button" class="btn" id="routeChooseBtn" data-i18n="routeChooseBtn"></button>
+      <button type="button" class="btn" id="routeEndBtn" data-i18n="routeEndBtn"></button>
+      <button type="button" class="btn btn-danger" id="routeStopBtn" data-i18n="routeStopBtn"></button>
+    </div>
+    <div class="route-offer" id="routeOffer" hidden>
+      <p id="routeOfferText"></p>
+      <div class="row">
+        <button type="button" class="btn" id="routeOfferOnBtn" data-i18n="routeOfferOn"></button>
+        <button type="button" class="btn" id="routeOfferNoBtn" data-i18n="routeOfferNo"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="quickStartPanel" hidden>
+    <h2 data-i18n="quickStartTitle"></h2>
+    <p class="note" data-i18n="quickStartIntro"></p>
+    <div class="field">
+      <label for="quickStartKey" data-i18n="quickStartKeyLabel"></label>
+      <input type="password" id="quickStartKey" autocomplete="off" spellcheck="false" data-i18n-placeholder="quickStartKeyPlaceholder">
+      <p class="note"><a href="#" id="quickStartKeyLink" data-i18n="quickStartGetKey"></a></p>
+    </div>
+    <div class="key-explain" data-key-explain data-provider="OpenRouter"></div>
+    <div class="row">
+      <button type="button" class="btn btn-primary" id="quickStartFetchBtn" data-i18n="quickStartFetchBtn"></button>
+      <button type="button" class="btn" id="quickStartCloseBtn" data-i18n="close"></button>
+    </div>
+    <p class="note" id="quickStartStatus"></p>
+    <div id="quickStartResult" hidden>
+      <div id="quickStartRows"></div>
+      <p class="note" data-i18n="quickStartPrivacy"></p>
+      <p class="note" data-i18n="quickStartEvidence"></p>
+      <div class="row">
+        <button type="button" class="btn btn-primary" id="quickStartCreateBtn" data-i18n="quickStartCreateBtn"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel" id="stuckPanel" hidden>
+    <h2 data-i18n="stuckTitle"></h2>
+    <p class="note" data-i18n="stuckIntro"></p>
+    <div class="field">
+      <label for="stuckNote" data-i18n="stuckNoteLabel"></label>
+      <textarea id="stuckNote" rows="2" maxlength="600" data-i18n-placeholder="stuckNotePlaceholder"></textarea>
+    </div>
+    <div class="field">
+      <label for="stuckReport" data-i18n="stuckReportLabel"></label>
+      <textarea id="stuckReport" rows="12" readonly spellcheck="false"></textarea>
+    </div>
+    <div class="row">
+      <button type="button" class="btn btn-primary" id="stuckCopyBtn" data-i18n="stuckCopyBtn"></button>
+      <button type="button" class="btn" id="stuckSaveBtn" data-i18n="stuckSaveBtn"></button>
+      <button type="button" class="btn" id="stuckCloseBtn" data-i18n="close"></button>
+    </div>
+    <p class="note" id="stuckStatus" role="status"></p>
+  </div>
+
+  <div class="panel" id="welcomePanel" hidden>
+    <h2 data-i18n="welcomeTitle"></h2>
+    <p class="note" data-i18n="welcomeIntro"></p>
+    <div class="welcome-ask" id="welcomeAskBox">
+      <label for="welcomeAskTask" data-i18n="welcomeAskLabel"></label>
+      <textarea id="welcomeAskTask" rows="3" maxlength="1500" data-i18n-placeholder="welcomeTaskPlaceholder"></textarea>
+      <div class="row">
+        <button type="button" class="btn btn-primary" id="welcomeGuideBtn" data-i18n="welcomeGuideBtn"></button>
+      </div>
+      <p class="eyebrow" data-i18n="welcomeExamples"></p>
+    </div>
+    <div class="welcome-demo" id="welcomeDemoBox">
+      <div>
+        <strong data-i18n="welcomeDemoTitle"></strong>
+        <p class="note" data-i18n="welcomeDemoText"></p>
+      </div>
+      <button type="button" class="btn" id="welcomeDemoBtn" data-i18n="welcomeDemoBtn"></button>
+    </div>
+    <div id="welcomeCards" class="welcome-cards"></div>
+    <div id="welcomeGuide" hidden>
+      <h3 class="eyebrow" data-i18n="guideTitle"></h3>
+      <p class="note" data-i18n="guideIntro"></p>
+      <div class="field">
+        <label for="guideTask" data-i18n="guideTaskLabel"></label>
+        <textarea id="guideTask" rows="4" maxlength="1500" data-i18n-placeholder="guideTaskPlaceholder"></textarea>
+      </div>
+      <div id="guideQuestions"></div>
+      <div class="row">
+        <button type="button" class="btn btn-primary" id="guideSuggestBtn" data-i18n="guideSuggestBtn"></button>
+        <button type="button" class="btn" id="guideBackBtn" data-i18n="welcomeBackBtn"></button>
+      </div>
+      <p class="note" id="guideStatus"></p>
+    </div>
+    <div id="welcomeDetail" hidden>
+      <h3 class="eyebrow" id="welcomeDetailTitle"></h3>
+      <p class="note" data-i18n="welcomeTaskLabel"></p>
+      <pre class="welcome-task" id="welcomeTask"></pre>
+      <div id="guideProposal" hidden>
+        <h3 class="eyebrow" data-i18n="guideProposalTitle"></h3>
+        <div class="guide-plan" id="guidePlan">
+          <p id="guidePlanWhat"></p>
+          <p class="note" id="guidePlanCalls"></p>
+          <p class="note" data-i18n="guidePlanGet"></p>
+        </div>
+        <div class="guide-row"><label for="guideTemplateSelect" data-i18n="guideRowTemplate"></label><select id="guideTemplateSelect" class="locale-select"></select><p class="note" id="guideWhyTemplate"></p></div>
+        <div class="guide-row"><label for="guidePresetSelect" data-i18n="guideRowPreset"></label><select id="guidePresetSelect" class="locale-select"></select><p class="note" id="guideWhyPreset"></p></div>
+        <div class="guide-row"><label for="guideLevelSelect" data-i18n="guideRowLevel"></label><select id="guideLevelSelect" class="locale-select"></select><p class="note" id="guideWhyLevel"></p></div>
+        <p class="note" id="guideSource"></p>
+        <div class="row"><button type="button" class="btn" id="guideAskBtn" data-i18n="guideAskBtn"></button></div>
+        <div id="guideAskPreview" class="guide-preview" hidden>
+          <p class="note" id="guideAskText"></p>
+          <p class="note" data-i18n="guideTaskSentLabel"></p>
+          <pre class="welcome-task" id="guideAskTask"></pre>
+          <div class="row">
+            <button type="button" class="btn btn-primary" id="guideAskSendBtn" data-i18n="guideAskSend"></button>
+            <button type="button" class="btn" id="guideAskCancelBtn" data-i18n="guideAskCancel"></button>
+          </div>
+        </div>
+        <p class="note" id="guideAskStatus"></p>
+      </div>
+      <div id="welcomeExampleBlock">
+        <p class="note" data-i18n="welcomeExampleLabel"></p>
+        <div id="welcomeExample"></div>
+      </div>
+      <div class="field" id="welcomeKeyField">
+        <label for="welcomeKey" data-i18n="quickStartKeyLabel"></label>
+        <input type="password" id="welcomeKey" autocomplete="off" spellcheck="false" data-i18n-placeholder="quickStartKeyPlaceholder">
+        <p class="note"><a href="#" id="welcomeKeyLink" data-i18n="quickStartGetKey"></a></p>
+      </div>
+      <div class="key-explain" data-key-explain data-provider="OpenRouter"></div>
+      <p class="note" id="welcomeKeyReused" data-i18n="welcomeKeyReused" hidden></p>
+      <div class="row">
+        <button type="button" class="btn btn-primary" id="welcomeFetchBtn" data-i18n="welcomeFetchBtn"></button>
+        <button type="button" class="btn" id="welcomeBackBtn" data-i18n="welcomeBackBtn"></button>
+      </div>
+      <p class="note" id="welcomeStatus"></p>
+      <div id="welcomeResult" hidden>
+        <div id="welcomeRows"></div>
+        <p class="note" data-i18n="welcomeModelsNote"></p>
+        <p class="note" data-i18n="quickStartPrivacy"></p>
+        <p class="note" data-i18n="welcomeLimitNote"></p>
+        <div class="row">
+          <button type="button" class="btn btn-primary" id="welcomeCreateBtn" data-i18n="quickStartCreateBtn"></button>
+        </div>
+      </div>
+    </div>
+    <div class="row" id="welcomeFooter">
+      <button type="button" class="btn" id="welcomeQuickBtn" data-i18n="quickStartBtn"></button>
+      <button type="button" class="btn" id="welcomeEmptyBtn" data-i18n="welcomeEmptyBtn"></button>
+    </div>
+  </div>
+
+  <div class="panel" id="ioPanel" hidden>
+    <h2 data-i18n="ioPanelTitle"></h2>
+    <p class="help-more"><a href="#" class="help-link" data-help="io" data-i18n="helpReadMore"></a></p>
+    <p class="note" data-i18n="ioPanelDesc"></p>
+    <p class="metrics-line" id="ioReaders"></p>
+    <div id="inboxSection" hidden>
+      <h3 class="eyebrow" data-i18n="inboxHeading"></h3>
+      <p class="note" id="inboxDesc"></p>
+      <div id="inboxList"></div>
+      <p class="note" id="inboxStatus"></p>
+      <div class="row">
+        <button type="button" class="btn btn-primary" id="inboxImportAllBtn" data-i18n="inboxImportAll"></button>
+        <button type="button" class="btn" id="inboxSeenBtn" data-i18n="inboxMarkSeen"></button>
+        <button type="button" class="btn" id="inboxOpenBtn" data-i18n="inboxOpen"></button>
+      </div>
+    </div>
+    <h3 class="eyebrow" data-i18n="ioInHeading"></h3>
+    <div id="ioInList"></div>
+    <h3 class="eyebrow" data-i18n="ioOutHeading"></h3>
+    <div id="ioOutList"></div>
+    <p class="note" id="ioFolder"></p>
+    <p class="note" id="ioStatus"></p>
+    <div class="row">
+      <button type="button" class="btn" id="ioOpenInBtn"><span data-i18n="ioInLabel"></span> · <span data-i18n="ioOpenFolder"></span></button>
+      <button type="button" class="btn" id="ioOpenOutBtn"><span data-i18n="ioOutLabel"></span> · <span data-i18n="ioOpenFolder"></span></button>
+      <button type="button" class="btn" id="closeIoBtn" data-i18n="close"></button>
+    </div>
+  </div>
+
+  <div class="layout-grid">
+    <div class="table-col">
+      <div class="table-box" id="tableBox" data-view="round">
+        <div class="table-top"></div>
+        <div class="plaque" id="plaque"></div>
+      </div>
+      <p class="full-note" id="fullNote" hidden data-i18n="fullNote"></p>
+      <div class="io-band" id="ioBand" data-i18n-title="ioBandTitle">
+        <button type="button" class="io-tile io-in" id="ioInTile"><span class="io-name" data-i18n="ioInLabel"></span><span class="io-count" id="ioInCount"></span><span class="io-note" id="ioInNote"></span><span class="io-drop" data-i18n="ioDropHint"></span></button>
+        <button type="button" class="io-tile io-inbox" id="ioInboxTile" hidden><span class="io-name" data-i18n="inboxLabel"></span><span class="io-count" id="ioInboxCount"></span><span class="io-note" id="ioInboxNote"></span></button>
+        <button type="button" class="io-tile io-out" id="ioOutTile"><span class="io-name" data-i18n="ioOutLabel"></span><span class="io-count" id="ioOutCount"></span><span class="io-note" id="ioOutNote"></span></button>
+      </div>
+    </div>
+
+    <div class="activity-panel">
+      <div class="log-head-row">
+        <p class="eyebrow" id="logHeading" data-i18n="logHeading"></p>
+        <button type="button" class="trash-btn" id="clearBoardBtn" data-i18n-title="clearBoardTitle" data-i18n-aria-label="clearBoardTitle">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 10v6M14 10v6"/></svg>
+          <span class="lbl" data-i18n="clearBoardConfirmShort"></span>
+        </button>
+      </div>
+      <div class="log" id="log">
+        <p class="log-empty" data-i18n="logEmpty"></p>
+      </div>
+      <div class="nextcard" id="nextCard" hidden></div>
+      <div class="log-foot">
+        <button type="button" class="btn log-view-toggle-btn" id="logViewToggleBtn"></button>
+        <span class="thirdeye-controls" data-level="more">
+          <button type="button" class="btn" id="thirdEyeBtn" data-i18n="thirdEyeBtn" data-i18n-title="thirdEyeBtnTitle"></button>
+          <span class="thirdeye-with" data-i18n="thirdEyeWith"></span>
+          <select class="thirdeye-select" id="thirdEyeSeatSelect" data-i18n-title="thirdEyeSelectTitle"></select>
+        </span>
+      </div>
+      <p class="thirdeye-explain" data-i18n="thirdEyeExplainLine" data-level="more"></p> <a href="#" class="help-link" data-help="third-eye" data-i18n="helpReadMore"></a>
+    </div>
+  </div>
+
+  <div class="api-missing-bar" id="apiMissingBar" role="status" hidden>
+    <span id="apiMissingText"></span>
+    <button type="button" class="btn btn-small" id="apiMissingBtn" data-i18n="apiNeededSetupBtn"></button>
+  </div>
+
+  <div class="ask-bar">
+    <p class="note" id="composerHint" hidden data-i18n="composerHint"></p>
+    <div class="ask-to">
+      <label for="speakerPick" class="ask-to-label" data-i18n="askToLabel"></label>
+      <select id="speakerPick" class="recipient-select"></select>
+      <span class="ask-caption" id="recipientCaption" aria-live="polite"></span>
+    </div>
+    <div class="ask-input">
+      <textarea id="msgInput" rows="2" data-i18n-placeholder="msgInputPlaceholder"></textarea>
+      <div class="ask-actions">
+        <button type="button" class="btn btn-primary" id="sendMsgBtn" data-i18n="sendMsgBtn"></button>
+        <button type="button" class="btn btn-danger" id="runStopBtn" hidden data-i18n="runStopBtn"></button>
+      </div>
+    </div>
+    <div class="ask-tools">
+      <button type="button" class="btn tool-btn variant-toggle-btn" id="openResultBtn" data-i18n="resultBtn" hidden></button>
+      <button type="button" class="btn tool-btn variant-toggle-btn" id="variantToggleBtn" data-i18n="variantToggleBtn" data-level="advanced"></button>
+      <button type="button" class="btn tool-btn variant-toggle-btn shield-chip" id="shieldBtn" aria-pressed="false" data-i18n="shieldChip"></button>
+      <span class="shield-state" id="shieldStateNote"></span>
+      <a href="#" class="help-link help-circle" data-help="run" data-i18n-title="helpBtnTitle" data-i18n-aria-label="helpBtnTitle">?</a>
+    </div>
+    <div class="variant-setup" id="variantSetup" hidden>
+      <p class="note" data-i18n="variantDesc"></p> <a href="#" class="help-link" data-help="variants" data-i18n="helpReadMore"></a>
+      <div class="field">
+        <label for="variantDialSelect" data-i18n="variantDialLabel"></label>
+        <select id="variantDialSelect"></select>
+      </div>
+      <div class="variant-state-picks" id="variantStatePicks"></div>
+      <div class="row">
+        <button type="button" class="btn btn-primary" id="runVariantsBtn" data-i18n="runVariantsBtn"></button>
+        <button type="button" class="btn" id="cancelVariantsBtn" data-i18n="cancel"></button>
+      </div>
+    </div>
+    <div class="variant-results" id="variantResults" hidden></div>
+    <p class="error-text" id="chatError" hidden></p>
+  </div>
+
+  <div class="panel" id="strategyPanel" hidden>
+    <h2 data-i18n="strategyPanelTitle"></h2>
+    <p class="help-more"><a href="#" class="help-link" data-help="workgraph" data-i18n="helpReadMore"></a></p>
+    <p class="note" data-i18n="strategyIntro"></p>
+    <div id="workGraph" class="work-graph"></div>
+    <div id="workGraphNotes"></div>
+    <div class="row">
+      <button type="button" class="btn btn-primary" id="strategyAskEyeBtn" data-i18n="strategyAskEye"></button>
+      <button type="button" class="btn" id="strategyCloseBtn" data-i18n="close"></button>
+    </div>
+    <h3 class="eyebrow" data-i18n="strategyLibraryHeading"></h3>
+    <p class="note" data-i18n="strategyLibraryNote"></p>
+    <div id="strategyList"></div>
+    <div class="row"><button type="button" class="btn" id="strategyNewBtn" data-i18n="strategyNew"></button></div>
+    <div id="strategyEditor" hidden>
+      <div class="field"><label for="strategyNameInput" data-i18n="strategyNameLabel"></label><input type="text" id="strategyNameInput" maxlength="60"></div>
+      <div class="field"><label for="strategyDescInput" data-i18n="strategyDescLabel"></label><input type="text" id="strategyDescInput" maxlength="400"></div>
+      <div class="field">
+        <label for="strategyTextInput" data-i18n="strategyTextLabel"></label>
+        <textarea id="strategyTextInput" rows="5" spellcheck="false"></textarea>
+        <p class="note" data-i18n="strategyTextHint"></p>
+        <p class="note error-text" id="strategyEditorError" hidden></p>
+      </div>
+      <div class="row">
+        <button type="button" class="btn btn-primary" id="strategySaveBtn" data-i18n="strategySave"></button>
+        <button type="button" class="btn" id="strategyCancelBtn" data-i18n="cancel"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel side-panel" id="settingsPanel" hidden>
+    <h2 data-i18n="settingsTitle"></h2>
+    <div class="settings-tabs" role="tablist" data-i18n-aria-label="settingsTitle">
+      <button type="button" class="settings-tab" role="tab" id="settingsTabBoard" data-tab="board" aria-controls="settingsBoardPane" data-i18n="settingsTabBoard"></button>
+      <button type="button" class="settings-tab" role="tab" id="settingsTabApp" data-tab="app" aria-controls="settingsAppPane" data-i18n="settingsTabApp"></button>
+    </div>
+
+    <div class="settings-pane" id="settingsBoardPane" role="tabpanel" aria-labelledby="settingsTabBoard">
+      <p class="scope-banner" id="settingsBoardScope"></p>
+      <p class="help-more"><a href="#" class="help-link" data-help="settings" data-i18n="helpReadMore"></a></p>
+      <div class="field">
+        <label for="projectNameInput" data-i18n="projectNameLabel"></label>
+        <input type="text" id="projectNameInput" maxlength="60">
+      </div>
+      <div class="field">
+        <label data-i18n="tableViewLabel"></label>
+        <div class="view-switch" id="tableViewSwitch" role="group" data-i18n-aria-label="tableViewLabel"></div>
+        <p class="note" data-i18n="settingsViewHint"></p>
+      </div>
+      <div class="field" data-level="more">
+        <label for="handoffModeSelect" data-i18n="handoffModeLabel"></label>
+        <select id="handoffModeSelect">
+          <option value="full" data-i18n="handoffModeFull"></option>
+          <option value="structured" data-i18n="handoffModeStructured"></option>
+        </select>
+        <p class="note" data-i18n="handoffModeHint"></p>
+        <label for="routingModeSelect" data-i18n="routingModeLabel"></label>
+        <select id="routingModeSelect">
+          <option value="fixed" data-i18n="routingModeFixed"></option>
+          <option value="suggest" data-i18n="routingModeSuggest"></option>
+        </select>
+        <label class="check-row" id="autopilotRow"><input type="checkbox" id="autopilotCheckbox"> <span data-i18n="autopilotLabel"></span></label>
+        <p class="note" id="routingModeHint" data-i18n="routingModeHint"></p>
+      </div>
+      <div class="field" id="evidenceField" data-level="advanced" hidden>
+        <label class="check-row"><input type="checkbox" id="requireEvidenceCheckbox"> <span data-i18n="requireEvidenceLabel"></span> <span class="kind-tag" data-kind="rule" data-i18n="kindRule" data-i18n-title="kindRuleTitle"></span></label>
+        <p class="note" data-i18n="requireEvidenceHint"></p>
+      </div>
+      <div class="field" id="roundsField" data-level="advanced">
+        <label for="roundsMaxInput" data-i18n="roundsLabel"></label>
+        <input type="number" id="roundsMaxInput" min="1" max="10" step="1" inputmode="numeric">
+        <label class="check-row"><input type="checkbox" id="roundsAutoCheckbox"> <span data-i18n="roundsAutoLabel"></span></label>
+        <p class="note" data-i18n="roundsHint"></p>
+      </div>
+      <div class="field" data-level="more">
+        <label class="check-row"><input type="checkbox" id="mandateGateCheckbox"> <span data-i18n="mandateGateLabel"></span> <span class="kind-tag" data-kind="rule" data-i18n="kindRule" data-i18n-title="kindRuleTitle"></span></label>
+        <p class="note" data-i18n="mandateGateHint"></p>
+      </div>
+      <div class="field" data-level="more">
+        <label class="check-row"><input type="checkbox" id="ownTakeFirstCheckbox"> <span data-i18n="ownTakeFirstLabel"></span> <span class="kind-tag" data-kind="rule" data-i18n="kindRule" data-i18n-title="kindRuleTitle"></span></label>
+        <p class="note" data-i18n="ownTakeFirstHint"></p>
+      </div>
+      <div class="field" data-level="more">
+        <label class="check-row"><input type="checkbox" id="envelopePreviewCheckbox"> <span data-i18n="envelopePreviewLabel"></span> <span class="kind-tag" data-kind="rule" data-i18n="kindRule" data-i18n-title="kindRuleTitle"></span></label>
+        <p class="note" data-i18n="envelopePreviewHint"></p>
+      </div>
+      <div class="field" data-level="advanced">
+        <label class="check-row"><input type="checkbox" id="freshRunsCheckbox"> <span data-i18n="freshRunsLabel"></span></label>
+        <p class="note" data-i18n="freshRunsHint"></p>
+      </div>
+      <div class="field" id="strategyField" data-level="advanced">
+        <label for="strategySelect" data-i18n="strategyLabel"></label>
+        <select id="strategySelect"></select>
+        <p class="note" data-i18n="strategyHint"></p>
+        <div class="row"><button type="button" class="btn" id="openStrategyBtn" data-i18n="strategyOpenBtn"></button></div>
+      </div>
+      <div class="field">
+        <label for="maxRunCostInput" data-i18n="maxRunCostLabel"></label>
+        <input type="number" id="maxRunCostInput" min="0" step="0.01" inputmode="decimal" data-i18n-placeholder="maxRunCostPlaceholder">
+        <p class="note" data-i18n="maxRunCostHint"></p>
+      </div>
+      <div class="field">
+        <div class="field-label-row">
+          <label for="githubInput" data-i18n="githubRepoLabel"></label>
+          <a href="#" class="field-hint-link" id="githubNewRepoLink" data-url="https://github.com/new" data-i18n="githubNewRepoLink"></a>
+        </div>
+        <input type="text" id="githubInput" data-i18n-placeholder="githubInputPlaceholder">
+        <p class="note" data-i18n="githubRepoHint"></p>
+      </div>
+      <div class="field">
+        <div class="field-label-row">
+          <label for="githubTokenInput" data-i18n="githubTokenLabel"></label>
+          <a href="#" class="field-hint-link" id="githubNewTokenLink" data-url="https://github.com/settings/tokens/new?scopes=repo&amp;description=Rundbordet" data-i18n="githubNewTokenLink"></a>
+        </div>
+        <input type="password" id="githubTokenInput" data-i18n-placeholder="githubTokenPlaceholder">
+        <p class="note" data-i18n="githubTokenHint"></p>
+      </div>
+      <div class="row">
+        <button type="button" class="btn btn-primary" id="saveBoardBtn" data-i18n="save"></button>
+        <button type="button" class="btn" id="cancelBoardBtn" data-i18n="cancel"></button>
+      </div>
+
+      <h3 class="eyebrow settings-heading" data-i18n="settingsDataHeading"></h3>
+      <div class="settings-tools">
+        <button type="button" class="btn" id="openMemoryBtn" data-i18n="memoryBtn" data-level="more"></button>
+        <button type="button" class="btn" id="openShieldBtn" data-i18n="shieldBtn"></button>
+        <button type="button" class="btn" id="openMetricsBtn" data-i18n="metricsBtn" data-level="advanced"></button>
+        <button type="button" class="btn" id="openTableBtn" data-i18n="tableBtn" data-level="advanced"></button>
+        <button type="button" class="btn" id="exportConvoBtn" data-i18n="exportConvoBtn" data-i18n-title="exportConvoTitle" data-level="advanced"></button>
+      </div>
+      <p class="note" id="exportConvoStatus"></p>
+      <div class="field" id="inboxField">
+        <label data-i18n="inboxSettingsLabel"></label>
+        <p class="note inbox-path" id="inboxPathText"></p>
+        <div class="row">
+          <button type="button" class="btn" id="inboxChooseBtn" data-i18n="inboxChooseBtn"></button>
+          <button type="button" class="btn" id="inboxClearBtn" data-i18n="inboxClearBtn"></button>
+        </div>
+        <p class="note" id="inboxSettingsStatus"></p>
+        <p class="note" data-i18n="inboxSettingsHint"></p>
+      </div>
+
+      <div class="danger-zone" id="dangerZone">
+        <h3 class="eyebrow settings-heading" data-i18n="dangerHeading"></h3>
+        <p class="note" id="dangerText"></p>
+        <button type="button" class="btn btn-danger" id="deleteBoardBtn" data-i18n="dangerOpenBtn"></button>
+        <div id="dangerConfirm" hidden>
+          <label for="dangerNameInput" id="dangerNameLabel"></label>
+          <input type="text" id="dangerNameInput" autocomplete="off" spellcheck="false">
+          <div class="row">
+            <button type="button" class="btn btn-danger" id="dangerConfirmBtn" disabled data-i18n="dangerConfirmBtn"></button>
+            <button type="button" class="btn" id="dangerCancelBtn" data-i18n="cancel"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-pane" id="settingsAppPane" role="tabpanel" aria-labelledby="settingsTabApp" hidden>
+      <p class="scope-banner scope-app" data-i18n="settingsScopeApp"></p>
+      <h3 class="eyebrow settings-heading" data-i18n="settingsLookHeading"></h3>
+      <div class="field">
+        <label for="themeSelect" data-i18n="themeLabel"></label>
+        <select id="themeSelect" class="locale-select">
+          <option value="system" data-i18n="themeSystem"></option>
+          <option value="light" data-i18n="themeLight"></option>
+          <option value="dark" data-i18n="themeDark"></option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="localeSelect" data-i18n="languageLabel"></label>
+        <select id="localeSelect" class="locale-select">
+          <option value="da">Dansk</option>
+          <option value="en">English</option>
+        </select>
+      </div>
+      <div class="field" data-level="advanced">
+        <label for="waitStyleSelect" data-i18n="waitStyleLabel"></label>
+        <select id="waitStyleSelect" class="locale-select">
+          <option value="wash" data-i18n="waitStyleWash"></option>
+          <option value="mosaic" data-i18n="waitStyleMosaic"></option>
+          <option value="swarm" data-i18n="waitStyleSwarm"></option>
+          <option value="particles" data-i18n="waitStyleParticles"></option>
+          <option value="off" data-i18n="waitStyleOff"></option>
+        </select>
+        <p class="note" data-i18n="waitStyleHint"></p>
+      </div>
+      <div class="field" data-level="more">
+        <label for="eyeFloatSelect" data-i18n="eyeFloatLabel"></label>
+        <select id="eyeFloatSelect" class="locale-select">
+          <option value="on" data-i18n="eyeFloatOn"></option>
+          <option value="off" data-i18n="eyeFloatOff"></option>
+        </select>
+        <p class="note" data-i18n="eyeFloatHint"></p>
+      </div>
+      <h3 class="eyebrow settings-heading" data-i18n="settingsToolsHeading"></h3>
+      <div class="settings-tools">
+        <button type="button" class="btn" id="openModelsBtn" data-i18n="openModelsBtn"></button>
+        <button type="button" class="btn" id="openPricesBtn" data-i18n="openPricesBtn" data-level="advanced"></button>
+        <button type="button" class="btn" id="openVoiceBtn" data-i18n="voiceBtn" data-level="more"></button>
+        <button type="button" class="btn" id="openManualBtn" data-i18n="helpMenuBtn"></button>
+      </div>
+      <h3 class="eyebrow settings-heading" data-i18n="settingsBoardsHeading"></h3>
+      <p class="note" data-i18n="boardsNote"></p>
+      <div id="boardsList"></div>
+      <div class="row"><button type="button" class="btn" id="boardsRestoreBtn" data-i18n="boardsRestoreBtn"></button></div>
+      <div class="field" id="boardsRestore" hidden></div>
+      <p class="note" id="boardsStatus" role="status"></p>
+      <div class="field" id="boardsDelete" hidden>
+        <p class="note" id="boardsDeleteText"></p>
+        <label for="boardsDeleteName" id="boardsDeleteNameLabel"></label>
+        <input type="text" id="boardsDeleteName" autocomplete="off" spellcheck="false">
+        <div class="row">
+          <button type="button" class="btn" id="boardsDeleteBackupBtn" data-i18n="boardsDeleteBackupFirst"></button>
+          <button type="button" class="btn btn-danger" id="boardsDeleteConfirmBtn" disabled data-i18n="boardsDeleteConfirmBtn"></button>
+          <button type="button" class="btn" id="boardsDeleteCancelBtn" data-i18n="boardsDeleteCancelBtn"></button>
+        </div>
+      </div>
+      <h3 class="eyebrow settings-heading" data-i18n="settingsRolesHeading"></h3>
+      <p class="note" data-i18n="rolesNote"></p>
+      <div id="rolesList"></div>
+      <div class="field">
+        <label for="rolesNewName" data-i18n="roleCustomLabel"></label>
+        <input type="text" id="rolesNewName" maxlength="40" autocomplete="off" data-i18n-placeholder="rolesNewNamePlaceholder">
+        <label for="rolesNewConcept" data-i18n="roleLabel"></label>
+        <select id="rolesNewConcept"></select>
+        <div class="row"><button type="button" class="btn" id="rolesAddBtn" data-i18n="rolesAddBtn"></button></div>
+        <p class="note" id="rolesStatus" role="status"></p>
+      </div>
+      <h3 class="eyebrow settings-heading" data-i18n="roleDefHeading"></h3>
+      <p class="note" data-i18n="roleDefNote"></p>
+      <div class="field">
+        <label for="roleDefConcept" data-i18n="roleLabel"></label>
+        <select id="roleDefConcept"></select>
+        <p class="note" id="roleDefSource" role="status"></p>
+        <div id="roleDefEditor" class="roledef-editor"></div>
+        <div class="row">
+          <button type="button" class="btn btn-primary" id="roleDefSaveBtn" data-i18n="roleDefSaveBtn"></button>
+          <button type="button" class="btn" id="roleDefResetBtn" data-i18n="roleDefResetBtn"></button>
+        </div>
+        <p class="note" id="roleDefStatus" role="status"></p>
+      </div>
+      <h3 class="eyebrow settings-heading" data-i18n="updateHeading"></h3>
+      <div class="field" id="updateSection">
+        <p class="note" id="updateVersionLine"></p>
+        <p class="eyebrow" data-i18n="licenseLabel"></p>
+        <p class="note" id="licenseStatus" role="status"></p>
+        <textarea id="licenseInput" rows="3" spellcheck="false" autocomplete="off" data-i18n-placeholder="licensePlaceholder"></textarea>
+        <div class="row">
+          <button type="button" class="btn" id="licenseSaveBtn" data-i18n="licenseSaveBtn"></button>
+          <button type="button" class="btn" id="licenseClearBtn" data-i18n="licenseClearBtn" hidden></button>
+        </div>
+        <p class="note" id="licenseMsg" role="status"></p>
+        <div class="row"><button type="button" class="btn" id="updateCheckBtn" data-i18n="updateCheckBtn"></button></div>
+        <p class="note" id="updateStatus" role="status"></p>
+        <div id="updateInfo" hidden>
+          <p class="eyebrow" data-i18n="updateNotesLabel"></p>
+          <div class="compare-text" id="updateNotes"></div>
+          <div class="row"><button type="button" class="btn btn-primary" id="updateDownloadBtn"></button></div>
+        </div>
+        <p class="note" data-i18n="updateHonest"></p>
+      </div>
+      <p class="app-version secrets-warning" id="secretsWarning" hidden data-i18n="secretsWarning"></p>
+      <p class="app-version" id="appVersionLine"></p>
+    </div>
+  </div>
+
+  <div class="panel side-panel" id="seatPanel" hidden>
+    <h2 id="seatPanelTitle" data-i18n="seatPanelTitleNew"></h2>
+    <p class="help-more"><a href="#" class="help-link" data-help="roles" data-i18n="helpReadMore"></a></p>
+    <div class="field" data-level="advanced">
+      <label for="roleSelect" data-i18n="roleLabel"></label>
+      <select id="roleSelect"></select>
+    </div>
+    <div class="field seat-order-field" id="seatOrderField" hidden>
+      <label data-i18n="seatOrderLabel"></label>
+      <div class="seat-order-row">
+        <span class="seat-order-text" id="seatOrderText"></span>
+        <button type="button" class="btn btn-small" id="seatOrderUpBtn" data-i18n="seatOrderUp"></button>
+        <button type="button" class="btn btn-small" id="seatOrderDownBtn" data-i18n="seatOrderDown"></button>
+      </div>
+      <p class="note" data-i18n="seatOrderHint"></p>
+    </div>
+    <div class="field" id="roleCustomField">
+      <label for="roleCustomInput" id="roleCustomLabel" data-i18n="roleCustomLabel"></label>
+      <input type="text" id="roleCustomInput" data-i18n-placeholder="roleCustomPlaceholder" maxlength="40" autocomplete="off">
+      <p class="note" data-level="advanced" data-i18n="roleNameHint"></p>
+      <p class="error-text" id="roleError" hidden></p>
+      <div class="row"><button type="button" class="btn btn-small" id="roleSaveLibBtn" data-i18n="roleSaveLibBtn"></button></div>
+      <p class="note" id="roleSaveLibNote" role="status"></p>
+    </div>
+    <div class="field" id="seatModelField">
+      <label for="seatModelSelect" data-i18n="seatModelLabel"></label>
+      <select id="seatModelSelect"></select>
+      <p class="note" id="seatModelNote"></p>
+      <p class="note error-text" id="seatModelError" role="alert" hidden data-i18n="seatModelError"></p>
+      <div class="row"><button type="button" class="btn btn-small" id="seatModelSetupBtn" data-i18n="openModelsBtn"></button></div>
+    </div>
+    <div class="field" hidden>
+      <label for="providerSelect" data-i18n="providerLabel"></label>
+      <select id="providerSelect">
+        <option value="anthropic">Anthropic</option>
+        <option value="openai">OpenAI</option>
+        <option value="google">Google (Gemini)</option>
+        <option value="groq">Groq</option>
+        <option value="mistral">Mistral</option>
+        <option value="xai">xAI (Grok)</option>
+        <option value="deepseek">DeepSeek</option>
+        <option value="openrouter">OpenRouter</option>
+        <option value="custom" data-i18n="providerOther"></option>
+      </select>
+    </div>
+    <div class="field" id="baseUrlField" hidden>
+      <label for="baseUrlInput" data-i18n="baseUrlLabel"></label>
+      <input type="text" id="baseUrlInput" data-i18n-placeholder="baseUrlPlaceholder">
+      <p class="note" data-i18n-html="baseUrlHintHtml"></p>
+    </div>
+    <div class="field">
+      <div class="field-label-row">
+        <label for="modelInput" data-i18n="modelLabel"></label>
+        <a href="#" class="help-q help-link" data-help="roles" data-i18n-title="modelHelpTitle" data-i18n-aria-label="modelHelpTitle">?</a>
+      </div>
+      <div class="model-row">
+        <div class="model-combo">
+          <input type="text" id="modelInput" data-i18n-placeholder="modelPlaceholder" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="modelDrop" autocomplete="off" spellcheck="false">
+          <div class="model-drop" id="modelDrop" role="listbox" hidden></div>
+        </div>
+        <button type="button" class="btn" id="fetchModelsBtn" data-i18n="fetchModelsBtn"></button>
+      </div>
+      <p class="note" id="modelNote"></p>
+    </div>
+    <div class="field" hidden>
+      <div class="field-label-row">
+        <label for="apiKeyInput" data-i18n="apiKeyLabel"></label>
+        <a href="#" class="field-hint-link" id="apiKeyHelpLink" hidden data-i18n="apiKeyGetLink"></a>
+      </div>
+      <input type="password" id="apiKeyInput" data-i18n-placeholder="apiKeyPlaceholder">
+      <p class="note" id="apiKeyNote" data-i18n="apiKeyHint"></p>
+    </div>
+    <div class="field">
+      <label data-i18n="colorLabel"></label>
+      <div class="swatches" id="swatches" role="group" data-i18n-aria-label="colorGroupAriaLabel"></div>
+    </div>
+    <div class="field">
+      <label class="check-row"><input type="checkbox" id="readsInCheckbox"> <span data-i18n="seatReadsInLabel"></span></label>
+      <p class="note" data-i18n="seatReadsInHint"></p>
+    </div>
+    <div class="field">
+      <label class="check-row"><input type="checkbox" id="checksCheckbox"> <span data-i18n="seatChecksLabel"></span> <span class="kind-tag" data-kind="check" data-i18n="kindCheck" data-i18n-title="kindCheckTitle"></span></label>
+      <p class="note" data-i18n="seatChecksHint"></p>
+    </div>
+    <div class="field">
+      <label for="voiceSelect" data-i18n="seatVoiceLabel"></label>
+      <select id="voiceSelect"><option value="" data-i18n="seatVoiceNone"></option></select>
+      <p class="note" id="voiceSelectHint" data-i18n="seatVoiceHint"></p> <a href="#" class="help-link" data-help="voice" data-i18n="helpReadMore"></a>
+    </div>
+    <section class="seat-behaviour">
+      <h3 class="seat-sec-h" data-i18n="behaviourTitle"></h3>
+      <p class="note" data-i18n="behaviourIntro"></p> <a href="#" class="help-link" data-help="dials" data-i18n="helpReadMore"></a>
+      <div class="preset-row" id="presetRow" role="group" data-i18n-aria-label="presetGroupLabel">
+        <span class="preset-label" data-i18n="presetLabel"></span>
+        <button type="button" class="btn preset-btn" data-preset="fast" aria-pressed="false" data-i18n="presetFast"></button>
+        <button type="button" class="btn preset-btn" data-preset="thorough" aria-pressed="false" data-i18n="presetThorough"></button>
+        <button type="button" class="btn preset-btn" data-preset="critical" aria-pressed="false" data-i18n="presetCritical"></button>
+      </div>
+      <p class="note" id="presetHint" role="status"></p>
+      <p class="note addon-legend" data-i18n="addonLegend"></p>
+      <div class="row"><button type="button" class="btn" id="tryOutBtn" data-i18n="tryOutBtn" data-i18n-title="tryOutTitle"></button></div>
+      <div class="try-out" id="tryOut" hidden>
+        <p class="note" data-i18n="tryOutIntro"></p>
+        <div class="field">
+          <label for="tryOutWhich" data-i18n="tryOutWhich"></label>
+          <select id="tryOutWhich"></select>
+        </div>
+        <div class="field">
+          <label for="tryOutTask" data-i18n="tryOutTaskLabel"></label>
+          <textarea id="tryOutTask" rows="3" data-i18n-placeholder="tryOutTaskPlaceholder"></textarea>
+        </div>
+        <p class="note" id="tryOutCost"></p>
+        <div class="row">
+          <button type="button" class="btn btn-primary" id="tryOutRunBtn" data-i18n="tryOutRun"></button>
+          <button type="button" class="btn" id="tryOutCloseBtn" data-i18n="close"></button>
+        </div>
+        <p class="note" id="tryOutStatus" role="status"></p>
+        <div id="tryOutResult" hidden>
+          <div class="try-col"><h4 class="seat-sub-h" data-i18n="tryOutAnswerA"></h4><div class="compare-text" id="tryOutTextA"></div></div>
+          <div class="try-col"><h4 class="seat-sub-h" data-i18n="tryOutAnswerB"></h4><div class="compare-text" id="tryOutTextB"></div></div>
+          <div class="row" id="tryOutPickRow">
+            <button type="button" class="btn" data-pick="A" data-i18n="tryOutPrefA"></button>
+            <button type="button" class="btn" data-pick="B" data-i18n="tryOutPrefB"></button>
+            <button type="button" class="btn" data-pick="none" data-i18n="tryOutPrefNone"></button>
+          </div>
+          <div id="tryOutRevealBox" hidden>
+            <p class="note" id="tryOutReveal"></p>
+            <div class="row">
+              <button type="button" class="btn btn-primary" id="tryOutKeepBtn"></button>
+              <button type="button" class="btn" id="tryOutDropBtn"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <details class="dial-tune" id="dialTune">
+        <summary data-i18n="dialTuneTitle"></summary>
+        <div id="dialsContainer"></div>
+      </details>
+      <p class="note" data-i18n="iconsHint"></p>
+    </section>
+    <details class="seat-adv" id="seatChangesDetails" data-level="advanced">
+      <summary data-i18n="changesTitle"></summary>
+      <p class="note" data-i18n="changesIntro"></p>
+      <h4 class="seat-sub-h" data-i18n="additionsTitle"></h4>
+      <p class="note" data-i18n="additionsDesc"></p>
+      <div id="seatAdditionsList"></div>
+      <details class="seat-history" id="seatHistoryDetails" hidden data-level="advanced">
+        <summary data-i18n="histTitle"></summary>
+        <p class="note" data-i18n="histDesc"></p>
+        <div id="seatHistoryList"></div>
+      </details>
+    </details>
+    <details class="seat-adv dials-details" data-level="advanced">
+      <summary data-i18n="fullInstructionTitle"></summary>
+      <p class="note" data-i18n="fullInstructionDesc"></p>
+      <pre class="instruction-preview" id="instructionPreview"></pre>
+    </details>
+    <p class="usage-line" id="seatUsageLine" hidden></p>
+    <p class="note" id="seatPriceHint" hidden></p>
+    <p class="test-result" id="testResult" hidden></p>
+    <div class="row">
+      <button type="button" class="btn btn-primary" id="saveSeatBtn" data-i18n="save"></button>
+      <button type="button" class="btn" id="testSeatBtn" data-i18n="testConnectionBtn"></button>
+      <button type="button" class="btn btn-danger" id="deleteSeatBtn" hidden data-i18n="deleteSeatBtn"></button>
+      <button type="button" class="btn" id="cancelSeatBtn" data-i18n="cancel"></button>
+    </div>
+  </div>
+
+  <p class="empty-hint" id="introHint" data-i18n="introHint"></p>
+</div>
+<script src="locales/da.js"></script>
+<script src="locales/en.js"></script>
+<script src="lib/metrics.js"></script>
+<script src="lib/handoff.js"></script>
+<script src="lib/io.js"></script>
+<script src="lib/orchestrator.js"></script>
+<script src="lib/verify.js"></script>
+<script src="lib/observer.js"></script>
+<script src="lib/memory.js"></script>
+<script src="lib/vision.js"></script>
+<script src="lib/shield.js"></script>
+<script src="lib/egress.js"></script>
+<script src="lib/voice.js"></script>
+<script src="lib/voicebrief.js"></script>
+<script src="lib/seatref.js"></script>
+<script src="lib/routing.js"></script>
+<script src="lib/rounds.js"></script>
+<script src="lib/mandate.js"></script>
+<script src="lib/decisions.js"></script>
+<script src="lib/edges.js"></script>
+<script src="lib/reflection.js"></script>
+<script src="lib/models.js"></script>
+<script src="lib/diffview.js"></script>
+<script src="lib/proposaltext.js"></script>
+<script src="lib/uilevel.js"></script>
+<script src="lib/updatecheck.js"></script>
+<script src="lib/addons.js"></script>
+<script src="lib/convoexport.js"></script>
+<script src="lib/inbox.js"></script>
+<script src="lib/strategy.js"></script>
+<script src="lib/workgraph.js"></script>
+<script src="lib/graphlayout.js"></script>
+<script src="lib/viewstate.js"></script>
+<script src="lib/openrouter.js"></script>
+<script src="lib/nextsteps.js"></script>
+<script src="lib/seathistory.js"></script>
+<script src="lib/seatsync.js"></script>
+<script src="lib/tablefile.js"></script>
+<script src="lib/sprintplan.js"></script>
+<script src="lib/templates.js"></script>
+<script src="lib/welcome.js"></script>
+<script src="lib/stuck.js"></script>
+<script src="lib/boardbackup.js"></script>
+<script src="lib/boardcopy.js"></script>
+<script src="lib/waitlayer.js"></script>
+<script src="lib/roledefaults.js"></script>
+<script src="lib/resultcard.js"></script>
+<script src="lib/runestimate.js"></script>
+<script src="lib/waitparticles.js"></script>
+<script src="lib/overview.js"></script>
+<script src="lib/guide.js"></script>
+<script src="lib/eyewatch.js"></script>
+<script src="lib/roles.js"></script>
+<script src="web/demo.js"></script>
+<script src="web/rundbord-web.js"></script>
+<script src="renderer/01-catalog.js"></script>
+<script src="renderer/02-instructions.js"></script>
+<script src="renderer/03-observer-needs.js"></script>
+<script src="renderer/04-seat-instructions.js"></script>
+<script src="renderer/05-core.js"></script>
+<script src="renderer/06-log.js"></script>
+<script src="renderer/07-memory.js"></script>
+<script src="renderer/08-io.js"></script>
+<script src="renderer/09-relay.js"></script>
+<script src="renderer/10-compose.js"></script>
+<script src="renderer/11-variants.js"></script>
+<script src="renderer/12-spend-metrics.js"></script>
+<script src="renderer/13-board-seats.js"></script>
+<script src="renderer/14-run.js"></script>
+<script src="renderer/15-turn-proposals-price.js"></script>
+<script src="renderer/16-voice.js"></script>
+<script src="renderer/16-talk.js"></script>
+<script src="renderer/17-shield.js"></script>
+<script src="renderer/18-nextsteps.js"></script>
+<script src="renderer/19-tablefile.js"></script>
+<script src="renderer/21-tableview.js"></script>
+<script src="renderer/22-handoff-view.js"></script>
+<script src="renderer/23-routing.js"></script>
+<script src="renderer/24-quickstart.js"></script>
+<script src="renderer/25-modelpicker.js"></script>
+<script src="renderer/26-settings.js"></script>
+<script src="renderer/27-dismiss.js"></script>
+<script src="renderer/28-inbox.js"></script>
+<script src="renderer/29-strategy.js"></script>
+<script src="renderer/30-edge-questions.js"></script>
+<script src="renderer/31-own-take.js"></script>
+<script src="renderer/32-envelope.js"></script>
+<script src="renderer/33-edge-settings.js"></script>
+<script src="renderer/34-reflection.js"></script>
+<script src="renderer/36-models.js"></script>
+<script src="renderer/35-diffview.js"></script>
+<script src="renderer/37-ui-level.js"></script>
+<script src="renderer/38-update.js"></script>
+<script src="renderer/39-data-hub.js"></script>
+<script src="renderer/40-addons.js"></script>
+<script src="renderer/41-welcome.js"></script>
+<script src="renderer/48-guide.js"></script>
+<script src="renderer/49-roledefaults.js"></script>
+<script src="renderer/50-result.js"></script>
+<script src="renderer/42-stuck.js"></script>
+<script src="renderer/43-boards.js"></script>
+<script src="renderer/44-roles.js"></script>
+<script src="renderer/45-waitlayer.js"></script>
+<script src="renderer/46-overview.js"></script>
+<script src="renderer/47-eye.js"></script>
+<script src="renderer/20-init.js"></script>
+<script src="web/welcome.js"></script>
+<button type="button" class="eye-float" id="eyeFloat" data-state="calm" hidden><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path class="eye-lid" d="M2 12c2.6-4.4 6-6.6 10-6.6s7.4 2.2 10 6.6c-2.6 4.4-6 6.6-10 6.6S4.6 16.4 2 12z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle class="eye-iris" cx="12" cy="12" r="3.3" fill="currentColor"/></svg><span class="eye-dot" aria-hidden="true"></span></button>
+<div class="role-preset-overlay" id="rolePresetOverlay" hidden>
+  <div class="role-preset-card" role="alertdialog" aria-modal="true" aria-labelledby="rolePresetTitle" aria-describedby="rolePresetIntro">
+    <h2 id="rolePresetTitle"></h2>
+    <p class="note" id="rolePresetIntro"></p>
+    <ul class="role-preset-list" id="rolePresetList"></ul>
+    <p class="role-preset-warn" id="rolePresetWarn" hidden></p>
+    <div class="role-preset-eye" id="rolePresetEyeBox" hidden>
+      <p class="note" id="rolePresetWhy" hidden></p>
+      <div class="row">
+        <button type="button" class="btn" id="rolePresetEyeBtn" data-i18n="rolePresetEyeBtn"></button>
+        <button type="button" class="btn" id="rolePresetBuiltinBtn" data-i18n="rolePresetBuiltinBtn" hidden></button>
+      </div>
+      <div id="rolePresetEyePreview" hidden>
+        <p class="note" id="rolePresetEyeText"></p>
+        <pre class="role-preset-sent" id="rolePresetEyeSent"></pre>
+        <div class="row">
+          <button type="button" class="btn btn-primary" id="rolePresetEyeSendBtn" data-i18n="rolePresetEyeSend"></button>
+          <button type="button" class="btn" id="rolePresetEyeCancelBtn" data-i18n="cancel"></button>
+        </div>
+      </div>
+      <p class="note" id="rolePresetEyeStatus"></p>
+    </div>
+    <div class="row">
+      <button type="button" class="btn btn-primary" id="rolePresetApplyBtn" data-i18n="rolePresetApply"></button>
+      <button type="button" class="btn" id="rolePresetKeepBtn" data-i18n="rolePresetKeep"></button>
+      <button type="button" class="btn" id="rolePresetCancelBtn" data-i18n="rolePresetCancel"></button>
+    </div>
+  </div>
+</div>
+<div class="config-problem" id="configProblem" role="alert" hidden>
+  <p id="configProblemText"></p>
+  <button type="button" class="btn" id="configProblemCloseBtn" data-i18n="close"></button>
+</div>
+<div class="sr-only" id="eyeLive" role="status" aria-live="polite"></div>
+<div class="eye-intro" id="eyeIntro" role="dialog" aria-labelledby="eyeIntroTitle" aria-describedby="eyeIntroText" hidden>
+  <h2 id="eyeIntroTitle" data-i18n="eyeIntroTitle"></h2>
+  <p id="eyeIntroText" data-i18n="eyeIntroText"></p>
+  <div class="row"><button type="button" class="btn btn-primary" id="eyeIntroTryBtn" data-i18n="eyeIntroTry"></button><button type="button" class="btn" id="eyeIntroOkBtn" data-i18n="eyeIntroOk"></button></div>
+</div>
+</body>
+</html>

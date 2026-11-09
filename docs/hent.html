@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark"><title>Get Rundbordet for your computer</title><link rel="icon" href="icon.png">
+<style>
+:root{--bg:#DBD9CE;--surface:#F2F0E7;--line:#D8D4C6;--ink:#26201A;--ink2:#5C5548;--accent:#2E5C4E;--on:#F4F2E9;--warn:#8C3A2B;}
+@media (prefers-color-scheme: dark){:root{--bg:#171613;--surface:#23211D;--line:#39362F;--ink:#ECE8DC;--ink2:#B9B2A2;--accent:#4F9C85;--on:#0F1F1A;--warn:#E5826D;}}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,sans-serif;}
+main{max-width:860px;margin:0 auto;padding:2rem 16px 4rem;}
+h1{font:600 28px Georgia,serif;margin:.2rem 0 .4rem;} h2{font-size:17px;margin:1.6rem 0 .4rem;}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1rem 1.1rem;margin:1rem 0;}
+table{width:100%;border-collapse:collapse;font-size:14px;} td,th{padding:.5rem .4rem;border-top:1px solid var(--line);text-align:left;vertical-align:top;}
+code{font:12px ui-monospace,monospace;word-break:break-all;color:var(--ink2);}
+.btn{display:inline-block;background:var(--accent);color:var(--on);padding:.3rem .8rem;border-radius:8px;text-decoration:none;font-weight:600;}
+.soon{color:var(--ink2);font-size:13px;} tr.me{background:color-mix(in srgb,var(--accent) 14%,transparent);}
+.warn{color:var(--warn);} a{color:var(--ink2);} p{color:var(--ink2);} .top{display:flex;justify-content:space-between;gap:12px;}
+</style></head><body><main>
+<p class="top"><a href="./">← Try Rundbordet in the browser</a><a href="hent.da.html" hreflang="da">Dansk</a></p>
+<h1>Get Rundbordet for your computer</h1>
+<p>Version 0.41.0. The desktop version has what the browser does not: your own folders (IN and OUT), keys in the computer's keyring, Save to git and read-aloud.</p>
+<div class="card"><table><thead><tr><th>For</th><th>Size</th><th>Checksum (SHA-256)</th><th></th></tr></thead><tbody>
+<tr data-os="mac"><td>Mac (Apple silicon)</td><td>130 MB</td><td><code>77c37e8be3e10aefb6958880f3265a612d1274bcc101090d12a9ef2640266e8b</code></td><td><a class="btn" href="https://github.com/ITCOACH-find-terapeut/ai-agent-table/releases/download/v0.41.0/Rundbordet-0.41.0-arm64.dmg" download>Get</a></td></tr>
+<tr data-os="mac"><td>Mac (Intel)</td><td>134 MB</td><td><code>c9882094a88f5180c84df514ec38730800accc74eec01575a1ade24e8d42865b</code></td><td><a class="btn" href="https://github.com/ITCOACH-find-terapeut/ai-agent-table/releases/download/v0.41.0/Rundbordet-0.41.0-x64.dmg" download>Get</a></td></tr>
+<tr data-os="win"><td>Windows (installer)</td><td>113 MB</td><td><code>f836e37f99a7965dbf065b051c932794d1ee76211773b8eeb4c4b0740659046e</code></td><td><a class="btn" href="https://github.com/ITCOACH-find-terapeut/ai-agent-table/releases/download/v0.41.0/Rundbordet-0.41.0-x64.exe" download>Get</a></td></tr>
+<tr data-os="win"><td>Windows (zip, no installer)</td><td>159 MB</td><td><code>94ed6ce452d40f6ca4b0e4c2bb34599d9391071b94efce7e76931829046cebec</code></td><td><a class="btn" href="https://github.com/ITCOACH-find-terapeut/ai-agent-table/releases/download/v0.41.0/Rundbordet-0.41.0-win-x64-uden-installer.zip" download>Get</a></td></tr>
+<tr data-os="linux"><td>Linux (archive)</td><td>89 MB</td><td><code>65fce2070c80174ccd3d70a4adcf4757003ee03798eec1d3c22d04f437908a94</code></td><td><a class="btn" href="https://github.com/ITCOACH-find-terapeut/ai-agent-table/releases/download/v0.41.0/Rundbordet-0.41.0-x64.tar.xz" download>Get</a></td></tr>
+</tbody></table></div>
+<h2>Read before you install</h2>
+<div class="card"><p><b class="warn">The programs are not signed yet.</b> Mac shows a warning the first time: on macOS 15 or later open System Settings → Privacy & Security and choose Open Anyway; on older versions right-click the app and choose Open. Windows may show SmartScreen: choose More info and Run anyway. <b class="warn">The Windows version has not been tested by us on a Windows machine yet.</b> The Linux archive (x64) has been tried on Omarchy (Arch with Hyprland) and works there. That is not proof for other Linux distributions. Check the file's checksum before you open it.</p></div>
+<h2>Free use, your own costs, licence and introductory courses</h2>
+<div class="card"><p><b>Free to download and use.</b> The program can be downloaded and used for free, also without a licence. There is a recorded demo that needs no key.</p>
+<p><b>Your own API key and costs.</b> You use your own API key and pay the model provider directly for the usage. A ChatGPT or Claude subscription does not in itself give an API key. The price depends on the model, the material and the number of calls; more seats and repeats can raise it.</p>
+<p><b>Update licence.</b> A one-time paid licence gives access to the update function in the app (check for and download new versions; the app downloads and verifies the file but does not install it for you). The program works without a licence. The price and how to pay have not been published here yet.</p>
+<p><b>Introductory courses.</b> Paid introductory courses are offered, where participants work with their own tasks and take a reusable table home. Sign-up and price have not been published here yet.</p></div>
+</main>
+<script>
+(function(){var ua=navigator.userAgent||"",os=/Windows/i.test(ua)?"win":/Mac/i.test(ua)?"mac":/Linux/i.test(ua)?"linux":"";
+if(!os)return;document.querySelectorAll("tr[data-os='"+os+"']").forEach(function(r){r.classList.add("me")});})();
+</script></body></html>

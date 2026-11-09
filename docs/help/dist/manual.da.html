@@ -1,0 +1,2023 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rundbordet — Brugermanual</title>
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<style>
+:root{
+  --bg:#DBD9CE; --paper:#F7F5EE; --surface:#F2F0E7; --line:#D8D4C6;
+  --ink:#26201A; --ink-2:#5C5548; --ink-3:#8A8272;
+  --accent:#2E5C4E; --accent-strong:#1F4237; --accent-soft:#E3ECE6;
+  --brass:#AD8A50; --danger:#8C3A2B; --danger-soft:#F3E4DF; --tip-soft:#EAF0E6; --note-soft:#EFEADB;
+  --field:#fff; --hover:#E8E5D8; --code-bg:#EDEADD; --mark:#F3DF9B; --tip-line:#CFDCC8; --note-line:#E1D8BC; --warn-line:#E6C9C0; --note-label:#7A6533; --on-accent:#F4F2E9; --on-accent-2:#C9D9CF;
+  --display:'Fraunces',Georgia,serif; --body:'Work Sans',system-ui,sans-serif; --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    color-scheme:dark;
+    --bg:#171613; --paper:#1F1D19; --surface:#23211D; --line:#39362F;
+    --ink:#ECE8DC; --ink-2:#B9B2A2; --ink-3:#938C7B;
+    --accent:#4F9C85; --accent-strong:#7CC4AC; --accent-soft:#1F332C;
+    --danger:#E5826D; --danger-soft:#33201B; --tip-soft:#1E2B25; --note-soft:#2B2719;
+    --field:#2B2924; --hover:#2F2D27; --code-bg:#2B2924; --mark:#6B5B1F; --tip-line:#2F4A3F; --note-line:#4A4122; --warn-line:#5A332A; --note-label:#D1B76B; --on-accent:#0F1F1A; --on-accent-2:#27493E;
+  }
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;scroll-padding-top:1.5rem;}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.7 var(--body);-webkit-font-smoothing:antialiased;}
+.shell{display:grid;grid-template-columns:290px minmax(0,1fr);min-height:100vh;}
+
+/* Sidebar */
+.sidebar{position:sticky;top:0;height:100vh;overflow-y:auto;padding:1.4rem 1.1rem 1.2rem;background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;gap:1rem;}
+.brand{display:flex;gap:.7rem;align-items:center;}
+.brand-mark{width:36px;height:36px;border-radius:50%;border:2px solid var(--brass);display:grid;place-items:center;color:var(--brass);font-size:18px;}
+.brand-name{font:600 19px/1.1 var(--display);}
+.brand-sub{font:400 11px/1.4 var(--mono);color:var(--ink-3);margin-top:2px;}
+#search{width:100%;padding:.55rem .75rem;border:1px solid var(--line);border-radius:9px;background:var(--field);font:400 14px var(--body);color:var(--ink);}
+#search:focus{outline:2px solid var(--accent);outline-offset:1px;}
+.toc{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px;}
+.toc a{display:flex;gap:.6rem;align-items:baseline;padding:.4rem .6rem;border-radius:8px;color:var(--ink-2);text-decoration:none;font-size:14px;line-height:1.35;}
+.toc a:hover{background:var(--hover);color:var(--ink);}
+.toc a.active{background:var(--accent);color:var(--on-accent);}
+.toc a.active .toc-n{color:var(--on-accent-2);}
+.toc li[hidden]{display:none;}
+.toc-n{font:500 11px var(--mono);color:var(--ink-3);min-width:1.4em;}
+.no-hits{font-size:13px;color:var(--ink-3);margin:0;}
+.side-actions{margin-top:auto;display:flex;gap:.5rem;flex-wrap:wrap;}
+.side-btn{flex:1;text-align:center;padding:.45rem .6rem;border:1px solid var(--line);border-radius:8px;background:var(--field);color:var(--ink);font:500 13px var(--body);text-decoration:none;cursor:pointer;}
+.side-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* Content */
+.content{padding:3rem clamp(1.2rem,5vw,4rem) 4rem;max-width:920px;}
+.hero{margin-bottom:3rem;padding-bottom:2rem;border-bottom:1px solid var(--line);}
+.eyebrow{font:500 12px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--brass);margin:0 0 .6rem;}
+.hero h1{font:600 clamp(2.4rem,5vw,3.6rem)/1.05 var(--display);margin:0 0 .5rem;letter-spacing:-.01em;}
+.hero-sub{font:400 1.25rem/1.4 var(--display);font-style:italic;color:var(--ink-2);margin:0;}
+.chapter{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:2rem clamp(1.2rem,3.5vw,2.6rem) 1.6rem;margin-bottom:1.6rem;box-shadow:0 1px 0 rgba(0,0,0,.02);}
+.chapter[hidden]{display:none;}
+.chapter-head{margin-bottom:1.2rem;}
+.chapter-n{font:500 12px var(--mono);color:var(--brass);letter-spacing:.1em;}
+.chapter-head h2{font:600 clamp(1.7rem,3.4vw,2.2rem)/1.15 var(--display);margin:.2rem 0 .4rem;letter-spacing:-.005em;}
+.chapter-summary{margin:0;color:var(--ink-2);font-size:1.05rem;}
+h3{font:600 1.3rem/1.25 var(--display);margin:2rem 0 .5rem;}
+h4{font:600 1.05rem/1.3 var(--body);margin:1.4rem 0 .3rem;}
+.anchor{margin-left:-1.1em;padding-right:.35em;color:var(--line);text-decoration:none;font-weight:400;opacity:0;transition:opacity .15s;}
+h3:hover .anchor,h4:hover .anchor{opacity:1;color:var(--brass);}
+p{margin:.7rem 0;}
+ul,ol{padding-left:1.4rem;margin:.7rem 0;}
+li{margin:.25rem 0;}
+li::marker{color:var(--brass);}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:2px;}
+a.external::after{content:" ↗";font-size:.8em;}
+code{font:500 .86em var(--mono);background:var(--code-bg);padding:.12em .4em;border-radius:5px;}
+pre{background:#26201A;color:#F4F2E9;padding:1rem 1.1rem;border-radius:10px;overflow-x:auto;font:400 13px/1.55 var(--mono);}
+pre code{background:none;padding:0;color:inherit;}
+kbd{font:500 .82em var(--mono);background:var(--field);border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:.08em .45em;white-space:nowrap;}
+table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.95rem;display:block;overflow-x:auto;}
+th{text-align:left;font:500 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);border-bottom:2px solid var(--line);padding:.5rem .7rem;}
+td{border-bottom:1px solid var(--line);padding:.55rem .7rem;vertical-align:top;}
+figure{margin:1.4rem 0;}
+figure img{display:block;max-width:100%;height:auto;border-radius:12px;border:1px solid var(--line);box-shadow:0 8px 28px rgba(38,32,26,.12);}
+figcaption{font-size:.85rem;color:var(--ink-3);margin-top:.55rem;text-align:center;}
+blockquote{margin:1rem 0;padding:.2rem 1.1rem;border-left:3px solid var(--brass);color:var(--ink-2);font-family:var(--display);font-style:italic;}
+hr{border:none;border-top:1px solid var(--line);margin:2rem 0;}
+.callout{display:flex;gap:.9rem;border-radius:12px;padding:.85rem 1.1rem;margin:1.2rem 0;border:1px solid transparent;}
+.callout>div>p:first-child{margin-top:0;}.callout>div>p:last-child{margin-bottom:0;}
+.callout-label{flex:none;font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;padding-top:.32rem;min-width:4.6em;}
+.callout.tip{background:var(--tip-soft);border-color:var(--tip-line);}.callout.tip .callout-label{color:var(--accent);}
+.callout.note{background:var(--note-soft);border-color:var(--note-line);}.callout.note .callout-label{color:var(--note-label);}
+.callout.warning{background:var(--danger-soft);border-color:var(--warn-line);}.callout.warning .callout-label{color:var(--danger);}
+.foot{text-align:center;color:var(--ink-3);font-size:13px;margin-top:2rem;}
+mark.hit{background:var(--mark);border-radius:3px;}
+
+/* Smal skærm: indholdsfortegnelsen bliver en blok øverst */
+@media (max-width:860px){
+  .shell{grid-template-columns:minmax(0,1fr);}
+  .content{min-width:0;}
+  .sidebar{position:static;height:auto;border-right:none;border-bottom:1px solid var(--line);}
+  .toc{max-height:14rem;overflow-y:auto;}
+  .content{padding-top:2rem;}
+}
+
+@media (max-width:560px){
+  .callout{flex-direction:column;gap:.2rem;}
+  .callout-label{padding-top:0;}
+  .chapter{padding-inline:1rem;}
+}
+
+/* Print / PDF */
+@media print{
+  :root{color-scheme:light;--bg:#fff;--paper:#fff;--surface:#fff;--line:#D8D4C6;--ink:#26201A;--ink-2:#5C5548;--ink-3:#8A8272;--accent:#2E5C4E;--accent-strong:#1F4237;--danger:#8C3A2B;--danger-soft:#F3E4DF;--tip-soft:#EAF0E6;--note-soft:#EFEADB;--field:#fff;--code-bg:#EDEADD;--tip-line:#CFDCC8;--note-line:#E1D8BC;--warn-line:#E6C9C0;--note-label:#7A6533;}
+  html{scroll-behavior:auto;}
+  body{background:#fff;font-size:11pt;}
+  .shell{display:block;}
+  .sidebar,.foot,.anchor{display:none!important;}
+  .content{max-width:none;padding:0;}
+  .hero{border:none;}
+  .chapter{break-before:page;border:none;box-shadow:none;background:#fff;padding:0;border-radius:0;}
+  .chapter[hidden]{display:block!important;}
+  figure,.callout,pre,table{break-inside:avoid;}
+  figure img{box-shadow:none;}
+  a{color:inherit;text-decoration:none;}
+  a.external::after{content:" (" attr(href) ")";font-size:.8em;color:#5C5548;}
+}
+
+</style>
+</head>
+<body data-lang="da" data-other="manual.en.html" data-nohits="Ingen kapitler matcher.">
+<div class="shell">
+<aside class="sidebar" id="sidebar">
+  <div class="brand"><span class="brand-mark">◯</span><div><div class="brand-name">Rundbordet</div><div class="brand-sub">Version 0.41.0 · rev 005a873</div></div></div>
+  <input type="search" id="search" placeholder="Søg i manualen …" aria-label="Søg i manualen …">
+  <nav aria-label="Indhold"><ol class="toc" id="toc">
+<li><a href="#getting-started" data-ch="getting-started"><span class="toc-n">01</span>Kom i gang på fem minutter</a></li>
+<li><a href="#table" data-ch="table"><span class="toc-n">02</span>Bordet og stolene</a></li>
+<li><a href="#roles" data-ch="roles"><span class="toc-n">03</span>Roller</a></li>
+<li><a href="#turn" data-ch="turn"><span class="toc-n">04</span>Hvem har turen</a></li>
+<li><a href="#run" data-ch="run"><span class="toc-n">05</span>Start bordet</a></li>
+<li><a href="#participate" data-ch="participate"><span class="toc-n">06</span>Deltag undervejs</a></li>
+<li><a href="#verify" data-ch="verify"><span class="toc-n">07</span>Kontrol og tilbagesendelse</a></li>
+<li><a href="#conversation" data-ch="conversation"><span class="toc-n">08</span>Aktivitetsstrøm og fuld samtale</a></li>
+<li><a href="#memory" data-ch="memory"><span class="toc-n">09</span>Hukommelse</a></li>
+<li><a href="#needs" data-ch="needs"><span class="toc-n">10</span>Åbne behov og forslag</a></li>
+<li><a href="#dials" data-ch="dials"><span class="toc-n">11</span>Adfærd og ikoner</a></li>
+<li><a href="#third-eye" data-ch="third-eye"><span class="toc-n">12</span>Tredje øje</a></li>
+<li><a href="#variants" data-ch="variants"><span class="toc-n">13</span>Smag varianter</a></li>
+<li><a href="#workgraph" data-ch="workgraph"><span class="toc-n">14</span>Strategi og arbejdsgraf</a></li>
+<li><a href="#io" data-ch="io"><span class="toc-n">15</span>IN og OUT</a></li>
+<li><a href="#metrics" data-ch="metrics"><span class="toc-n">16</span>Målinger og overdragelse</a></li>
+<li><a href="#prices" data-ch="prices"><span class="toc-n">17</span>Priser og forbrug</a></li>
+<li><a href="#git" data-ch="git"><span class="toc-n">18</span>Gem i git</a></li>
+<li><a href="#voice" data-ch="voice"><span class="toc-n">19</span>Stemme (ElevenLabs)</a></li>
+<li><a href="#shield" data-ch="shield"><span class="toc-n">20</span>Beskyttelse</a></li>
+<li><a href="#language" data-ch="language"><span class="toc-n">21</span>Sprog</a></li>
+<li><a href="#settings" data-ch="settings"><span class="toc-n">22</span>Indstillinger</a></li>
+<li><a href="#shortcuts" data-ch="shortcuts"><span class="toc-n">23</span>Genveje</a></li>
+<li><a href="#troubleshooting" data-ch="troubleshooting"><span class="toc-n">24</span>Fejlfinding og FAQ</a></li>
+<li><a href="#glossary" data-ch="glossary"><span class="toc-n">25</span>Ordliste</a></li>
+<li><a href="#about" data-ch="about"><span class="toc-n">26</span>Om Rundbordet</a></li>
+  </ol></nav>
+  <p class="no-hits" id="noHits" hidden>Ingen kapitler matcher.</p>
+  <div class="side-actions">
+    <a class="side-btn" id="langLink" href="manual.en.html">English</a>
+    <button class="side-btn" id="pdfBtn" type="button">Gem som PDF</button>
+  </div>
+</aside>
+<main class="content" id="content">
+<header class="hero">
+  <p class="eyebrow">Brugermanual</p>
+  <h1>Rundbordet</h1>
+  <p class="hero-sub">Et AI-team omkring ét bord.</p>
+</header>
+<section class="chapter" id="getting-started" data-title="Kom i gang på fem minutter">
+<header class="chapter-head"><span class="chapter-n">01</span><h2>Kom i gang på fem minutter</h2><p class="chapter-summary">Fra tomt bord til dit første svar fra to AI-stole.</p></header>
+<p>Rundbordet er et lille kontrolpanel, hvor du sætter flere AI-modeller omkring ét bord. Hver model sidder på en <strong>stol</strong> med en <strong>rolle</strong> (fx Clarifier eller Builder), og du kan lade dem arbejde efter tur på den samme opgave. Alt foregår på din egen computer; du bruger dine egne API-nøgler.</p>
+<p><figure><img src="../img/da/table.png" alt="Bordet med fire stole, samtalen i højre side og IN/OUT under bordet" loading="lazy"><figcaption>Overblikket: stolene om bordet, samtalen til højre, IN og OUT under bordet</figcaption></figure></p>
+<h3 id="getting-started-se-en-indspillet-demo-foerst"><a class="anchor" href="#getting-started-se-en-indspillet-demo-foerst" aria-hidden="true">#</a>Se en indspillet demo først</h3>
+<p>Øverst på første skærm står <em>Se den indspillede demo</em>. Den åbner et eget vindue med et færdigt øvelsesbord (en plan for en lille café), hvor du kan klikke rundt, se stolene arbejde efter tur, prøve Tredje øjes valg og se Beskyttelsen virke. <strong>Svarene er skrevet på forhånd og kommer ikke fra en model.</strong> Der bruges ingen nøgle, det koster ingenting, din egen tekst bruges ikke, og dine egne borde rører demoen aldrig. Intet i demoen gemmes, når du lukker vinduet.</p>
+<h3 id="getting-started-foerste-gang-vaelg-en-opgave"><a class="anchor" href="#getting-started-foerste-gang-vaelg-en-opgave" aria-hidden="true">#</a>Første gang: vælg en opgave</h3>
+<p>Første gang du åbner Rundbordet, spørger appen: <em>Hvad vil du gerne have hjælp til?</em> Du kan skrive din egen opgave i feltet øverst (se næste afsnit) eller vælge et eksempel. Der er fire eksempler: <em>Forstå noget svært</em>, <em>Vælg mellem to muligheder</em>, <em>Er det her rigtigt?</em> og <em>Forstå et brev, jeg har fået</em>. Vælg en, og du ser opgaven, et eksempel på, hvordan et svar kan se ud, og hvilke modeller bordet vil bruge. Eksemplet er skrevet på forhånd; det er ikke et svar fra en model, og dit eget svar bliver anderledes.</p>
+<ol>
+<li>Indsæt din OpenRouter-nøgle (der er et link til at hente en), og tryk <em>Tjek nøglen og vis modellerne</em>. Under feltet står, at <strong>et ChatGPT- eller Claude-abonnement ikke i sig selv giver en API-nøgle</strong>, at du betaler udbyderen direkte, hvor nøglen gemmes, og hvem der modtager opgaven. Nøgletjekket sender ingen opgave.</li>
+<li>Se modellerne og listepriserne, og tryk <em>Opret bordet</em>.</li>
+<li>Opgaven står nu i beskedfeltet. Der er <strong>ikke sendt noget til nogen model endnu.</strong> Ret opgaven, hvis du vil, og tryk <em>Send til bordet</em>, når du er klar.</li>
+</ol>
+<p>Prisgrænsen for en kørsel sættes til 1 USD, så kørslen stopper, når grænsen er nået. Du kan ændre den under bordets indstillinger. Brevopgaven er en forklaring i almindeligt sprog og <strong>ikke juridisk rådgivning</strong>. Eksempelbrevet er opdigtet; skift det ud med dit eget, eller læg en PDF i IN.</p>
+<p>Vil du hellere starte selv, så tryk <em>Start med et tomt bord</em> og følg trinene nedenfor. Du kan altid åbne opgaverne igen ved at trykke på <strong>+</strong> ved siden af bordvælgeren.</p>
+<h3 id="getting-started-har-du-en-anden-opgave-faa-et-forslag"><a class="anchor" href="#getting-started-har-du-en-anden-opgave-faa-et-forslag" aria-hidden="true">#</a>Har du en anden opgave? Få et forslag</h3>
+<p>Passer ingen af de fire eksempler, så skriv opgaven med dine egne ord i feltet øverst (eller indsæt den tekst, du vil have hjælp til), og tryk <em>Få et forslag til min opgave</em>. Svar så svar på tre korte spørgsmål: hvor meget du selv vil være med undervejs, om du har brugt AI-værktøjer, hvor flere stole arbejder sammen, før, og hvor vigtigt det er, at svaret er rigtigt. Så foreslår appen tre ting, hver med en kort begrundelse:</p>
+<ul>
+<li><strong>Sådan går det:</strong> med almindelige ord, hvad bordet gør (bordtypens egen beskrivelse), hvor mange stole der kaldes, og hvad du får ud af det. Der er ikke flere stole eller kald, end bordtypen kræver.</li>
+<li><strong>Bord:</strong> en af bordtyperne (Læring, Beslutning, Fakta, Brev, to stole til at bygge, Scrum), valgt ud fra ordene i din opgave. Kan appen ikke se en bestemt type, foreslår den <em>Læring</em>, fordi du så tænker først, og siger, at det er et udgangspunkt.</li>
+<li><strong>Tænkning:</strong> <em>Hurtig</em>, <em>Grundig</em> eller <em>Kritisk</em>, ud fra hvor vigtigt det er, at svaret er rigtigt. Forudindstillingen lægges oven på bordets egen opsætning og slår aldrig noget fra, som bordet har slået til. Det er ønsker til modellen, ikke en garanti.</li>
+<li><strong>Visning:</strong> <em>Enkel</em>, <em>Mere</em> eller <em>Avanceret</em>, ud fra din erfaring og din lyst til at styre. Det afgøres altid af dine egne svar. Du kan skifte i toppen, når som helst.</li>
+</ul>
+<p><strong>Du kan ændre alle tre</strong>, før noget oprettes; så står der <em>Du har valgt det selv</em>. Forslaget laves af faste regler i appen, og <strong>i den del sendes intet nogen steder</strong>.</p>
+<p>Vil du have Tredje øje til at læse opgaven og rette bord og tænkning, så tryk <em>Lad Tredje øje læse opgaven</em> (efter at du har tjekket nøglen og set modellerne). Du ser først <strong>præcis, hvad der sendes</strong> (din opgave og en kort liste over bordtyperne; svarene på de tre spørgsmål sendes ikke), hvilken model der bruges, og et <strong>overslag over prisen</strong>. Først når du trykker <em>Send</em>, sendes ét kald. Svaret godtages kun, hvis det er et af de kendte valg; ellers ændres intet. Kaldet er med i bordets regning som Tredje øjes udgift. Visningen rører Tredje øje aldrig.</p>
+<h3 id="getting-started-det-skal-du-bruge"><a class="anchor" href="#getting-started-det-skal-du-bruge" aria-hidden="true">#</a>Det skal du bruge</h3>
+<ul>
+<li>En <strong>API-nøgle</strong> fra mindst én udbyder (Anthropic, OpenAI, Google Gemini, Groq, Mistral, xAI, DeepSeek eller en OpenAI-kompatibel tjeneste). Nøglen får du hos udbyderen; i stolens panel er der et link, <em>Hent nøgle</em>.</li>
+<li>Et par kroner på kontoen hos udbyderen. Små modeller koster typisk under en øre pr. svar.</li>
+<li>Mac, Windows eller Linux. Åbner Mac&#39;en ikke appen, eller skal du bruge Linux (fx Omarchy), står det under <a href="#troubleshooting-installer-paa-linux-fx-omarchy">Installer på Linux</a> og <a href="#troubleshooting">Fejlfinding</a>.</li>
+</ul>
+<h3 id="getting-started-saadan-goer-du"><a class="anchor" href="#getting-started-saadan-goer-du" aria-hidden="true">#</a>Sådan gør du</h3>
+<ol>
+<li><strong>Tilføj en stol.</strong> Klik på den stiplede cirkel med <strong>+</strong> ved bordet. Under <em>Avanceret</em> vælger du en rolle, fx <em>Orchestrator</em>; ellers trykker du <em>+ Ny stol</em> og giver stolen et navn.</li>
+<li><strong>Vælg Modelprofil API og model.</strong> Har du ingen profil endnu, så sæt en op med udbyder og nøgle (knappen står i stolens panel). Vælg derefter modellen på stolen (skriv navnet eller klik <em>Hent modeller</em>).</li>
+<li><strong>Test.</strong> Klik <em>Test API</em>. Får du besked om, at forbindelsen virker, er nøgle og model i orden.</li>
+<li><strong>Gem.</strong> Stolen sætter sig ved bordet.</li>
+<li><strong>Tilføj en stol mere</strong>, fx <em>Clarifier</em> eller <em>Builder</em>. Stolene må gerne bruge forskellige udbydere.</li>
+<li><strong>Giv bordet en opgave.</strong> Nederst står modtagervalget <em>Til</em>. Lad det stå på <em>Alle (start kørsel)</em>, skriv en opgave, fx “Lav en plan for en kundeportal”, og klik <em>Send til bordet</em> (eller tryk ⌘/Ctrl+Enter). Linjen ved siden af siger, hvad der sker.</li>
+<li><strong>Bekræft.</strong> Bordet viser opgaven, rækkefølgen og forbruget indtil nu. Klik <em>▶ Start bordet</em>.</li>
+<li><strong>Læs.</strong> Første stol svarer, svaret sendes videre til næste stol, og så fremdeles. I <em>Samtale ved bordet</em> ser du forløbet.</li>
+</ol>
+<aside class="callout tip"><span class="callout-label">Tip</span><div><p>Vil du kun tale med én stol, så vælg dens navn under <em>Til</em> i stedet for <em>Alle</em>. Så svarer kun den stol, med sin egen model.</p>
+</div></aside>
+<h3 id="getting-started-hvad-sker-der-bagefter"><a class="anchor" href="#getting-started-hvad-sker-der-bagefter" aria-hidden="true">#</a>Hvad sker der bagefter?</h3>
+<p>Hver stol slutter sit svar med et lille <strong>behov</strong>: hvad der stadig mangler, og hvilken rolle der bedst kan løse det. Dem samler bordet i knappen <em>Næste skridt</em> sammen med observationer og forslag fra Tredje øje. Læs mere i <a href="#needs">Åbne behov og forslag</a>.</p>
+<h3 id="getting-started-hvor-meget-skal-du-selv-vaere-med"><a class="anchor" href="#getting-started-hvor-meget-skal-du-selv-vaere-med" aria-hidden="true">#</a>Hvor meget skal du selv være med?</h3>
+<p>Bordet kan køre helt færdigt, eller du kan være med undervejs: stole kan holde pause ved spørgsmål til dig, og du kan skrive dit eget bud, før bordet kører. Under ⚙ → <em>Dette bord</em> → <em>Bordfil</em> → <em>Skabeloner</em> ligger færdige borde (Faktabord, Makkerpar, Scrum, Læringsbord, Beslutningsbord og Brevbord), hver med et mærke: <em>Du er med: lidt / undervejs / hele vejen</em>. Læs mere i <a href="#participate">Deltag undervejs</a>.</p>
+<aside class="callout note"><span class="callout-label">Bemærk</span><div><p>Appen er lavet til at <em>prøve, sammenligne og styre</em> AI-samarbejde: hvem gør hvad, hvad det koster, og hvad du selv beslutter. Intet sker bag din ryg; du starter hver kørsel, og du bestemmer hvad der gemmes.</p>
+</div></aside>
+
+</section>
+<section class="chapter" id="table" data-title="Bordet og stolene">
+<header class="chapter-head"><span class="chapter-n">02</span><h2>Bordet og stolene</h2><p class="chapter-summary">Sådan er bordet bygget op, og hvad du kan gøre med en stol.</p></header>
+<p>Bordet har op til <strong>otte pladser</strong>. Hver plads er en stol med en rolle, en model og en række indstillinger.</p>
+<h3 id="table-saadan-laeser-du-en-stol"><a class="anchor" href="#table-saadan-laeser-du-en-stol" aria-hidden="true">#</a>Sådan læser du en stol</h3>
+<p><figure><img src="../img/da/seat.png" alt="Stolens panel med rolle, udbyder, model, API-nøgle og farve" loading="lazy"><figcaption>Stolens panel</figcaption></figure></p>
+<p>På selve stolen ser du:</p>
+<ul>
+<li><strong>Rollens navn</strong>, et <strong>statusord</strong> og én <strong>aktivitetslinje</strong>. Statusordet er det, appen kan dokumentere: <em>Arbejder</em> (et modelkald kører), <em>Har turen</em>, <em>Næste i rækken</em>, <em>Venter</em>, <em>Færdig</em>, <em>Kontrol ikke bestået</em>, <em>Behov til dig</em>, <em>Venter på dig</em> (bordet holder pause og venter på dit svar), <em>Pauset</em> eller <em>Fejlet</em>. Linjen under siger, hvad der skete eller afventes, fx <em>Svarer nu · modelnavn</em>, <em>Afventer Clarifier</em> eller <em>Afleverede til Builder</em>. Intet vises, som appen ikke ved.</li>
+<li><strong>Detaljer ved hover:</strong> hold musen over (eller tab til) stolen for model, udbyder, mandat, arbejdsform, aktive indstillinger, om den er kontrolstol og om den læser IN. De små ikoner til at ændre mandat og arbejdsform kommer frem på samme måde (se <a href="#dials">Adfærd og ikoner</a>).</li>
+<li>En lille <strong>prik</strong> i hjørnet viser, at stolens API-nøgle er testet: grøn betyder, at testen virkede.</li>
+<li>Et <strong>kronemærke</strong> 👑, hvis stolen har turen (se <a href="#turn">Hvem har turen</a>).</li>
+</ul>
+<h3 id="table-det-kan-du-goere"><a class="anchor" href="#table-det-kan-du-goere" aria-hidden="true">#</a>Det kan du gøre</h3>
+<table>
+<thead>
+<tr>
+<th>Handling</th>
+<th>Sådan</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Tilføje en stol</td>
+<td>Klik på den stiplede cirkel med <strong>+</strong></td>
+</tr>
+<tr>
+<td>Redigere en stol</td>
+<td>Klik på stolen</td>
+</tr>
+<tr>
+<td>Flytte en stol</td>
+<td>Træk i den lille prikkede hjørne-hane; dobbeltklik for at nulstille placeringen</td>
+</tr>
+<tr>
+<td>Ændre projektnavn og GitHub</td>
+<td>Klik på navnet midt på bordet</td>
+</tr>
+<tr>
+<td>Slette en stol</td>
+<td>Åbn stolen og klik <em>Slet stol</em></td>
+</tr>
+<tr>
+<td>Skifte bord</td>
+<td>Brug rullelisten øverst til venstre; <strong>+</strong> ved siden af rullelisten (opgavekort, egen opgave, <em>Hurtig start</em> eller et tomt bord)</td>
+</tr>
+</tbody></table>
+<h3 id="table-tre-visninger-af-bordet-samme-data"><a class="anchor" href="#table-tre-visninger-af-bordet-samme-data" aria-hidden="true">#</a>Tre visninger af bordet, samme data</h3>
+<p>Under ⚙ → <em>Dette bord</em> → <em>Visning af bordet</em> vælger du, hvordan bordet vises (se <a href="#settings">Indstillinger</a>):</p>
+<ul>
+<li><strong>Rundt:</strong> stolene sidder rundt om et rundt bord. Her kan du trække stolene frit og se alle symboler ved hover.</li>
+<li><strong>Kompakt:</strong> et mindre, rundt bord med små stole (navn og et lille tegn: ● arbejder, ! behov, … venter). Stolene står på de faste pladser.</li>
+<li><strong>Liste:</strong> stolene står under hinanden i bordets rækkefølge, med nummer, status og model. Den passer til smalle vinduer.</li>
+<li><strong>Auto</strong> vælger efter bordkolonnens bredde: rundt fra ca. 480 px, kompakt fra ca. 340 px og ellers liste. Visningen skifter først, når bredden er et godt stykke forbi grænsen, så den ikke flimrer.</li>
+</ul>
+<p>Valget gælder kun dette bord og gemmes sammen med det. Står den på <em>Auto</em>, kan visningen skifte, når du ændrer vinduets størrelse; vælger du en bestemt visning, ligger den fast. Stolenes data, klik og indstillinger er de samme i alle tre.</p>
+<h3 id="table-overdragelser-mellem-stole"><a class="anchor" href="#table-overdragelser-mellem-stole" aria-hidden="true">#</a>Overdragelser mellem stole</h3>
+<p>Når en stol afleverer sit svar til den næste (i en kørsel eller når du videresender selv), vises det:</p>
+<ul>
+<li><p><strong>Rundt og kompakt bord:</strong> en tynd forbindelse mellem stolene med en lille pil midt på, der viser vejen informationen sendes (fra → til); hold musen over den for at se, hvem der afleverer til hvem. Stiplet betyder, at overdragelsen endnu ikke er sket; fuld linje betyder, at den er gennemført i den seneste opgave; en <strong>hul pil med kortere streger</strong> betyder, at den næste stol kom efter, men ingen overdragelse er logget (fx fordi svaret ikke havde en 🔭-blok); en <strong>prik-streg-linje</strong> er en <strong>genvej uden for rækkefølgen</strong>: enten en manuel videresendelse eller en overdragelse, der gik et andet sted hen end rækkefølgen siger (fx ved dynamisk valg af næste stol). Der tegnes ellers kun pile i den planlagte rækkefølge, så en stol ikke ser ud til at have to planlagte pile; genvejen er mærket med navnene (hold musen over den). Nederst til venstre på bordet står en lille <strong>forklaring</strong> til linjerne. Pilen sidder tæt på modtageren, så den ikke havner oven på midten af bordet. Når en overdragelse sker, løber en lille prik langs linjen (højst ét ad gangen, fordi bordet arbejder sekventielt; ved reduceret bevægelse vises ingen bevægelse).</p>
+</li>
+<li><p><strong>Liste:</strong> en lille pil mellem rækkerne (svævetip: &quot;Afleveret til Builder&quot;), og når overdragelsen er sket, hvordan den blev sendt (&quot;fuld tekst&quot; eller &quot;struktureret&quot;).</p>
+</li>
+<li><p><strong>Resumé:</strong> klik på pilen eller forbindelsen, eller på overdragelseslinjen under et svar i den fulde samtale. Er overdragelsen <strong>struktureret</strong>, ser du fakta, beslutninger, åbne spørgsmål, advarsler og forventet output. Er den <strong>fuld tekst</strong>, står der tydeligt, at hele svaret blev sendt uden felter, og hvorfor (bordets indstilling, svaret havde ingen strukturerede felter, eller modtageren er en kontrolstol, som altid får hele teksten). Du ser også, hvor mange tegn der blev sendt.</p>
+</li>
+<li><p><strong>Spørgsmål til dig:</strong> har en stol et spørgsmål til dig, får pilen ud fra den et mærke (gult tal, rødt eller grønt ✓), og et klik viser spørgsmålet og et svarfelt. Se <a href="#participate">Deltag undervejs</a>.</p>
+</li>
+</ul>
+<p>Det bygger på de data, appen allerede har; der laves ingen ekstra modelkald.</p>
+<h3 id="table-stolens-panel"><a class="anchor" href="#table-stolens-panel" aria-hidden="true">#</a>Stolens panel</h3>
+<ul>
+<li><strong>Rolle (begreb) og rollenavn:</strong> vælg et begreb på listen. <em>Rollenavn</em> står lige under og er tomt som standard; skriver du et navn, bruges det i stedet for begrebet overalt på bordet (se <a href="#roles">Roller</a>).</li>
+<li><strong>Modelprofil API:</strong> vælg den profil, der har udbyder og nøgle. En profil sætter du op én gang under ⚙ → <em>Hele programmet</em> → <em>Modelprofiler API …</em> (knappen står også i stolens panel). Nøglen skrives aldrig på stolen.</li>
+<li><strong>Model:</strong> vælg modellen på stolen; <em>Hent modeller</em> henter den aktuelle liste direkte fra udbyderen via profilens nøgle.</li>
+<li><strong>Test API:</strong> sender et lille prøvekald, så du ser, om nøgle og model virker.</li>
+<li><strong>Farve:</strong> kun for overblikkets skyld.</li>
+<li><strong>Læser IN-mappen:</strong> giver stolen adgang til dit materiale (se <a href="#io">IN og OUT</a>).</li>
+<li><strong>Kontrollerer resultatet:</strong> gør stolen til kontrolstol (se <a href="#verify">Kontrol og tilbagesendelse</a>).</li>
+<li><strong>Stemme (ElevenLabs):</strong> vælg en stemme, så stolens svar kan læses højt (se <a href="#voice">Stemme</a>).</li>
+<li><strong>Instruktioner (avanceret):</strong> stolens ti adfærdsindstillinger (se <a href="#dials">Adfærd og ikoner</a>).</li>
+</ul>
+<aside class="callout warning"><span class="callout-label">Pas på</span><div><p>En stol uden Modelprofil API kan ikke gemmes, og bordet starter ikke, før alle stole har en profil og en model. Appen siger, hvad der mangler, og fører dig derhen; et banner over beskedfeltet viser det hele tiden.</p>
+</div></aside>
+<h3 id="table-bordfil-gem-del-og-import-r"><a class="anchor" href="#table-bordfil-gem-del-og-import-r" aria-hidden="true">#</a>Bordfil: gem, del og importér</h3>
+<p>Under ⚙ → <em>Dette bord</em> → <strong>Bordfil</strong> kan du gemme bordets opsætning som en fil: roller, model og udbyder, dials, ikoner, tilvalg, tilføjelser, kontrolstole, overdragelsesform, runder, eget bud først og prisgrænse. Filen indeholder <strong>aldrig</strong> nøgler, adresser, stemmer, beskeder, hukommelse eller Beskyttelsens ord, så den kan lægges i git eller sendes videre.</p>
+<ul>
+<li><strong>Eksportér bordfil</strong> gemmer en <code>.bord.json</code>-fil, hvor du vælger.</li>
+<li><strong>Skriv roller og setup som dokument i OUT</strong> laver en læsbar Markdown-fil om hver stol: model, mandat, aktive dials, tilføjelser, de seneste ændringer og den fulde instruktion, modellen får. Den ligger i OUT, og at rette i den ændrer ikke bordet.</li>
+<li><strong>Importér bordfil</strong> opretter altid et <strong>nyt</strong> bord; dit eksisterende bord røres ikke.</li>
+</ul>
+<p>En stols <strong>rollenavn</strong> og <strong>begreb</strong> (fx <em>OUT Writer</em>) står hver for sig i filen, så en omdøbt stol beholder sin funktion, også efter import. Ældre filer uden begreb virker som før.</p>
+<aside class="callout warning"><span class="callout-label">Pas på</span><div><p>En bordfil fra en anden er upålidelig tekst. Før noget oprettes, viser appen alle stole og <strong>alle tilføjelser i fuld længde</strong>, fordi de bliver en del af stolens instruktion. Læs dem igennem. Stolene får hverken nøgle eller adresse fra filen; med <em>Genbrug mine nøgler</em> kan faste udbydere låne dine egne nøgler, men aldrig udbyderen “Andet”.</p>
+</div></aside>
+<p>Appen kontrollerer filen mod en fast liste (kendte udbydere, dials, tilstande og ikoner), afkorter tekster og springer ugyldigt over med en advarsel. Højst 12 stole og 20 tilføjelser pr. stol.</p>
+<h3 id="table-skabeloner-faerdige-borde-efter-hvor-meget-du-er-med"><a class="anchor" href="#table-skabeloner-faerdige-borde-efter-hvor-meget-du-er-med" aria-hidden="true">#</a>Skabeloner: færdige borde efter, hvor meget du er med</h3>
+<p>Under ⚙ → <em>Dette bord</em> → <strong>Bordfil</strong> ligger <strong>Skabeloner</strong>. Hver skabelon har et mærke, der siger, hvor meget du er med. Ikke alle opgaver har brug for dig hele vejen: et rent opslag af fakta har ingen glæde af pauser, mens et valg eller en læringsopgave netop vinder ved dem. Du ser alle instruktioner i forhåndsvisningen, før noget oprettes.</p>
+<table>
+<thead>
+<tr>
+<th>Skabelon</th>
+<th>Du er med</th>
+<th>Hvad den er til</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Faktabord</strong></td>
+<td>lidt</td>
+<td><strong>Researcher</strong> samler viden med kilder, <strong>Reviewer</strong> (kontrolstol) kontrollerer kilder og usikkerhed, og <strong>OUT Writer</strong> skriver resultatet som fil. Højst to runder, ingen pauser</td>
+</tr>
+<tr>
+<td><strong>Makkerpar</strong></td>
+<td>lidt</td>
+<td><strong>Driver</strong> laver, <strong>Navigator</strong> gennemgår (se <a href="#verify">Kontrol og tilbagesendelse</a>)</td>
+</tr>
+<tr>
+<td><strong>Scrum</strong></td>
+<td>undervejs</td>
+<td>Sprintplanlægning, se nedenfor</td>
+</tr>
+<tr>
+<td><strong>Læringsbord</strong></td>
+<td>hele vejen</td>
+<td>Du tænker først. <strong>Clarifier</strong> (⏸) beder om dit eget bud, <strong>Forklarer</strong> (⏸) giver perspektiver og siger, hvad der er usikkert, <strong>Udfordrer</strong> (?) stiller spørgsmål til dine antagelser, og <strong>Skriver</strong> hjælper dig med at formulere din egen konklusion</td>
+</tr>
+<tr>
+<td><strong>Beslutningsbord</strong></td>
+<td>hele vejen</td>
+<td><strong>Clarifier</strong>, <strong>Analytiker</strong> (fordele og ulemper), <strong>Berørte</strong> (de berørtes perspektiv), <strong>Udfordrer</strong> (⏸) og <strong>OUT Writer</strong>, der skriver et beslutningsnotat med <em>din</em> beslutning og de åbne spørgsmål</td>
+</tr>
+</tbody></table>
+<p>Læringsbordet og Beslutningsbordet har desuden <strong>Eget bud først</strong> slået til (se <a href="#participate">Deltag undervejs</a>): du skriver dit eget bud, før bordet kører, og ser det ved siden af resultatet bagefter. Mandaterne (✓ ? ⏸) i Læringsbordet og Beslutningsbordet virker, fordi nye borde har <strong>Mandatet styrer forløbet</strong> slået til (se <a href="#participate">Deltag undervejs</a>). I Beslutningsbordet sidder pausen lige før OUT Writer, så din beslutning kan skrives i pausekortet. Dine afgørelser og de åbne spørgsmål følger desuden med i beslutningsregistret (se <a href="#participate">Deltag undervejs</a>), så notatet kan forholde sig til dem.</p>
+<p>Ingen af skabelonerne beslutter noget for dig. Du kan altid ændre stole, mandater og instruktioner bagefter.</p>
+<h4 id="table-scrum"><a class="anchor" href="#table-scrum" aria-hidden="true">#</a>Scrum</h4>
+<p><em>Scrum: sprintplanlægning</em> opretter et bord med fem stole: <strong>Product Owner</strong> (læser visionen i IN og prioriterer), <strong>Scrum Master</strong> (faciliterer og holder øje med mål og kapacitet), <strong>Developer</strong> (estimerer i point), <strong>Tester</strong> (kontrolstol, der tjekker acceptkriterier) og <strong>OUT Writer</strong> (skriver planen som fil). Du ser alle instruktioner i forhåndsvisningen, før bordet oprettes, og stolene får udbyder og nøgle bagefter (<em>Genbrug mine nøgler</em> kan låne dine egne).</p>
+<p>Læg projektets vision og backlog i <strong>IN</strong>, skriv opgaven (fx <em>Planlæg næste sprint</em>) og start bordet. Stolene arbejder ét led ad gangen, og du er med: bordet aftaler ikke selv noget uden dig.</p>
+
+</section>
+<section class="chapter" id="roles" data-title="Roller">
+<header class="chapter-head"><span class="chapter-n">03</span><h2>Roller</h2><p class="chapter-summary">Rollen er stolens navn og udgangspunkt; adfærden styrer du selv.</p></header>
+<p>Når du vælger en rolle, får stolen navnet som sin identitet (“Du er Clarifier.”). Rollen er <strong>ikke</strong> en færdigskrevet personlighed; hvordan stolen arbejder, afgøres af indstillingerne under <a href="#dials">Adfærd og ikoner</a>. Vælg rollen efter hvad du vil bruge stolen til.</p>
+<h3 id="roles-begreb-og-rollenavn"><a class="anchor" href="#roles-begreb-og-rollenavn" aria-hidden="true">#</a>Begreb og rollenavn</h3>
+<p>Rollen på listen er stolens <strong>begreb</strong>. <em>Rollenavn</em> står lige under og er tomt som standard; skriver du et navn der, bruges det i stedet for begrebet overalt på bordet (i samtalen, på stolen og i modtagerlisten). Begrebet gælder stadig: en stol med begrebet <em>OUT Writer</em> afleverer i OUT, uanset hvad den hedder. Dine egne roller kan gemmes under ⚙ → <em>Hele programmet</em> → <em>Dine roller</em> (se <a href="#settings">Indstillinger</a>).</p>
+<p>Listen med begreber, og rolleknapperne når du tilføjer en stol, vises kun under visningen <strong>Avanceret</strong>. På <strong>Enkel</strong> og <strong>Mere</strong> trykker du <em>+ Ny stol</em> og giver stolen et navn; vil du have, at stolen gemmer sit svar som en fil i OUT, sætter du kryds i <em>Skriver til OUT</em> først. Du giver altså en ny stol bare et navn, og en eksisterende stol beholder sit begreb. Skifter du begreb under Avanceret, står det i stolens historik (<em>Begreb: Builder → Reviewer</em>), og du kan rulle det tilbage.</p>
+<h3 id="roles-rollernes-startindstillinger"><a class="anchor" href="#roles-rollernes-startindstillinger" aria-hidden="true">#</a>Rollernes startindstillinger</h3>
+<p>Et begreb er ellers kun et navn, men hvert begreb kan få <strong>startindstillinger</strong>: hvor grundig og kritisk stolen er (dials), egne instruktioner, om den er kontrolstol, og om den læser IN-mappen. Appen har forslag til de vigtigste roller (Orchestrator, Clarifier, Researcher, Builder, Tester, Reviewer, Documenter og OUT Writer).</p>
+<ul>
+<li><strong>Giver du en stol et begreb</strong> (en ny stol, eller et nyt begreb på en eksisterende), viser appen først en <strong>konsekvensgennemgang</strong>: præcis hvilke indstillinger der ændres, og en advarsel, hvis det kan give flere eller større kald (kontrolstol eller læsning af IN). Du vælger <em>Brug rollens indstillinger</em>, <em>Behold stolens indstillinger</em> eller <em>Fortryd rollevalget</em>. Intet er gemt, før du gemmer stolen, og ændringen står i stolens historik.</li>
+<li><strong>Lad Tredje øje foreslå:</strong> i konsekvensgennemgangen kan du bede <a href="#third-eye">Tredje øje</a> om et eget forslag til rollens indstillinger og instruktioner. Appen viser først præcis, hvad der sendes (kun rollens navn og stolens egne instruktioner) og et overslag over størrelsen, og sender intet, før du trykker <em>Send til Tredje øje</em>. Forslaget vises som ændringer før og efter, og du kan vende tilbage til appens eget forslag. Kaldet bogføres på bordet.</li>
+<li><strong>Selvstændighed, regler og omkostning</strong> sættes aldrig af en rolle; de er dine egne valg.</li>
+<li><strong>Ret dem</strong> under ⚙ → <em>Hele programmet</em> → <em>Rollernes startindstillinger</em>: vælg et begreb, ret og gem. <em>Gendan forslaget</em> fjerner dine rettelser.</li>
+</ul>
+<h3 id="roles-rollerne"><a class="anchor" href="#roles-rollerne" aria-hidden="true">#</a>Rollerne</h3>
+<table>
+<thead>
+<tr>
+<th>Gruppe</th>
+<th>Roller</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Kerne- og styringsroller</strong></td>
+<td>Orchestrator (holder overblikket og fordeler arbejdet), Router (peger på hvem der skal tage næste skridt), PM (Product), Communicator</td>
+</tr>
+<tr>
+<td><strong>Analyse og planlægning</strong></td>
+<td>Clarifier (stiller afklarende spørgsmål), Researcher, Architect, Planner</td>
+</tr>
+<tr>
+<td><strong>Udvikling og implementering</strong></td>
+<td>Builder, Database, Frontend, Backend, DevOps</td>
+</tr>
+<tr>
+<td><strong>Kvalitetssikring</strong></td>
+<td>Tester, Security, Reviewer, Evaluator</td>
+</tr>
+<tr>
+<td><strong>Viden, læring og forbedring</strong></td>
+<td>Documenter, Memory, Process Analyst, Learning Agent</td>
+</tr>
+<tr>
+<td><strong>Specialiserede roller</strong></td>
+<td>UX Researcher, API Specialist, Performance, Compliance, Human</td>
+</tr>
+<tr>
+<td><strong>Aflevering</strong></td>
+<td><strong>OUT Writer</strong>: skriver bordets resultat som en fil i OUT-mappen (se <a href="#io">IN og OUT</a>)</td>
+</tr>
+</tbody></table>
+<h3 id="roles-din-egen-rolle"><a class="anchor" href="#roles-din-egen-rolle" aria-hidden="true">#</a>Din egen rolle</h3>
+<p>Vælg <em>Andet (skriv selv)</em> i rullelisten og giv rollen et navn, fx <em>Debugger</em> eller <em>Redaktør</em>. Navnet bruges som stolens identitet.</p>
+<p>Skabelonerne bruger også egne rollenavne (fx <em>Driver</em>, <em>Navigator</em>, <em>Forklarer</em>, <em>Udfordrer</em>, <em>Skriver</em>, <em>Berørte</em>). Det er roller, du selv kunne have skrevet under <em>Andet</em>, med en færdig instruktion (se <a href="#table">Bordet og stolene</a>).</p>
+<h3 id="roles-en-god-sammensaetning"><a class="anchor" href="#roles-en-god-sammensaetning" aria-hidden="true">#</a>En god sammensætning</h3>
+<p>Start småt: en stol til at <strong>afklare</strong>, en til at <strong>bygge</strong> og en til at <strong>kontrollere</strong>. Flere stole giver flere kald og dermed højere regning, men ikke nødvendigvis bedre resultater. Se pris og forbrug under <a href="#metrics">Målinger</a> og <a href="#prices">Priser og forbrug</a>.</p>
+<aside class="callout tip"><span class="callout-label">Tip</span><div><p>Forskellige udbydere på forskellige stole giver ofte mere varierede svar end fire stole med samme model.</p>
+</div></aside>
+<h3 id="roles-vaelg-model"><a class="anchor" href="#roles-vaelg-model" aria-hidden="true">#</a>Vælg model</h3>
+<p>Du vælger en <strong>modelprofil API</strong> i stolens panel; den har udbyder og nøgle, og modellen vælger du selv på stolen (se <a href="#settings">Indstillinger</a>).</p>
+<p>Skriv de første bogstaver i feltet <em>Model</em>, så vises alle modeller, der passer. Vælg med ↑ ↓ og Enter, eller klik. Du kan også skrive et modelnavn, der ikke står på listen.</p>
+<p><em>Hent modeller</em> henter den aktuelle liste direkte fra udbyderen (kræver nøglen); forslagene, der står i forvejen, kan være forældede. Hos OpenRouter hedder modellerne <em>udbyder/model</em>, fx <code>openai/gpt-4.1</code>; skriv <code>anthropic/</code> for kun at se den udbyders modeller.</p>
+
+</section>
+<section class="chapter" id="turn" data-title="Hvem har turen">
+<header class="chapter-head"><span class="chapter-n">04</span><h2>Hvem har turen</h2><p class="chapter-summary">Kronen viser, hvilken stol der står for tur.</p></header>
+<p>Ved bordet kan <strong>én stol</strong> ad gangen have turen. Den markeres med en krone 👑. Turen er en synlig markør; den hjælper dig og bordet med at holde styr på, hvem der er “den næste”.</p>
+<h3 id="turn-turen-skifter-af-sig-selv"><a class="anchor" href="#turn-turen-skifter-af-sig-selv" aria-hidden="true">#</a>Turen skifter af sig selv</h3>
+<ul>
+<li>Når du starter bordet, følger turen med rundt fra stol til stol.</li>
+<li>Sender du en besked direkte til en stol, eller videresender du et svar, får modtageren turen.</li>
+</ul>
+<h3 id="turn-giv-turen-manuelt"><a class="anchor" href="#turn-giv-turen-manuelt" aria-hidden="true">#</a>Giv turen manuelt</h3>
+<p>Under bordet står en linje som “👑 Clarifier har turen — klik for hvorfor”. Klik på den for at åbne panelet <em>Hvem har turen</em>:</p>
+<ul>
+<li>Vælg en stol og skriv evt. en begrundelse (valgfrit).</li>
+<li>Klik <em>Giv turen</em>, eller <em>Ingen har turen</em> for at fjerne kronen.</li>
+</ul>
+<p>Begrundelsen gemmes, så du senere kan se, <em>hvorfor</em> turen blev givet.</p>
+
+</section>
+<section class="chapter" id="run" data-title="Start bordet">
+<header class="chapter-head"><span class="chapter-n">05</span><h2>Start bordet</h2><p class="chapter-summary">Lad stolene arbejde efter tur på samme opgave, og hold øje med forbruget.</p></header>
+<p>En <strong>kørsel</strong> er, når bordet går rundt i stolene i den rækkefølge, du ser dem, og sender opgaven og hvert svar videre.</p>
+<h3 id="run-saadan-starter-du"><a class="anchor" href="#run-saadan-starter-du" aria-hidden="true">#</a>Sådan starter du</h3>
+<ol>
+<li>Lad <em>Til</em> stå på <strong>Alle (start kørsel)</strong>.</li>
+<li>Skriv opgaven i feltet (det vokser med teksten) og klik <em>Send til bordet</em> (eller tryk <kbd>⌘</kbd>+<kbd>Enter</kbd> / <kbd>Ctrl</kbd>+<kbd>Enter</kbd>).</li>
+<li>Bordet viser en bekræftelse: opgaven, stolene i rækkefølge, det hidtidige forbrug og, hvis stole læser IN-mappen, hvor mange filer og omtrent hvor mange tokens det koster pr. kald.</li>
+<li>Klik <em>▶ Start bordet</em>. Eller <em>Justér</em>, hvis du vil rette noget først; din tekst bliver stående.</li>
+</ol>
+<p><figure><img src="../img/da/start.png" alt="Bekræftelsen før en kørsel" loading="lazy"><figcaption>Bekræftelsen før en kørsel</figcaption></figure></p>
+<h3 id="run-under-koerslen"><a class="anchor" href="#run-under-koerslen" aria-hidden="true">#</a>Under kørslen</h3>
+<ul>
+<li>Én stol svarer ad gangen, med et <strong>ægte modelkald</strong>. Statusord og fremdrift ses på bordet.</li>
+<li>Hver stol får den <strong>oprindelige opgave</strong> med, plus det forrige svar som overlevering, så opgaven ikke forsvinder undervejs (se <a href="#metrics">Målinger og overdragelse</a>).</li>
+<li>Før bordet starter, tjekkes det, at alle stole har en Modelprofil API og en model; ellers starter det ikke, og appen siger, hvad der mangler. Svarer en stol ikke, springer bordet videre og skriver en note.</li>
+<li>Får en stol en <strong>forbigående fejl</strong> (for mange forespørgsler, overbelastet udbyder, timeout, netværk), prøver bordet igen op til to gange med en kort pause. Ugyldig nøgle eller forkert modelnavn gentages ikke, og stolen springes over.</li>
+<li>Er en stol <strong>kontrolstol</strong>, og består den ikke, holder kørslen pause, og du vælger (se <a href="#verify">Kontrol og tilbagesendelse</a>).</li>
+<li>Klik <em>■ Stop</em> for at afbryde. Allerede modtagne svar bevares.</li>
+</ul>
+<h3 id="run-resultatet-find-kopi-r-gem-og-brug-igen"><a class="anchor" href="#run-resultatet-find-kopi-r-gem-og-brug-igen" aria-hidden="true">#</a>Resultatet: find, kopiér, gem og brug igen</h3>
+<p>Når en kørsel er færdig, åbner <strong>Resultat</strong> af sig selv (og kan altid åbnes med knappen <em>Resultat</em> ved beskedfeltet). Kortet samler det, der allerede findes, uden et nyt kald til nogen model og uden at opdigte noget:</p>
+<ul>
+<li><strong>Konklusion:</strong> bordets seneste svar, ordret, med navnet på stolen.</li>
+<li><strong>Dine beslutninger:</strong> de spørgsmål, du har besvaret eller sprunget over.</li>
+<li><strong>Åbne spørgsmål:</strong> de spørgsmål til dig, der ikke er afgjort endnu.</li>
+</ul>
+<p>Dele, der ikke findes, udelades. Tryk <em>Kopiér</em> for at lægge resultatet på udklipsholderen, eller <em>Gem som fil</em> for en Markdown-fil. Samtalen og de enkelte svar står stadig i samtalen, hvis du vil se, hvordan svaret blev til.</p>
+<p><strong>Brug bordet igen</strong> giver <em>samme fremgangsmåde, nyt materiale</em>. Appen forklarer først, hvad der følger med (stolene, deres indstillinger og instruktioner, pilene og bordets indstillinger, også Beskyttelsens ord og regler) og hvad der ikke gør (samtalen, dine beslutninger og åbne spørgsmål, hukommelse, målinger, GitHub-adgang og filerne i IN). Først når du bekræfter, oprettes et nyt, rent bord. Der sendes intet, før du selv trykker Send, og det gamle bord og dets resultat bliver, som de er.</p>
+<h3 id="run-vil-du-vaere-med-undervejs"><a class="anchor" href="#run-vil-du-vaere-med-undervejs" aria-hidden="true">#</a>Vil du være med undervejs?</h3>
+<p>Bordet kan holde pause ved en stols spørgsmål til dig, vise åbne spørgsmål på pilene, samle dine afgørelser i et beslutningsregister og lade dig skrive dit eget bud først. Alt det står i <a href="#participate">Deltag undervejs</a>.</p>
+<h3 id="run-starter-hver-koersel-ren"><a class="anchor" href="#run-starter-hver-koersel-ren" aria-hidden="true">#</a>Starter hver kørsel ren?</h3>
+<p>Under ⚙ → <em>Dette bord</em> kan du slå <strong>Hver kørsel starter ren</strong> til. Så ser en stol kun den aktuelle opgaves egne beskeder, når bordet kører, og husker ikke tidligere kørsler på bordet. Det forhindrer, at en tidligere kørsel (fx et andet forsøg på samme bord) farver den næste. <strong>Nye borde har det slået til; eksisterende borde er uændrede</strong> (stolene husker deres hele samtale). Startbekræftelsen siger, hvad der gælder. Når du skriver direkte til én stol, gælder hele samtalen stadig.</p>
+<h3 id="run-prisgraense"><a class="anchor" href="#run-prisgraense" aria-hidden="true">#</a>Prisgrænse</h3>
+<p>I projektpanelet (klik på navnet midt på bordet) kan du sætte en <strong>prisgrænse pr. kørsel</strong>. Har kørslen brugt beløbet, stopper bordet, <em>før</em> næste stol kaldes, og skriver en note. Det sidste svar kan overskride grænsen lidt. Kun kald med kendt pris tælles (se <a href="#prices">Priser og forbrug</a>). Tom = ingen grænse. Grænsen er <strong>listepris, ikke udbyderens faktura</strong>, den tjekkes kun <strong>mellem stolene</strong>, og et enkelt kald kan gå over den.</p>
+<p>Før start viser bekræftelsen et <strong>skønnet forbrug</strong> ud fra stolenes seneste kald. Det er et skøn: har en stol ikke svaret før, kan den ikke skønnes, og så siger bekræftelsen det i stedet for at gætte; en model uden listepris nævnes, fordi dens kald ikke kan regnes med. Prisen afhænger af model, materiale og antal kald, og flere stole og gentagelser kan øge den. Bekræftelsen viser også, hvilken udbyder der modtager opgaven.</p>
+<h3 id="run-kun-n-stol"><a class="anchor" href="#run-kun-n-stol" aria-hidden="true">#</a>Kun én stol</h3>
+<p>Vælg stolens navn under <em>Til</em> og send. Så svarer kun den, og den får turen.</p>
+<aside class="callout warning"><span class="callout-label">Pas på</span><div><p>Hvert svar er et rigtigt kald til din udbyder og koster penge. Bekræftelsen viser forbruget indtil nu, så du kan tage stilling, før du starter.</p>
+</div></aside>
+
+</section>
+<section class="chapter" id="participate" data-title="Deltag undervejs">
+<header class="chapter-head"><span class="chapter-n">06</span><h2>Deltag undervejs</h2><p class="chapter-summary">Pause ved spørgsmål, beslutningsregister og dit eget bud: sådan er du med, i stedet for kun at vente på resultatet.</p></header>
+<p>Et bord kan køre helt færdigt uden dig, eller du kan være med undervejs. Hvor meget, afgør du: pr. stol (mandatet), pr. bord (indstillingerne under ⚙ → <em>Dette bord</em>) og pr. kørsel (om du skriver et eget bud). Ikke alle opgaver har brug for dig. Et rent opslag af fakta kan køre uden pauser; et valg eller en læringsopgave vinder ved dem.</p>
+<table>
+<thead>
+<tr>
+<th>Funktion</th>
+<th>Hvad den gør</th>
+<th>Hvor du styrer den</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Mandat som stop</strong></td>
+<td>Bordet holder pause efter en stol og viser dig dens spørgsmål</td>
+<td>Mandat-ikonet på stolen + <em>Mandatet styrer forløbet</em></td>
+</tr>
+<tr>
+<td><strong>Pilen viser det åbne</strong></td>
+<td>Åbne spørgsmål vises på pilen mellem stolene, og du kan svare dér</td>
+<td>Altid, hvor en stol har et spørgsmål til dig</td>
+</tr>
+<tr>
+<td><strong>Beslutningsregister og afslutningstjek</strong></td>
+<td>Dine afgørelser følger med til de næste stole; efter kørslen tælles de åbne spørgsmål</td>
+<td>Altid</td>
+</tr>
+<tr>
+<td><strong>Pause og overdragelse pr. pil</strong></td>
+<td>Pause før en bestemt stol, eller kun opgaven og dine afgørelser</td>
+<td>Pilens panel, <em>Denne pil</em></td>
+</tr>
+<tr>
+<td><strong>Uenigheder</strong></td>
+<td>To svar ved siden af hinanden, og en model, der peger på forskellene</td>
+<td><em>Overblik</em> → <em>Uenigheder</em></td>
+</tr>
+<tr>
+<td><strong>Tilbageblik</strong></td>
+<td>En kalenderfil, der minder dig om at se tilbage på en beslutning</td>
+<td><em>Overblik</em> → <em>Tilbageblik</em></td>
+</tr>
+<tr>
+<td><strong>Kuverten</strong></td>
+<td>Du ser og kan rette den tekst, næste stol får, før den kaldes</td>
+<td><em>Se og redigér kuverten</em></td>
+</tr>
+<tr>
+<td><strong>Eget bud først</strong></td>
+<td>Du skriver dit bud, før bordet kører, og ser det ved siden af resultatet</td>
+<td><em>Eget bud først</em></td>
+</tr>
+</tbody></table>
+<p>De færdige borde under <em>Skabeloner</em> er sat op efter, hvor meget du er med (se <a href="#table">Bordet og stolene</a>). Hvor meget du faktisk har været med, kan du se som tal under ⚙ → <em>Dette bord</em> → <em>Målinger</em> → <strong>Din deltagelse</strong> (se <a href="#metrics">Målinger og overdragelse</a>).</p>
+<h3 id="participate-overblik-t-sted-for-det-der-kraever-dig"><a class="anchor" href="#participate-overblik-t-sted-for-det-der-kraever-dig" aria-hidden="true">#</a>Overblik: ét sted for det, der kræver dig</h3>
+<p>Øverst i topbaren står <strong>Overblik</strong>. Under knappen ligger fem ting samlet: <strong>Næste skridt</strong>, <strong>Tilbageblik</strong>, <strong>Uenigheder</strong>, <strong>Regning og priser</strong> og <strong>Jeg sidder fast</strong>. Hver række åbner det, den tidligere knap åbnede. På <em>Enkel</em> vises Næste skridt, regningen og Jeg sidder fast; <em>Mere</em> og <em>Avanceret</em> tilføjer Tilbageblik og Uenigheder.</p>
+<p><strong>Jeg sidder fast</strong> står også som en egen knap i topbaren på alle niveauer, så sikkerhedsnettet altid er ét klik væk.</p>
+<p>Tallet på knappen er <strong>kun det, appen ved kræver dig</strong>: ting, kun du kan afgøre, og en kørsel, der venter på dig. Står der intet tal, kræver intet dig lige nu. Menuen lukker, når du vælger noget, trykker Escape eller klikker udenfor.</p>
+<h3 id="participate-mandat-som-stop-koer-helt-faerdigt-eller-deltag-undervejs"><a class="anchor" href="#participate-mandat-som-stop-koer-helt-faerdigt-eller-deltag-undervejs" aria-hidden="true">#</a>Mandat som stop: kør helt færdigt, eller deltag undervejs</h3>
+<p>Mandat-ikonet på hver stol styrer, om bordet <strong>holder pause</strong> efter stolen. Det gælder, når <strong>Mandatet styrer forløbet</strong> er slået til under ⚙ → <em>Dette bord</em> (nye borde har det slået til; eksisterende borde er uændrede):</p>
+<table>
+<thead>
+<tr>
+<th>Ikon</th>
+<th>Hvad der sker</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>✓</strong></td>
+<td>Bordet kører videre uden dig. Spørgsmål samles ikke op her</td>
+</tr>
+<tr>
+<td><strong>?</strong></td>
+<td>Bordet stopper, <strong>når stolen har et spørgsmål, som kun du kan afgøre</strong></td>
+</tr>
+<tr>
+<td><strong>⏸</strong></td>
+<td>Bordet stopper <strong>altid</strong> efter stolen, så du selv ser resultatet</td>
+</tr>
+</tbody></table>
+<p><figure><img src="../img/da/pause.png" alt="Pausekortet: et spørgsmål til dig" loading="lazy"><figcaption>Pausekortet</figcaption></figure></p>
+<p>Et spørgsmål til dig er stolens 🔭 <em>Behov</em>, når det begynder med <strong>VURDERING:</strong> (værdier, prioritering, konsekvenser), eller når det ikke peger på en stol ved bordet. Begynder det med <strong>FAKTA:</strong> (noget, en stol eller en fil kan svare på), stopper bordet ikke. Et behov, der er &quot;intet&quot;, er intet spørgsmål.</p>
+<p>Ved en pause kan du:</p>
+<ul>
+<li><strong>skrive dit svar</strong> (eller, ved ⏸, en kommentar til næste stol) og trykke <strong>Fortsæt</strong>. Svaret og spørgsmålet kommer i <strong>beslutningsregistret</strong> og følger med til de næste stole (se nedenfor). En kommentar (uden spørgsmål) går kun til næste stol;</li>
+<li>trykke <strong>Bevidst udeladt</strong>: næste stol får at vide, at du valgte ikke at svare, og at den ikke må antage et svar;</li>
+<li>se stolens svar (<strong>Se svaret</strong>: svaret åbner i selve pausen, og pausen får en ramme, til du har svaret eller trykker <strong>Skjul svaret</strong>) eller <strong>Stoppe kørslen</strong>.</li>
+</ul>
+<p>Kontrolstole stopper ikke herfra; de har deres egen beslutning (se <a href="#verify">Kontrol af resultater</a>). Efter den sidste stol er der ingen pause. I aktivitetsstrømmen og hændelserne står kun, <strong>at</strong> der var en pause, og hvor mange spørgsmål der blev besvaret eller udeladt, aldrig dine svar.</p>
+<h3 id="participate-pilen-viser-det-aabne"><a class="anchor" href="#participate-pilen-viser-det-aabne" aria-hidden="true">#</a>Pilen viser det åbne</h3>
+<p>Når en stol i sit svar har et <strong>spørgsmål til dig</strong> (et behov, der begynder med VURDERING:), får <strong>pilen fra stolen</strong> et lille mærke: et tal for åbne spørgsmål (gult), eller rødt, når bordet holder pause og venter på dig. Er spørgsmålet afgjort, står der et grønt ✓. Tryk på pilen for at se dem:</p>
+<p><figure><img src="../img/da/edge-question.png" alt="Pilens panel med et spørgsmål til dig" loading="lazy"><figcaption>Pilens panel</figcaption></figure></p>
+<ul>
+<li><strong>Besvar</strong> gemmer dit svar. <strong>Bevidst udeladt</strong> gemmer, at du valgte ikke at svare. Et tomt svar tæller ikke.</li>
+<li>Svaret kommer i <strong>beslutningsregistret</strong> (se nedenfor).</li>
+<li>Et afgjort spørgsmål tæller ikke længere i <strong>Næste skridt</strong>.</li>
+<li>Holder bordet pause, besvarer du i <strong>pausekortet</strong>; pilen viser det samme og har en knap derhen.</li>
+<li>Hændelserne (<code>question.answered</code>, <code>question.skipped</code>) siger kun, <strong>at</strong> du svarede, aldrig hvad.</li>
+</ul>
+<p>Spørgsmålene sidder på den første pil ud fra hver stol. Den sidste stol har ingen pil ud, så dens spørgsmål står kun i Næste skridt.</p>
+<h3 id="participate-beslutningsregistret-og-afslutningstjekket"><a class="anchor" href="#participate-beslutningsregistret-og-afslutningstjekket" aria-hidden="true">#</a>Beslutningsregistret og afslutningstjekket</h3>
+<p>Alle dine afgørelser i en opgave (svar og <em>Bevidst udeladt</em>, på pilen eller i pausekortet) samles i et <strong>beslutningsregister</strong>. Det følger med i <strong>hver overdragelse</strong> til de næste stole, i kørsler og med <em>Videresend</em>: stolene får dine svar, får at vide, hvad du bevidst lod ligge, og ser, hvilke spørgsmål der stadig er åbne. De får besked om ikke at opfinde svar og ikke at afgøre de åbne selv. <strong>OUT Writer</strong> skal forholde sig til hvert punkt: afgjorte med dit svar, åbne i en sektion <em>Åbne spørgsmål</em>.</p>
+<p>Efter en gennemført kørsel gør <strong>afslutningstjekket</strong> (regler, ingen model) opmærksom på, hvor mange spørgsmål til dig der stadig er åbne, og hvilke. Det står i aktivitetsstrømmen og i hændelserne (<code>run.closingcheck</code>, kun tal). Tjekket kontrollerer ikke, om en OUT-fil rent faktisk nævner et spørgsmål; det er stolens opgave, og du bør læse filen.</p>
+<p>Registret gælder den <strong>seneste opgave</strong>. Tidligere opgavers afgørelser tages ikke med.</p>
+<h3 id="participate-pause-og-overdragelse-pr-pil"><a class="anchor" href="#participate-pause-og-overdragelse-pr-pil" aria-hidden="true">#</a>Pause og overdragelse pr. pil</h3>
+<p>Tryk på en pil mellem to stole. Under <strong>Denne pil</strong> kan du ændre to ting for netop den overgang:</p>
+<ul>
+<li><strong>Stop her: du læser, før [næste stol] starter</strong> (pilens pause): bordet stopper altid, når den forrige stol er færdig, og viser <em>Pause før …</em> med svaret, eventuelle spørgsmål og et felt til en kommentar til næste stol. Pausen <strong>lægges oveni stolens mandat</strong>: stopper mandatet, eller pilen har en pause, stopper bordet. Den gælder også, når <em>Mandatet styrer forløbet</em> er slået fra. Pilen får et lille ⏸. <strong>Forskellen på pilens pause og mandatet ⏸:</strong> pilens pause sidder på én bestemt pil og virker altid i fast rækkefølge; mandatet ⏸ sidder på stolen (også når næste stol vælges dynamisk), men virker kun, når <em>Mandatet styrer forløbet</em> er slået til. Begge giver det samme stop og det samme pausekort.</li>
+<li><strong>Overdragelse til denne stol:</strong> <em>Som bordet</em> (standard), <em>Fuld tekst</em>, <em>Struktureret</em> eller <strong>Kun opgaven og dine afgørelser</strong>. Med den sidste ser stolen ikke det forrige svar, kun opgaven og beslutningsregistret. Det er en måde at få et uafhængigt bud på, som ikke bygger på det, der stod før. En kontrolstol får altid hele teksten.</li>
+</ul>
+<p>Det gælder fra næste overdragelse og i en kørsel og med <em>Videresend</em>, og hændelsen <code>edge.configured</code> gemmer kun valget. Pausen gælder i fast rækkefølge; vælger du selv næste stol (⚙ → <em>Dette bord</em> → <em>Hvem tager næste?</em>), har du allerede en beslutning ved hver overgang. Indstillingerne pr. pil gemmes med bordet, men <strong>ikke i bordfilen</strong>, fordi de hænger på bordets stole.</p>
+<h3 id="participate-uenigheder-mellem-to-svar"><a class="anchor" href="#participate-uenigheder-mellem-to-svar" aria-hidden="true">#</a>Uenigheder mellem to svar</h3>
+<p><strong>⚖ Uenigheder</strong> (under <em>Overblik</em>) sætter to svar ved siden af hinanden, helst fra to forskellige modeller. Uenighed er der, hvor du selv skal tænke, og det er sjældent det, man ser, når svarene står hver for sig.</p>
+<ul>
+<li>Appen vælger som standard <strong>de to seneste svar fra forskellige modeller</strong> i den seneste opgave. Du kan vælge andre. Kommer de to svar fra samme model, står der en note om, at uenigheder siger mindre da.</li>
+<li>Tryk <strong>Find uenigheder</strong>, og en <strong>model peger på forskellene</strong>: hvad de er enige om, hvad de er uenige om (med hvad A og B hver siger), og hvad der er uklart. Du vælger selv, hvilken stol der låner regnekraft, og helst en model, der hverken er A eller B. Det koster <strong>ét kald</strong>, og begge svar sendes først, når du trykker (via Beskyttelse, hvis den er slået til).</li>
+<li>Svaret er <strong>modellens vurdering og kan tage fejl</strong>. Kan appen ikke læse det, vises det, som det er. Læs altid selv de to svar.</li>
+<li>Ved hver uenighed kan du skrive <strong>din afgørelse</strong> og gemme den i <strong>beslutningsregistret</strong>, så den følger med til de næste stole.</li>
+<li>Hændelserne (<code>diff.opened</code>, <code>diff.analysed</code>) har kun antal, aldrig tekst, og Målinger tæller sammenligningerne.</li>
+</ul>
+<p>Der er ingen måling af, at det hjælper at lade forskellige modeller kontrollere hinanden. Modeller kan begå de samme fejl, og en model, der vurderer to modeller, er stadig en model.</p>
+<h3 id="participate-tilbageblik-i-kalenderen"><a class="anchor" href="#participate-tilbageblik-i-kalenderen" aria-hidden="true">#</a>Tilbageblik i kalenderen</h3>
+<p><strong>🗓 Tilbageblik</strong> (under <em>Overblik</em>) laver en <strong>kalenderfil</strong> (<code>.ics</code>), der minder dig om at se tilbage på en beslutning om en uge, to uger eller en måned.</p>
+<p><figure><img src="../img/da/reflect.png" alt="Tilbageblik: en kalenderfil med spørgsmål" loading="lazy"><figcaption>Tilbageblik</figcaption></figure></p>
+<ul>
+<li><strong>Appen sender intet.</strong> Den gemmer en fil, og du åbner den i din egen kalender. Aftalen ligger derefter hos din kalenderudbyder.</li>
+<li><strong>Spørgsmålene</strong> er 2-3 og lavet af regler, ikke af en model, fx <em>Holdt beslutningen? Hvad ville du gøre anderledes? Hvilket spørgsmål, du lod ligge, ville du besvare nu?</em> Har du skrevet et eget bud, spørges der også til, hvordan det stod sig mod bordets. Du kan rette dem, som du vil.</li>
+<li><strong>Som standard indeholder aftalen ingen af dine ord.</strong> Vil du have emnet med (dit seneste afgjorte spørgsmål, eller opgaven), skal du selv sætte kryds. Så står det i aftalen og dermed i din kalender.</li>
+<li><strong>Parkér dine åbne spørgsmål:</strong> sæt kryds ved <em>Tag mine åbne spørgsmål med</em>, så står de spørgsmål, du endnu ikke har besvaret, i aftalens beskrivelse, og du glemmer dem ikke. Med <em>Tag mine afgørelser med</em> kommer også dine afgørelser (spørgsmål og dit svar) med. Begge er <strong>slået fra som standard</strong>, fordi teksten ellers står i din kalender. Du ser, og kan rette, præcis det der kommer med, før noget gemmes.</li>
+<li>Aftalen står kl. 09.00 lokal tid. Falder dagen i en weekend, flyttes den til mandag. Kalenderen minder dig ved start; appen gør det ikke.</li>
+<li>Hændelsen <code>reflection.scheduled</code> gemmer kun valgene (tidspunkt, antal spørgsmål, om emnet er med), aldrig teksten, og Målinger tæller, hvor mange kalenderfiler du har lavet.</li>
+</ul>
+<p>Det er en idé, ikke en målt metode: der er ingen evidens for, at et tilbageblik hjælper. Det koster dig kun den tid, du selv sætter af.</p>
+<h3 id="participate-se-og-redig-r-kuverten-foer-den-sendes"><a class="anchor" href="#participate-se-og-redig-r-kuverten-foer-den-sendes" aria-hidden="true">#</a>Se og redigér kuverten, før den sendes</h3>
+<p>Slår du <strong>Se og redigér kuverten, før den sendes</strong> til under ⚙ → <em>Dette bord</em>, stopper bordet, lige før en stol kaldes, og viser <strong>præcis den tekst, stolen får</strong>: opgaven, forrige svar, beslutningsregistret og dine noter. Det gælder både en kørsel og <em>Videresend</em>. Pilen mellem de to stole får et rødt ✉, og et klik på pilen leder til kuverten.</p>
+<p><figure><img src="../img/da/envelope.png" alt="Kuverten før næste stol kaldes" loading="lazy"><figcaption>Kuverten</figcaption></figure></p>
+<ul>
+<li><strong>Ret teksten</strong>, hvis du vil: fjern noget, der ikke skal med, eller tilføj en linje. Tælleren viser antal tegn og om teksten er rettet, og <em>Gendan den oprindelige tekst</em> sætter den tilbage.</li>
+<li><strong>Send kuverten</strong> sender den tekst, du ser, og den <strong>rettede tekst gemmes i samtalen</strong> (markeret som rettet), så den viser, hvad stolen faktisk fik.</li>
+<li><strong>Stop kørslen</strong> (eller <em>Annullér afsendelsen</em> ved <em>Videresend</em>) sender intet. Stolen kaldes ikke, og overdragelsen logges ikke, fordi den ikke skete.</li>
+<li>Opgaven til den første stol vises ikke som en kuvert; den har du selv skrevet.</li>
+<li>Hændelserne (<code>envelope.opened</code>, <code>envelope.sent</code>, <code>envelope.edited</code>, <code>envelope.cancelled</code>) har kun antal tegn og om du rettede, aldrig teksten.</li>
+</ul>
+<p>Det koster et klik pr. overdragelse, så det er slået fra som standard. Det passer, når du vil kontrollere, hvad en stol får at vide, fx ved fortrolige oplysninger eller for at fjerne støj. En rettelse gælder kun den ene kuvert; den følger ikke med til de næste.</p>
+<h3 id="participate-dit-eget-bud-foerst"><a class="anchor" href="#participate-dit-eget-bud-foerst" aria-hidden="true">#</a>Dit eget bud først</h3>
+<p>Slår du <strong>Eget bud først</strong> til under ⚙ → <em>Dette bord</em>, får startbekræftelsen et felt: <em>Dit eget bud først (valgfrit)</em>. Skriv, hvad du selv tror, svaret eller løsningen er, og hvorfor, <strong>før</strong> bordet kører. Læringsbordet og Beslutningsbordet har det slået til.</p>
+<p><figure><img src="../img/da/compare.png" alt="Dit bud ved siden af bordets resultat" loading="lazy"><figcaption>Dit bud og bordets resultat</figcaption></figure></p>
+<ul>
+<li><strong>Stolene ser ikke dit bud.</strong> Det sendes til ingen stol, så bordets resultat er et uafhængigt bud, du kan sammenligne med. (Vil du have, at en stol bruger det, så skriv det i opgaven eller i et svar i pausekortet.)</li>
+<li>Buddet står i samtalen som en besked fra dig, og i hændelserne står kun, <strong>at</strong> du skrev et (og hvor langt det var), aldrig hvad.</li>
+<li>Er kørslen færdig, vises <strong>dit bud og bordets resultat ved siden af hinanden</strong>. Du kan vælge <em>Mit bud står</em>, <em>Jeg justerer mit bud</em> eller <em>Jeg skifter til bordets forslag</em>, og skrive en valgfri forklaring. Ingen af valgene er rigtige. Valget og forklaringen gemmes på din computer, i samtalen; hændelsen gemmer kun valget.</li>
+<li>Lader du feltet stå tomt, springer du det <strong>bevidst</strong> over. Så vises der ingen sammenligning.</li>
+</ul>
+<p>Formålet er, at du tænker, før du ser bordets svar, så du ikke bare tager det første, der står der. Det koster dig lidt tid hver gang; derfor er det valgfrit pr. bord og pr. kørsel.</p>
+
+</section>
+<section class="chapter" id="verify" data-title="Kontrol og tilbagesendelse">
+<header class="chapter-head"><span class="chapter-n">07</span><h2>Kontrol og tilbagesendelse</h2><p class="chapter-summary">Lad en stol vurdere resultatet, og bestem selv, hvad der sker, når det ikke består.</p></header>
+<p>En <strong>kontrolstol</strong> læser det forrige arbejde, sammenholder det med den oprindelige opgave og giver en dom: <strong>bestået</strong> eller <strong>ikke bestået</strong>. Består det ikke, holder kørslen pause, og <em>du</em> vælger, hvad der sker. Intet sker af sig selv.</p>
+<h3 id="verify-saet-en-stol-til-at-kontrollere"><a class="anchor" href="#verify-saet-en-stol-til-at-kontrollere" aria-hidden="true">#</a>Sæt en stol til at kontrollere</h3>
+<ol>
+<li>Åbn stolen (typisk en <em>Tester</em>, <em>Reviewer</em> eller <em>Evaluator</em>).</li>
+<li>Sæt kryds ved <strong>Kontrollerer resultatet</strong>, og gem.</li>
+<li>Placér stolen efter den stol, der laver arbejdet.</li>
+</ol>
+<p>Stolen får den fulde tekst fra forrige stol (ikke kun overdragelsen), så den kan vurdere selve resultatet. Den slutter sit svar med en dom, som du ser under svaret i samtalen: <em>🧪 Kontrol: bestået</em> eller <em>ikke bestået</em>.</p>
+<aside class="callout tip"><span class="callout-label">Tip</span><div><p>Brug en anden model til kontrollen end til arbejdet. En model er sjældent den bedste dommer over sit eget svar.</p>
+</div></aside>
+<h3 id="verify-naar-kontrollen-ikke-bestaar"><a class="anchor" href="#verify-naar-kontrollen-ikke-bestaar" aria-hidden="true">#</a>Når kontrollen ikke består</h3>
+<p>Kørslen holder pause, og du får tre valg:</p>
+<table>
+<thead>
+<tr>
+<th>Valg</th>
+<th>Hvad der sker</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Send tilbage til [stol]</strong></td>
+<td>Stolen får kontrolnoten og den oprindelige opgave og retter sit svar. Derefter går kørslen videre, og kontrollen vurderer igen. Målet er den rolle, kontrollen selv anbefalede, hvis den sidder tidligere i rækken, ellers den nærmeste tidligere stol</td>
+</tr>
+<tr>
+<td><strong>Fortsæt alligevel</strong></td>
+<td>Kørslen fortsætter trods dommen. Overstyringen logges</td>
+</tr>
+<tr>
+<td><strong>Stop kørslen</strong></td>
+<td>Kørslen afsluttes med en note</td>
+</tr>
+</tbody></table>
+<p>Der kan højst sendes tilbage <strong>to gange</strong> i en kørsel (tre runder). Derefter er der kun <em>fortsæt</em> eller <em>stop</em>, så ingen kørsel kan gå i ring. Loftet kan ændres, se <em>Runder</em> nedenfor.</p>
+<p>En <strong>uklar dom</strong> (svaret har ingen linje med PASS eller FAIL) regnes aldrig for bestået. Den behandles som ikke bestået.</p>
+<h3 id="verify-runder-og-makkerpar"><a class="anchor" href="#verify-runder-og-makkerpar" aria-hidden="true">#</a>Runder og makkerpar</h3>
+<p>En <strong>runde</strong> er ét gennemløb: stolen laver, kontrollen vurderer. Første gennemløb er runde 1, og hver tilbagesendelse giver en ny. Under ⚙ → <em>Dette bord</em> (når bordet har en kontrolstol) sætter du <strong>højst antal runder</strong> (1 til 10; 1 betyder ingen tilbagesendelse, standard er 3) og kan sætte kryds ved <strong>Send selv tilbage, når kontrollen ikke består</strong>.</p>
+<p>Med krydset sender kontrollen en tydelig FAIL tilbage af sig selv, til loftet er nået. Så er det dig, der vælger, som beskrevet ovenfor. En <strong>uklar dom</strong> sendes aldrig tilbage af sig selv. Hver automatisk tilbagesendelse står i aktivitetsstrømmen med begrundelsen, statuslinjen viser <em>runde 2 af 3</em>, og du kan altid stoppe.</p>
+<p>Skabelonen <strong>Makkerpar: laver og gennemgår</strong> (under ⚙ → <em>Dette bord</em> → <em>Bordfil</em> → <em>Skabeloner</em>) er sat op sådan: <strong>Driver</strong> laver arbejdet, <strong>Navigator</strong> gennemgår det mod opgaven og siger PASS eller FAIL, og de tager op til tre runder. Du ser alle instruktioner i forhåndsvisningen, før bordet oprettes. Hvor godt et makkerpar virker, er ikke målt; sammenlign selv pris og resultat med én enkelt stol.</p>
+<h3 id="verify-kraev-bevis-for-pass-valgfrit"><a class="anchor" href="#verify-kraev-bevis-for-pass-valgfrit" aria-hidden="true">#</a>Kræv bevis for PASS (valgfrit)</h3>
+<p>En kontrol kan skrive PASS, uden at have læst efter. Slå <strong>Kræv bevis for PASS</strong> til under ⚙ → <em>Dette bord</em> (vises, når bordet har en kontrolstol), og kontrolstolen bliver bedt om at citere det, den har set, før den siger PASS:</p>
+<pre><code>🔎 BEVIS: &quot;ordret stump fra det svar, kontrollen fik&quot;
+🧪 KONTROL: PASS
+</code></pre>
+<p><strong>Appen slår selv hvert citat op</strong> i den tekst, kontrollen fik at vurdere (store og små bogstaver, mellemrum, anførselstegn og markdown er ligegyldige; &quot;…&quot; må stå for udeladt tekst). Et PASS regnes kun for bestået, hvis der er mindst ét citat, <strong>alle</strong> citater findes ordret, og hvert er mindst 12 tegn i ét stykke. Ellers vises <em>PASS uden bevis</em>: kørslen holder pause, porten før OUT lukker, og du vælger som ved en ikke bestået kontrol. Et PASS uden bevis <strong>sendes aldrig tilbage af sig selv</strong>, heller ikke med automatisk tilbagesendelse, for den kan ikke vide, hvad der mangler. En FAIL kræver intet bevis.</p>
+<aside class="callout warning"><span class="callout-label">Pas på</span><div><p>Beviset viser, at citaterne <strong>findes</strong> i svaret. Det viser ikke, at de understøtter PASS, eller at arbejdet er rigtigt: en kontrolstol kan stadig citere noget irrelevant. Læs selv citaterne, de står i samtalen. Standard er slået fra, og hændelserne i <em>Målinger</em> har kun antal og status, aldrig citaterne.</p>
+</div></aside>
+<h3 id="verify-port-foer-out"><a class="anchor" href="#verify-port-foer-out" aria-hidden="true">#</a>Port før OUT</h3>
+<p>Er den seneste kontrol i en opgave ikke bestået, <strong>gemmes intet i OUT</strong>, hverken af OUT Writer eller med <em>↓ Gem i OUT</em>. I stedet kommer en note med knappen <strong>Gem alligevel</strong>. Det er en bevidst overstyring, og den logges.</p>
+<h3 id="verify-maalinger"><a class="anchor" href="#verify-maalinger" aria-hidden="true">#</a>Målinger</h3>
+<p><em>Målinger</em> viser antal beståede, ikke beståede og uklare kontroller, tilbagesendelser, overstyringer og gentagelser efter forbigående fejl. Loggen gemmer aldrig begrundelsens tekst.</p>
+<aside class="callout warning"><span class="callout-label">Pas på</span><div><p>En kontrol er en <strong>model, der vurderer en model</strong>. Den er en rådgiver, ikke en garanti. Den kan slippe fejl igennem og kan afvise gode svar. Læs selv resultatet, før du bruger det.</p>
+</div></aside>
+
+</section>
+<section class="chapter" id="conversation" data-title="Aktivitetsstrøm og fuld samtale">
+<header class="chapter-head"><span class="chapter-n">08</span><h2>Aktivitetsstrøm og fuld samtale</h2><p class="chapter-summary">To måder at læse, hvad der sker ved bordet.</p></header>
+<p>Til højre (eller under bordet på et smalt vindue) står <strong>Samtale ved bordet</strong>. Den kan vises på to måder; skift med knappen øverst i panelet.</p>
+<h3 id="conversation-aktivitetsstroem-standard"><a class="anchor" href="#conversation-aktivitetsstroem-standard" aria-hidden="true">#</a>Aktivitetsstrøm (standard)</h3>
+<p>En kort liste over hændelserne, med mere plads end før. Hver hændelse har tidspunkt, hvem og små <strong>mærker</strong>: hvad slags hændelse det er (<em>Opgave</em>, <em>Svar</em>, <em>Videresendt</em>, <em>Tredje øje</em>, <em>Gemt i OUT</em> …), resultatet af en kontrol (<em>Bestået</em> eller <em>Ikke bestået</em>) og om noget kræver dig (<em>Behov: Tester</em> eller <em>Spørger dig</em>). Teksten kan fylde op til tre linjer. Klik <em>Vis</em> for at springe til beskeden i den fulde samtale.</p>
+<p>Systemnoter fra bordet står her også: en pause, <em>Afslutningstjek</em> (åbne spørgsmål efter en kørsel), <em>Dit eget bud</em> og dit valg bagefter (se <a href="#participate">Deltag undervejs</a>).</p>
+<h3 id="conversation-fuld-samtale"><a class="anchor" href="#conversation-fuld-samtale" aria-hidden="true">#</a>Fuld samtale</h3>
+<p><figure><img src="../img/da/conversation.png" alt="Den fulde samtale med behovsboks under et svar" loading="lazy"><figcaption>Et svar med behovsboks og handlinger</figcaption></figure></p>
+<p>Den fulde samtale får <strong>hele bredden under bordet</strong>. Her ser du hvert svar med:</p>
+<ul>
+<li><strong>Første sætning</strong> som <em>opsummering af, hvordan stolen forstod opgaven</em>. Klik <em>▸ Vis hele svaret</em> for resten.</li>
+<li><strong>Behovsboksen</strong> 🔭👉🎚 med stolens forslag til næste skridt (se <a href="#needs">Åbne behov og forslag</a>).</li>
+<li>En <strong>overdragelseslinje</strong> 📋, hvis stolen har afleveret fakta, beslutninger m.m. (se <a href="#metrics">Målinger og overdragelse</a>).</li>
+<li><strong>Handlinger</strong> under svaret. De to vigtigste står fremme, resten ligger under <strong>Mere ▾</strong>:</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Knap</th>
+<th>Hvad den gør</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>↓ Gem i OUT</td>
+<td><em>Fremme.</em> Gemmer svaret som en fil i bordets OUT-mappe. Når svaret er gemt, skifter knappen til <strong>✓ Åbn i OUT</strong> (åbner OUT-mappen), og under <em>Mere</em> kan du gemme en ny kopi</td>
+</tr>
+<tr>
+<td>→ Videresend til…</td>
+<td><em>Fremme.</em> Sender svaret til en anden stol; den anbefalede er markeret</td>
+</tr>
+<tr>
+<td>💡 Til instruktion</td>
+<td><em>Under Mere.</em> Gør det markerede stykke af svaret (ellers et udkast fra svaret) til en fast instruktion for en stol, efter du har set og rettet teksten</td>
+</tr>
+<tr>
+<td>💾 Gem i git</td>
+<td><em>Under Mere.</em> Skriver svaret til en fil i dit GitHub-repo (kun hvis repo og token er sat)</td>
+</tr>
+<tr>
+<td>Husk</td>
+<td><em>Under Mere.</em> Gemmer svarets beslutninger i bordets hukommelse</td>
+</tr>
+<tr>
+<td>🔊 Læs op</td>
+<td><em>Under Mere.</em> Stemmen siger et kort brief om svaret (kun hvis stolen har en stemme)</td>
+</tr>
+</tbody></table>
+<p>Intet bliver gemt i git, før du selv klikker på <em>Gem i git</em>.</p>
+<p>Svar, hvor stolen stiller <strong>dig</strong> et spørgsmål, får mærket <em>❓ Spørger dig</em>.</p>
+<h3 id="conversation-mens-et-svar-er-paa-vej"><a class="anchor" href="#conversation-mens-et-svar-er-paa-vej" aria-hidden="true">#</a>Mens et svar er på vej</h3>
+<p>Når bordet har sendt en forespørgsel til en model, og det første ord endnu ikke er kommet, står der i stolens boble et roligt <strong>ventelag</strong>: bløde farver i stolens farve med ét ord i midten. Ordet er <strong>stolens rolle</strong> (<em>Bygger</em>, <em>Gennemgår</em>, <em>Skriver</em> …), eller <em>Kontrollerer</em>, hvis stolen kontrollerer resultatet; en stol med et eget navn uden begreb siger <em>Svarer</em>. Ordet skifter aldrig af sig selv: det viser kun, hvad bordet ved. Laget forsvinder, når første ord kommer, og det findes aldrig, mens bolden ligger hos dig (fx når Beskyttelse venter på dit valg).</p>
+<p>Under ⚙ → <em>Hele programmet</em> → <em>Ventelag</em> (Avanceret) kan du vælge udtryk: <strong>Farvetone</strong> (standard), <strong>Pixelmosaik</strong>, <strong>Pixelsværm</strong>, <strong>Partikler (3D)</strong> eller <strong>Kun ordet</strong>. Har dit system <em>reducer bevægelse</em> slået til, står laget stille.</p>
+<h3 id="conversation-eksport-r-samtalen"><a class="anchor" href="#conversation-eksport-r-samtalen" aria-hidden="true">#</a>Eksportér samtalen</h3>
+<p>Under ⚙ → <em>Dette bord</em> → <strong>Eksportér samtale</strong> gemmer du hele samtalen som <strong>én Markdown-fil</strong>, fx til dokumentation eller en opgave. Filen indeholder:</p>
+<ul>
+<li><strong>Opsætning:</strong> hver stols model, mandat, dials, tilføjelser og den fulde instruktion, modellen faktisk får.</li>
+<li><strong>Samtalen</strong> med et tidspunkt på hver besked, og hvem der skrev: <em>Opgave fra dig</em>, en stol (med udbyder og model), <em>Videresendt til …</em>, <em>Sendt tilbage til …</em>, system og Tredje øje.</li>
+<li><strong>Hændelser</strong> fra bordets logbog (kørsler, kald, behov, kontrol, valg) med tidspunkter og uden beskedtekst.</li>
+<li><strong>Dine indgreb</strong>, et udkast til en situationslog: det, du selv gjorde (gav opgaven, startede og stoppede kørslen, skrev til en stol, valgte næste, sendte tilbage, justerede), med kolonner til <em>T/U/O</em> og <em>Hvorfor</em>, som du selv udfylder. Det, stolene eller autopiloten gjorde af sig selv, står ikke her.</li>
+</ul>
+<p>Filen indeholder <strong>aldrig</strong> API-nøgler, adresser eller stemmer. Er <em>Beskyttelse</em> slået til, står teksten, som den er gemt, med pladsholdere i stedet for de skjulte oplysninger. Tidspunkterne er din computers lokale tid.</p>
+<h3 id="conversation-ryd-samtalen"><a class="anchor" href="#conversation-ryd-samtalen" aria-hidden="true">#</a>Ryd samtalen</h3>
+<p><strong>Papirkurven</strong> øverst til højre i samtalepanelet sletter samtalens beskeder for det aktive bord. Første klik gør den rød og viser <em>Ryd?</em>; klik igen inden for tre sekunder for at slette. Det kan ikke fortrydes. Stole og indstillinger bliver.</p>
+<aside class="callout note"><span class="callout-label">Bemærk</span><div><p>Målingerne (se <a href="#metrics">Målinger og overdragelse</a>) gemmer aldrig beskedtekst, så de er uafhængige af samtalen.</p>
+</div></aside>
+
+</section>
+<section class="chapter" id="memory" data-title="Hukommelse">
+<header class="chapter-head"><span class="chapter-n">09</span><h2>Hukommelse</h2><p class="chapter-summary">Beslutninger og fakta, bordet husker på tværs af opgaver.</p></header>
+<p>Som standard husker en stol kun sin egen samtale. <strong>Hukommelsen</strong> er en liste over punkter, <em>du</em> vil have bordet til at huske: en beslutning, et budget, en målgruppe. Punkterne lægges i <strong>alle stoles instruktion</strong>, hver gang de svarer, med besked om at følge dem, medmindre opgaven udtrykkeligt siger andet.</p>
+<h3 id="memory-saadan-bruger-du-den"><a class="anchor" href="#memory-saadan-bruger-du-den" aria-hidden="true">#</a>Sådan bruger du den</h3>
+<ul>
+<li><strong>Fra et svar:</strong> har svaret afleveret beslutninger (linjen ✔ i overdragelsen), får det knappen <strong>🧠 Husk</strong> i den fulde samtale. Den gemmer beslutningerne. Dubletter springes over.</li>
+<li><strong>Manuelt:</strong> åbn ⚙ → <em>Dette bord</em> og vælg <strong>Hukommelse</strong>. Skriv et punkt og klik <em>Tilføj</em>.</li>
+<li><strong>Ret og slet:</strong> punkterne kan rettes direkte i panelet og slettes.</li>
+</ul>
+<p>Højst <strong>30 punkter</strong> på hver <strong>300 tegn</strong>. Panelet viser, hvor mange tokens hukommelsen omtrent koster pr. kald.</p>
+<aside class="callout warning"><span class="callout-label">Pas på</span><div><p>Hukommelsen sendes med <strong>hver gang</strong> en stol svarer, og koster tokens. Hold den kort. Slet det, der ikke længere gælder, ellers styrer gamle beslutninger nye opgaver.</p>
+</div></aside>
+<aside class="callout note"><span class="callout-label">Bemærk</span><div><p>Hukommelsen gemmes pr. bord på din computer. Ligesom alt andet sendes den til de AI-udbydere, du har sat på stolene. I loggen gemmes kun, at den blev ændret eller brugt, aldrig teksten.</p>
+</div></aside>
+
+</section>
+<section class="chapter" id="needs" data-title="Åbne behov og forslag">
+<header class="chapter-head"><span class="chapter-n">10</span><h2>Åbne behov og forslag</h2><p class="chapter-summary">Sådan bruger du stolenes egne forslag til næste skridt, uden at miste kontrollen.</p></header>
+<h3 id="needs-behov"><a class="anchor" href="#needs-behov" aria-hidden="true">#</a>Behov</h3>
+<p>Hver stol afslutter sit svar med tre linjer:</p>
+<ul>
+<li><strong>🔭 Behov</strong>: hvad der stadig mangler, eller hvad der bør ske som det næste.</li>
+<li><strong>👉 Rolle</strong>: hvilken rolle der bedst kan løse det.</li>
+<li><strong>🎚 Justér</strong>: en foreslået ændring af en dial (fx “Nysgerrighed: Til, styrke 8”).</li>
+</ul>
+<p><strong>Næste skridt-kortet</strong> står lige under samtalen og viser <strong>ét</strong> emne ad gangen: først det, kun du kan afgøre, så det, du selv justerer, så Tredje øjes åbne valg, så det, appen kan udføre efter din godkendelse, og til sidst forslag til instruktioner. Handlingen sker på kortet. <strong>Flere forslag (n)</strong> åbner hele oversigten. Kortet viger, mens en pause, en kontrol eller et rute-tilbud venter på dig, så der kun er ét at svare på.</p>
+<p>Behovene samles i knappen <strong>📥 Næste skridt (n)</strong> øverst. Står der &quot;· 2 kræver dig&quot;, er to af dem beslutninger, kun du kan tage; er knappen gul og fed, <strong>blokerer</strong> noget en igangværende kørsel (kontrollen er ikke bestået, og kørslen holder pause). <strong>Næste skridt-listen</strong> er delt i fire grupper:</p>
+<table>
+<thead>
+<tr>
+<th>Gruppe</th>
+<th>Betydning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Kræver din beslutning</strong></td>
+<td>Ingen model eller regel kan afgøre det for dig. Det, der blokerer en kørsel, står øverst med mærket <em>Blokerer kørslen</em></td>
+</tr>
+<tr>
+<td><strong>Kan justeres</strong></td>
+<td>Stolen er fundet. Du justerer den selv i dens panel</td>
+</tr>
+<tr>
+<td><strong>Kan udføres efter godkendelse</strong></td>
+<td>Tredje øjes forslag (A/B/C), forslag til instruktioner og behov, bordet kan løse med ét klik. Intet sker, før du vælger</td>
+</tr>
+<tr>
+<td><strong>Observation</strong></td>
+<td>Registreret af regler ud fra hændelserne, med beviser (se <a href="#third-eye">Tredje øje</a>)</td>
+</tr>
+</tbody></table>
+<p><em>Næste skridt-listen er en huskeliste til dig og ikke en e-mailindbakke.</em> Appen bygger den selv af det, stolene skriver sidst i deres svar, og af regler. Modellerne ser aldrig listen og kan ikke åbne den. Spørger du en stol om &quot;indbakken&quot; eller &quot;anmeldelser&quot;, ved den ikke, hvad du mener. Vil en stol arbejde med dit materiale, skal det ligge i <strong>IN-mappen</strong> (og stolen skal have <em>Læser IN-mappen</em> slået til), eller du skal skrive det ind i opgaven.</p>
+<p><strong>Hvad tæller?</strong> Tallet på knappen viser kun det, der hører til den <strong>seneste opgave</strong>. Behov fra tidligere opgaver ligger samlet nederst under <em>Fra tidligere opgaver</em>. <strong>Kræver dig</strong> er behov, hvis 👉 <em>Rolle</em> ikke peger på en stol ved bordet (fx &quot;ingen&quot;), så kun du kan afgøre dem. Et behov begynder med <strong>VURDERING:</strong> (en beslutning om værdier, prioritering eller konsekvenser, som kun du kan tage) eller <strong>FAKTA:</strong> (noget, en stol eller en fil kan svare på). Det er de vurderinger, der kan få bordet til at holde pause (se <a href="#participate">Deltag undervejs</a>). Spørgsmål, du har besvaret eller bevidst udeladt (på pilen eller i pausekortet), tæller ikke længere. Skriver en stol <strong>&quot;intet&quot;</strong> som behov, er der intet behov, og det vises ikke. Står en foreslået justering allerede sådan på stolen, viser kortet <strong>✓ allerede sat</strong> i stedet for <em>Gør det for mig</em>.</p>
+<p>Oversigten viser kun det nødvendige: hvem, hvad og den ene handling. Rolle, foreslået justering og de øvrige handlinger ligger under <strong>Detaljer</strong>.</p>
+<p>På et behov kan du:</p>
+<p>Linjen <em>Justér</em> er <strong>modellens egen anmodning</strong> i dens svar. Appen ændrer aldrig en dial af sig selv. Kortet siger tydeligt, hvad der er sket:</p>
+<ul>
+<li><strong>Modellen foreslår: Risikosans Til, styrke 6 hos Builder</strong> med knapperne <strong>✓ Sæt Risikosans til Til, styrke 6</strong> (sætter dialen med det samme), <strong>Lad mig rette</strong> (åbner stolen ved Risikosans, så du selv kan justere) og <strong>Ikke nu</strong> (skjuler behovet uden at ændre noget).</li>
+<li><strong>Risikosans står på Til, styrke 6 hos Builder</strong> (hvis dialen allerede står sådan) med <strong>OK</strong> (skjuler behovet) og <strong>Lad mig rette</strong>.</li>
+<li>Efter dit valg står der det, der faktisk er tilfældet, og <strong>✓ Løst</strong>: enten <em>står på</em> (dialen er sat) eller <em>ikke ændret</em> (du valgte Ikke nu).</li>
+</ul>
+<p>Peger behovet ikke på en stol (<em>Rolle ingen</em>), gælder justeringen den stol, der skrev behovet. Har behovet ingen justering, der kan tolkes, er der <strong>⚙ Justér [stol]</strong> (åbner stolen) og <strong>✓ Markér som løst</strong>.</p>
+<p>Under <strong>Kræver din beslutning</strong> er der to ting mere:</p>
+<ul>
+<li>Foreslår behovet en justering uden at pege på en stol, står den som den primære knap, fx <strong>✨ Slå Nysgerrighed til hos Builder</strong>. Den gælder stolen, der skrev behovet, og du kan ændre det igen i stolens panel.</li>
+<li>Er behovet en vurdering, kun du kan afgøre, kan du <strong>skrive dit svar direkte på kortet</strong> og trykke <em>Send til bordet</em>. Svaret gemmes i beslutningsregistret og følger med i alle overdragelser. <em>Markér som løst</em> er her en stille, sekundær handling, fordi det ikke svarer på noget.</li>
+</ul>
+<aside class="callout tip"><span class="callout-label">Tip</span><div><p>Behovene er <em>forslag fra en model</em>, ikke fakta. Brug dem som inspiration, og tag selv den endelige beslutning.</p>
+</div></aside>
+<h3 id="needs-forslag-til-instruktioner"><a class="anchor" href="#needs-forslag-til-instruktioner" aria-hidden="true">#</a>Forslag til instruktioner</h3>
+<p>Synes du, at en stol bør have en fast tilføjelse til sin instruktion, så markér det stykke i svaret, du vil bruge, og klik <strong>💡 Til instruktion</strong> (under <em>Mere</em>). Markerer du intet, får du et <strong>udkast</strong>: første rigtige sætning efter stolens gentagelse af opgaven, aldrig 🔭/👉/🎚-linjerne og aldrig hele svaret. Forslaget lander under <strong>✨ Forslag</strong> øverst, og panelet scroller sig i syne.</p>
+<ul>
+<li><strong>✨ Formulér som instruktion for mig</strong> (valgfri): ét kort modelkald, kun når du trykker. Teksten sendes til den valgte stol og kommer tilbage i feltet som en kort instruktion i bydeform. Prisen står ved knappen, og intet er gemt, før du godkender.</li>
+<li><strong>Godkend</strong>: du kan rette teksten og vælge, <strong>hvilken stol</strong> der får den (ikke nødvendigvis den, svaret kom fra). Den stol, svaret peger på (👉 ROLLE), står først og er mærket <em>(anbefalet)</em>; ellers er det stolen, svaret kom fra. Anbefalingen er en regel og kan tage fejl. Den føjes til stolens instruktion som en tilføjelse markeret “godkendt tilføjelse”.</li>
+<li><strong>Afvis</strong>: forslaget slettes.</li>
+</ul>
+<p>Intet ændres, før du selv godkender.</p>
+
+</section>
+<section class="chapter" id="dials" data-title="Adfærd og ikoner">
+<header class="chapter-head"><span class="chapter-n">11</span><h2>Adfærd og ikoner</h2><p class="chapter-summary">De ti indstillinger og tre ikonrækker, der former hver stols instruktion.</p></header>
+<p>Hver stol kan finjusteres. Indstillingerne oversættes til tekst, som lægges i den <strong>systeminstruktion</strong>, stolen faktisk sender til sin model. Du kan se den samlede tekst nederst i stolens panel under <em>Vis hele instruktionen, som modellen får</em>.</p>
+<h3 id="dials-de-ti-dials-i-fire-grupper"><a class="anchor" href="#dials-de-ti-dials-i-fire-grupper" aria-hidden="true">#</a>De ti dials i fire grupper</h3>
+<p>I stolens panel står dialerne under <strong>Opførsel</strong>, i fire grupper. Hver gruppe viser, hvor mange der er aktive, og hvilke, uden at du åbner den. Åbn en gruppe for at ændre dem. Hver dial har tilstandene <strong>Fra</strong>, <strong>Til</strong> og (hvor det giver mening) <strong>Efter behov</strong>, en <strong>styrke fra 1 til 10</strong> og en valgfri note.</p>
+<table>
+<thead>
+<tr>
+<th>Gruppe</th>
+<th>Dial</th>
+<th>Spørgsmålet den svarer på</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Tænkning</strong></td>
+<td>💭 Ræsonnement</td>
+<td>Hvor grundigt skal stolen tænke sig om?</td>
+</tr>
+<tr>
+<td></td>
+<td>💡 Nysgerrighed</td>
+<td>Leder den aktivt efter huller og alternativer?</td>
+</tr>
+<tr>
+<td></td>
+<td>🪞 Selvtjek</td>
+<td>Skal den spørge sig selv “kan jeg have misforstået noget?”</td>
+</tr>
+<tr>
+<td><strong>Kritisk vurdering</strong></td>
+<td>⚔ Modsigelse</td>
+<td>Hvor tilbøjelig er den til at sige fra?</td>
+</tr>
+<tr>
+<td></td>
+<td>🚨 Risikosans</td>
+<td>Er den opmærksom på konsekvenser og risici?</td>
+</tr>
+<tr>
+<td></td>
+<td>❓ Usikkerhed</td>
+<td>Siger den, hvor sikker den er, og hvad den ikke ved?</td>
+</tr>
+<tr>
+<td><strong>Handling og ansvar</strong></td>
+<td>👣 Selvstændighed</td>
+<td>Må den handle selv, eller skal den spørge først? <em>(Kun forslag / Til / Efter behov)</em></td>
+</tr>
+<tr>
+<td></td>
+<td>♥ Menneskelig konsekvens</td>
+<td>Nævner den, hvem der påvirkes?</td>
+</tr>
+<tr>
+<td></td>
+<td>🔧 Må ændre egne regler</td>
+<td>Nej / Foreslå / Ja</td>
+</tr>
+<tr>
+<td><strong>Ressourcer</strong></td>
+<td>💸 Omkostningsbevidsthed</td>
+<td>Holder den svarene korte for at spare forbrug?</td>
+</tr>
+</tbody></table>
+<h3 id="dials-forudindstillinger-og-maerker"><a class="anchor" href="#dials-forudindstillinger-og-maerker" aria-hidden="true">#</a>Forudindstillinger og mærker</h3>
+<p>Øverst i stolens <strong>Opførsel</strong> kan du vælge en forudindstilling i stedet for at stille ti dials:</p>
+<table>
+<thead>
+<tr>
+<th>Forudindstilling</th>
+<th>Hvad den gør</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Hurtig</strong></td>
+<td>Slukker de seks dials om tænkning og kritik. Hurtigst og billigst</td>
+</tr>
+<tr>
+<td><strong>Grundig</strong></td>
+<td>Tænder Ræsonnement (6), Selvtjek og Usikkerhed</td>
+</tr>
+<tr>
+<td><strong>Kritisk</strong></td>
+<td>Grundig, plus Modsigelse (8) og Risikosans (7)</td>
+</tr>
+</tbody></table>
+<p>En forudindstilling ændrer <strong>kun</strong> de seks dials (Ræsonnement, Nysgerrighed, Selvtjek, Modsigelse, Risikosans, Usikkerhed) og kun i <strong>udkastet</strong>: intet gemmes, før du trykker Gem. Selvstændighed, Menneskelig konsekvens, Ret reglerne og Omkostning røres aldrig af en forudindstilling. Står stolen anderledes end alle tre, siger panelet, at det er dine egne indstillinger. De ti dials ligger under <strong>Tilpas selv</strong>.</p>
+<p><strong>Hvad lover et add-on?</strong> Hvert er mærket med sin art, fordi det afgør, hvad det kan love:</p>
+<ul>
+<li><strong>Stil:</strong> en instruktion i prompten. Et <em>ønske</em> til modellen, ingen garanti. Alle ti dials er stil.</li>
+<li><strong>Kontrol:</strong> en separat stol (<em>Kontrollerer resultatet</em>) med en tydelig dom, PASS eller FAIL, der kan stoppe kørslen.</li>
+<li><strong>Regel:</strong> noget appen selv håndhæver, fx pauser, kuverten og eget bud først.</li>
+</ul>
+<aside class="callout note"><span class="callout-label">Bemærk</span><div><p><strong>Grundig</strong> er stadig stil. Vil du have en rigtig kontrol, så sæt kryds ved <em>Kontrollerer resultatet</em> på en anden stol, helst med en anden model.</p>
+</div></aside>
+<h4 id="dials-proev-med-og-uden"><a class="anchor" href="#dials-proev-med-og-uden" aria-hidden="true">#</a>Prøv med og uden</h4>
+<p>Knappen <strong>Prøv med og uden …</strong> kører den samme opgave to gange gennem stolens model: med dine indstillinger og uden den dial, du vælger (eller uden alle, der er slået til). Du ser de to svar som <strong>A</strong> og <strong>B</strong>, uden at vide, hvilket der er hvilket, og vælger <em>A er bedst</em>, <em>B er bedst</em> eller <em>Ingen forskel</em>. Først derefter afsløres det, og du kan beholde dialen eller slå den fra i udkastet.</p>
+<ul>
+<li>Det er <strong>to kald</strong> til stolens model, kun når du trykker. Antallet står ved knappen. Opgaven går gennem Beskyttelse, hvis den er slået til.</li>
+<li>Svarene gemmes <strong>ikke</strong> i samtalen. Hændelserne (<code>preset.applied</code>, <code>tryout.run</code>, <code>tryout.chosen</code>, <code>tryout.decided</code>) har kun valg og antal, aldrig tekst.</li>
+<li>Det er <strong>ét forsøg</strong>. Det viser en tendens, ikke et bevis; en model kan svare forskelligt blot af tilfældigheder. Gentag det på en anden opgave, før du lægger vægt på det.</li>
+</ul>
+<h3 id="dials-tre-ikonraekker-paa-stolen-og-hvordan-de-haenger-sammen-med-dials"><a class="anchor" href="#dials-tre-ikonraekker-paa-stolen-og-hvordan-de-haenger-sammen-med-dials" aria-hidden="true">#</a>Tre ikonrækker på stolen, og hvordan de hænger sammen med dials</h3>
+<p>Ikonerne redigerer du direkte på stolen: hold musen over den. De tæller med i instruktionen.</p>
+<ul>
+<li><strong>Mandat</strong>: ✓ <em>Fortsætter selv, uden at spørge dig</em> · ? <em>Spørger dig, når den er i tvivl</em> · ⏸ <em>Stopper altid efter sig selv</em>. Mandatet kan også styre selve forløbet: ✓ fortsætter selv, ? spørger dig ved et spørgsmål, ⏸ stopper altid, så du læser resultatet (det samme som en pause på pilen efter stolen) (se <a href="#participate">Deltag undervejs</a>)</li>
+<li><strong>Arbejdsform</strong>: 🧠 <em>Tænk</em> (analyse og grundighed) · ♥ <em>Omtanke</em> (mennesker og konsekvenser) · 👣 <em>Handling</em> (implementering og tempo)</li>
+<li><strong>Information</strong>: ● <em>Sten</em> (faste krav og regler) · ▤ <em>Papir</em> (viden og dokumentation) · ✂ <em>Saks</em> (noget stolen må ændre eller bygge videre på)</li>
+</ul>
+<p>Mandat og arbejdsform er <strong>genveje til de samme indstillinger som dialerne</strong>, så de aldrig kan stå uenige:</p>
+<table>
+<thead>
+<tr>
+<th>Ikon</th>
+<th>Samme som dial</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>🧠 Tænk</td>
+<td>Ræsonnement</td>
+</tr>
+<tr>
+<td>♥ Omtanke</td>
+<td>Menneskelig konsekvens</td>
+</tr>
+<tr>
+<td>👣 Handling og mandatet ✓ ? ⏸</td>
+<td>Selvstændighed</td>
+</tr>
+</tbody></table>
+<p>Ikonet har <strong>tre tilstande</strong>: fuldt tændt er <em>Til</em>, med stiplet kontur er <em>Efter behov</em> (modellen vælger selv), og slukket er <em>Fra</em>. Nye stole starter med Ræsonnement og Menneskelig konsekvens på <em>Efter behov</em>, så 🧠 og ♥ ser tændt ud uden at være &quot;altid&quot;. Sæt dialen til <em>Fra</em> for at slukke dem.</p>
+<p>Tænder eller slukker du ikonet, følger dialen med, og omvendt. Ændrer du dialen <em>Selvstændighed</em> i stolens panel, og mandatet derved skifter, skriver appen en note om det og hvorfor. ✓ sætter Selvstændighed til, mens ? og ⏸ sætter den til <em>Kun forslag</em>. Information (●▤✂) hører kun til ikonerne. <em>Efter behov</em> tæller som aktiv og vises som tændt.</p>
+<aside class="callout note"><span class="callout-label">Bemærk</span><div><p>Stole, der er gemt i en tidligere version, kan have ikoner og dials, der ikke var enige. Ved næste gemning ryddes det: tændt det ene sted er tændt begge steder, og for selvstændighed vinder det mest tilbageholdende.</p>
+</div></aside>
+<h3 id="dials-hold-musen-over-en-stol"><a class="anchor" href="#dials-hold-musen-over-en-stol" aria-hidden="true">#</a>Hold musen over en stol</h3>
+<p>Detaljeboksen viser <strong>alle ti dials</strong> med deres tilstand (også de slukkede, nedtonet), grupperet som i panelet, plus model, mandat, arbejdsform, information og antal tilføjelser.</p>
+<h3 id="dials-saadan-bruger-du-det"><a class="anchor" href="#dials-saadan-bruger-du-det" aria-hidden="true">#</a>Sådan bruger du det</h3>
+<ol>
+<li>Start med få indstillinger tændt. Flere dials betyder en længere instruktion og lidt højere forbrug.</li>
+<li>Brug <strong>Smag varianter</strong> (se <a href="#variants">Varianter</a>) til at sammenligne, hvad en enkelt dial faktisk gør.</li>
+<li>Lad stolenes egne 🎚-forslag pege dig i retning, men afgør selv.</li>
+</ol>
+<aside class="callout note"><span class="callout-label">Bemærk</span><div><p>En dial er en <em>bøn</em> til modellen, ikke en garanti. Modellerne følger den forskelligt, og styrke 8 er ikke dobbelt så meget som styrke 4.</p>
+</div></aside>
+<h3 id="dials-historik-og-tilbagerulning"><a class="anchor" href="#dials-historik-og-tilbagerulning" aria-hidden="true">#</a>Historik og tilbagerulning</h3>
+<p>Hver gang en stols opførsel ændres, noteres det i stolens panel under <strong>Historik</strong>: hvad der blev ændret (dial, ikon, tilføjelse, kontrolstol, læser IN), hvornår, og hvad der udløste det: <em>Manuelt</em>, <em>Behov (Gør det for mig)</em>, <em>Næste skridt</em>, <em>Valgt variant</em> eller <em>Godkendt forslag</em>. Farve, plads og nøgler tæller ikke med.</p>
+<p>Ved hver post kan du trykke <strong>Gendan til før denne ændring</strong>. Stolens dials, ikoner, tilføjelser, kontrolstol og IN-valg sættes tilbage; navn, model og nøgle røres ikke. Selve tilbagerulningen står i historikken som <em>Gendannet</em>, så du kan fortryde den igen. Stolen gemmer de seneste 30 ændringer.</p>
+<aside class="callout note"><span class="callout-label">Bemærk</span><div><p>Mens Beskyttelse er slået til, krypteres tilføjelserne og historikken på disken sammen med beskederne.</p>
+</div></aside>
+
+</section>
+<section class="chapter" id="third-eye" data-title="Tredje øje">
+<header class="chapter-head"><span class="chapter-n">12</span><h2>Tredje øje</h2><p class="chapter-summary">En uafhængig vurdering af hvordan bordet arbejder.</p></header>
+<p><strong>🔎 Tredje øje</strong> er en observatør af <em>processen</em>; den deltager ikke i arbejdet. Den læser hele samtalen og de åbne behov og giver en ærlig vurdering af, hvordan det går: hvad der fungerer, hvor bordet går i ring, og hvad der mangler.</p>
+<h3 id="third-eye-saadan-bruger-du-det"><a class="anchor" href="#third-eye-saadan-bruger-du-det" aria-hidden="true">#</a>Sådan bruger du det</h3>
+<ol>
+<li>Klik <em>🔎 Tredje øje</em> over samtalen.</li>
+<li>Vælg efter <em>med</em>, hvilken <strong>Modelprofil API</strong> der skal give Tredje øje regnekraft. Tredje øje har sin egen forbindelse og behøver ikke en stol: automatisk bruges OpenRouter-profilen (en billig model som standard), ellers den første profil med en nøgle. Du kan også vælge en stols model og nøgle, som før. Et valgt Modelprofil API huskes.</li>
+<li>Vurderingen kommer i samtalen, mærket “vurderet af” med den valgte profil eller stol og model.</li>
+</ol>
+<p>Tredje øjes udgifter står i <strong>Regning og priser</strong> som en egen linje, <em>Tredje øje</em>, og er med i bordets samlede regning.</p>
+<h3 id="third-eye-naeste-skridt-a-b-eller-c"><a class="anchor" href="#third-eye-naeste-skridt-a-b-eller-c" aria-hidden="true">#</a>Næste skridt: A, B eller C</h3>
+<p>Efter sin vurdering foreslår Tredje øje op til <strong>tre næste skridt</strong>, som du kan vælge imellem. De står i <strong>📥 Næste skridt</strong> og under vurderingen i den fulde samtale. Et forslag kan være:</p>
+<ul>
+<li><strong>Giv turen</strong> til en stol (“Take turns”).</li>
+<li><strong>Sæt en dial</strong> på en stol, fx <em>Modsigelse: Til, styrke 8</em>.</li>
+<li><strong>Tilføj en stol</strong> med en rolle fra listen eller en helt ny rolle med egen instruktion. Formularen åbnes udfyldt (med samme nøgle som en eksisterende stol), og stolen oprettes først, når du gemmer.</li>
+<li><strong>Giv en stol et tilvalg</strong>, en ny, navngivet instruktion. Tilvalg står i stolens panel under <em>Tilføjelser</em>, og du kan fjerne dem igen.</li>
+</ul>
+<p>Intet sker, før du selv trykker <strong>Vælg A/B/C</strong>. Kortet viser præcis, hvad der vil ske, og den fulde tekst på en ny rolle eller et nyt tilvalg. <em>Ikke nu</em> afviser dem alle. Et nyt Tredje øje-svar erstatter det gamle sæt.</p>
+<aside class="callout note"><span class="callout-label">Bemærk</span><div><p>Forslagene kontrolleres af appen: kun stole, roller, dials og tilstande, der findes på bordet, accepteres, og højst tre. Et forslag med noget andet (fx et ukendt navn) kasseres uden at blive vist. Forslag kan aldrig ændre nøgler, adresser, GitHub eller Beskyttelse.</p>
+</div></aside>
+<h3 id="third-eye-gode-raad"><a class="anchor" href="#third-eye-gode-raad" aria-hidden="true">#</a>Gode råd</h3>
+<ul>
+<li>Vælg gerne en anden model end dem, der arbejder på opgaven; en uafhængig vurdering er mere værd.</li>
+<li>Det koster ét kald, og jo længere samtalen er, jo mere fylder den i kaldet.</li>
+<li>Knappen er slået fra, hvis ingen stol har en gemt API-nøgle.</li>
+</ul>
+<h3 id="third-eye-observationer-regler-uden-modelkald"><a class="anchor" href="#third-eye-observationer-regler-uden-modelkald" aria-hidden="true">#</a>Observationer (regler uden modelkald)</h3>
+<p>Ud over vurderingen på knaptryk holder appen selv øje med hændelseslogen. Fundene står i <strong>📥 Næste skridt</strong>, under overskriften <em>Observationer</em>, og koster ingenting, fordi de er regler og ikke modelkald. Hvert fund kan åbnes med <strong>Vis beviser</strong>, som viser de hændelser, der udløste det, og kan skjules med <strong>Skjul</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Fund</th>
+<th>Udløses når</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Samme behov gentages</td>
+<td>Samme rolle foreslås mindst tre gange i én opgave</td>
+</tr>
+<tr>
+<td>Kontrollen fejler gentagne gange</td>
+<td>Mindst tre kontroller ikke bestået eller uklare</td>
+</tr>
+<tr>
+<td>Tilbagesendelser opbrugt</td>
+<td>To tilbagesendelser er brugt</td>
+</tr>
+<tr>
+<td>Mange mislykkede kald</td>
+<td>Mindst 40 % af mindst tre kald mislykkedes</td>
+</tr>
+<tr>
+<td>Samme stol kaldt mange gange</td>
+<td>Mindst seks svar fra én stol i én opgave</td>
+</tr>
+<tr>
+<td>Overdragelsen falder tilbage</td>
+<td>Mindst to gange til fuld tekst</td>
+</tr>
+<tr>
+<td>Prisgrænsen stoppede kørslen</td>
+<td>Kørslen blev stoppet af grænsen</td>
+</tr>
+<tr>
+<td>Du har overstyret en kontrol</td>
+<td>Til orientering</td>
+</tr>
+</tbody></table>
+<p>Reglerne ser kun de seneste fem opgaver. De gætter ikke på årsagen; de peger på det, der er sket. Når du beder om en vurdering med <em>🔎 Tredje øje</em>, følger fundene med, så vurderingen bygger på fakta.</p>
+<aside class="callout note"><span class="callout-label">Bemærk</span><div><p>Tredje øje kan tage fejl som enhver anden model. Se den som en anden mening, ikke en dom.</p>
+</div></aside>
+<h3 id="third-eye-tre-lag-observation-vurdering-forslag"><a class="anchor" href="#third-eye-tre-lag-observation-vurdering-forslag" aria-hidden="true">#</a>Tre lag: observation, vurdering, forslag</h3>
+<p>Tredje øje viser tre forskellige slags ting, og de er holdt adskilt, så du kan se, hvad du kan stole på, og hvad der er en mening:</p>
+<table>
+<thead>
+<tr>
+<th>Lag</th>
+<th>Hvad det er</th>
+<th>Hvor det kommer fra</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Observation</strong></td>
+<td>En registreret hændelse, fx <em>3 af 3 kald mislykkedes i samme opgave</em></td>
+<td>Regler på hændelseslogen. <strong>Ingen model.</strong> Hver observation har <em>beviser</em>: de hændelser, der udløste den</td>
+</tr>
+<tr>
+<td><strong>Vurdering</strong></td>
+<td>Modellens mening om, hvordan det går (<em>Modellens vurdering</em>)</td>
+<td>En model. <strong>Den kan tage fejl</strong> og er en vurdering, ikke en kendsgerning</td>
+</tr>
+<tr>
+<td><strong>Forslag</strong></td>
+<td>Op til tre næste skridt (A, B, C), som du kan vælge</td>
+<td>Modellens forslag, valideret af appen. Intet ændres, før du vælger</td>
+</tr>
+</tbody></table>
+<p>Hvert forslag viser en <strong>konsekvens</strong>, før du vælger det: hvad der konkret sker (fx <em>Tester får turen. Intet andet ændres.</em>, eller at en dial ændres på en stol, står i stolens historik og kan rulles tilbage). Dialogen med Tredje øje viser de tre lag som mærker øverst og de seneste observationer under dem.</p>
+<h3 id="third-eye-oejet-i-hjoernet"><a class="anchor" href="#third-eye-oejet-i-hjoernet" aria-hidden="true">#</a>Øjet i hjørnet</h3>
+<p>Nederst til venstre sidder et lille <strong>øje</strong>. Det er Tredje øjes måde at sige til, at noget kræver dig, uden at du skal lede efter det. Det markerer <strong>kun det, appen faktisk ved</strong>, og aldrig noget, den gætter:</p>
+<ul>
+<li><strong>kontrollen er ikke bestået</strong>, og kørslen venter på dit valg,</li>
+<li><strong>kørslen holder pause</strong> og venter på dit svar,</li>
+<li><strong>prisgrænsen er nået</strong>, og kørslen er stoppet,</li>
+<li><strong>en stol mangler API-nøgle</strong> (<em>API mangler</em>),</li>
+<li><strong>ting, kun du kan afgøre</strong> (samme tal som på <em>Overblik</em>).</li>
+</ul>
+<p>Første gang forklarer et lille kort, hvad Tredje øje er. Bagefter er øjet, når intet kræver dig, <strong>grønt og blinker blidt</strong>: det viser, at Tredje øje er med, og blinket betyder aldrig, at noget skal gøres. Når noget nyt kræver dig, <strong>pulserer det nogle få gange</strong> og står derefter stille med en markering, til det er løst. Samme tilstand pulserer ikke igen. Et rødt øje betyder, at kørslen står stille og venter på dig.</p>
+<p><strong>Tryk på øjet</strong> for at komme derhen, hvor det kan afgøres: ind i pausen eller kontrollen, til regningen, til <em>API mangler</em> eller til <em>Næste skridt</em>. Er øjet roligt, åbner trykket selve Tredje øje, så du kan stille et spørgsmål; <em>Overblik</em> ligger stadig i topbaren. Peger du på det, står årsagen som tekst, og skærmlæsere får den at vide, når en ny årsag kommer til. Har dit system <em>reducer bevægelse</em> slået til, pulserer øjet ikke, men markeringen står der stadig.</p>
+<p>Du kan skjule øjet under ⚙ → <strong>Tredje øje i hjørnet</strong> (fra <em>Mere</em>).</p>
+<h3 id="third-eye-samtale-med-tredje-oeje"><a class="anchor" href="#third-eye-samtale-med-tredje-oeje" aria-hidden="true">#</a>Samtale med Tredje øje</h3>
+<p>Knappen <strong>🔎 Tredje øje</strong> er den eneste indgang til Tredje øje. Den åbner en dialog, hvor du kan:</p>
+<ul>
+<li>trykke <strong>Vurdér bordet nu</strong> (vurderingen skrives i bordets log med forslag A/B/C, som før),</li>
+<li>vælge et af forslagene, skrive eller tale et spørgsmål (🎤), fx om hvordan det går, eller <strong>hvad en ændring ville betyde for projektet</strong> (ny rolle, anden dial, anden model, at stoppe nu).</li>
+</ul>
+<p><strong>Teksten skrives uændret, og stemmen giver en lydbesked.</strong> Tredje øjes tekst er den samme som altid. Bagefter laver appen en kort <strong>lydbesked på højst ca. 10 sekunder</strong>, der siger <strong>status</strong> og <strong>hvad der kræves af dig</strong>: om du skal læse teksten, vælge A, B eller C, svare på noget, eller at intet kræves lige nu. Beskeden skrives af den samme model i en lille, separat forespørgsel (et par øre), og teksten vises i dialogen sammen med genvejen <strong>Vis teksten ↗</strong>, som springer til vurderingen i bordets log.</p>
+<p>Spørger du til en ændring, svarer Tredje øje kort og i fast rækkefølge: <strong>forventet effekt</strong>, <strong>risiko og pris</strong>, <strong>et alternativ</strong> og <strong>sin anbefaling</strong> (og hvad der ville få det til at ændre den). Det skelner mellem det, det kan se, og det, det gætter.</p>
+<ul>
+<li>Der er ingen lydknap: lydbeskeden kommer, når der er en ElevenLabs-nøgle og en stemme til Tredje øje (vælges automatisk første gang). Vil du ikke høre den, så vælg <em>Ingen</em> under <em>Stemme til Tredje øje</em>. Mangler noget, står det under dialogen (med knappen <em>Vælg stemme</em>), og går afspilningen galt, står fejlen der også.</li>
+<li>Samtalen <strong>ændrer ingenting</strong>. Ændringer gør du selv, hvor du plejer, eller via <em>Næste skridt</em> ovenfor.</li>
+<li>Samtalen ligger ikke i bordets log og indgår ikke i det, stolene eller en vurdering får at se. <em>Ryd samtalen</em> sletter den.</li>
+</ul>
+<aside class="callout note"><span class="callout-label">Bemærk</span><div><p>Spørgsmålet og bordets indhold sendes til den model, der sidder på den stol, du har valgt ved Tredje øje, og går gennem Beskyttelse, hvis den er slået til. Lydbeskeden indeholder ord fra teksten og sendes til ElevenLabs, og kun hvis Beskyttelse er slået fra.</p>
+</div></aside>
+
+</section>
+<section class="chapter" id="variants" data-title="Smag varianter">
+<header class="chapter-head"><span class="chapter-n">13</span><h2>Smag varianter</h2><p class="chapter-summary">Kør samme besked med forskellige indstillinger, og vælg det svar, du bedst kan lide.</p></header>
+<p>Ved du ikke, om en stol skal have <strong>Modsigelse</strong> på 3 eller 9? Så lad den svare på begge dele og sammenlign.</p>
+<h3 id="variants-saadan-goer-du"><a class="anchor" href="#variants-saadan-goer-du" aria-hidden="true">#</a>Sådan gør du</h3>
+<ol>
+<li>Vælg én stol under <em>Til</em> og skriv din besked (uden at sende).</li>
+<li>Klik <em>🔀 Smag varianter</em>.</li>
+<li>Vælg den <strong>dial</strong>, du vil variere, og mindst <strong>to tilstande</strong> at sammenligne.</li>
+<li>Klik <em>Kør varianter</em>. Stolen svarer parallelt en gang pr. tilstand, med samme besked.</li>
+<li>Læs svarene side om side, og klik <strong>✓ Brug dette svar</strong> på det bedste.</li>
+</ol>
+<p>Det valgte svar bliver stolens svar i samtalen, og valget noteres i <a href="#metrics">Målinger</a>.</p>
+<aside class="callout warning"><span class="callout-label">Pas på</span><div><p>Hver variant er et selvstændigt kald. Tre varianter koster tre gange så meget som ét svar.</p>
+</div></aside>
+
+</section>
+<section class="chapter" id="workgraph" data-title="Strategi og arbejdsgraf">
+<header class="chapter-head"><span class="chapter-n">14</span><h2>Strategi og arbejdsgraf</h2><p class="chapter-summary">Se, hvad der faktisk skete i en kørsel, og sammenlign det med en strategi, du selv vælger.</p></header>
+<p>En <strong>strategi</strong> er en graf over roller, skrevet som enkle linjer, fx:</p>
+<pre><code>Clarifier -&gt; Builder -&gt; Reviewer
+Reviewer -&gt; Builder [ved ikke bestået]
+</code></pre>
+<p>Bordet <strong>følger ikke</strong> strategien af sig selv. Den bruges til to ting: at sammenligne forløbet med, og at give Tredje øje noget at forholde sig til. Der er ingen strategi som standard.</p>
+<h3 id="workgraph-arbejdsgrafen"><a class="anchor" href="#workgraph-arbejdsgrafen" aria-hidden="true">#</a>Arbejdsgrafen</h3>
+<p>Åbn ⚙ → <em>Dette bord</em> → <strong>Arbejdsgraf og strategibibliotek …</strong>.</p>
+<p><figure><img src="../img/da/workgraph.png" alt="Arbejdsgrafen med en valgt strategi" loading="lazy"><figcaption>Arbejdsgrafen for seneste kørsel</figcaption></figure></p>
+<p>Grafen er <strong>udledt af bordets egne hændelser</strong> i den seneste kørsel, uden modelkald:</p>
+<ul>
+<li>hver <strong>stol</strong> er en boks med antal svar og eventuelle kontroller, der ikke bestod,</li>
+<li>en <strong>fuld pil</strong> er en overdragelse, der skete (med antal, hvis flere),</li>
+<li>en <strong>rød bue</strong> er en tilbagesendelse efter en kontrol,</li>
+<li>en <strong>stiplet pil</strong> er strategiens egen vej.</li>
+</ul>
+<p>En stiplet boks er en rolle fra strategien, som ikke var med eller ikke har en stol med det navn. En boks med orange kant var med, men står ikke i strategien.</p>
+<h3 id="workgraph-afvigelser"><a class="anchor" href="#workgraph-afvigelser" aria-hidden="true">#</a>Afvigelser</h3>
+<p>Med en valgt strategi sammenlignes forløbet efter faste regler: roller uden en stol, stole der ikke var med, stole uden for strategien, en anden rækkefølge end strategiens, overdragelser strategien ikke har, tilbagesendelser (og om strategien har en vej tilbage) og stole, der svarede tre gange eller mere. <strong>Det er regler og ikke en vurdering, og en afvigelse er ikke i sig selv en fejl</strong>: det kan være præcis det, du ville.</p>
+<h3 id="workgraph-strategibiblioteket"><a class="anchor" href="#workgraph-strategibiblioteket" aria-hidden="true">#</a>Strategibiblioteket</h3>
+<p>Under grafen ligger biblioteket. Der er tre <strong>startstrategier</strong> (<em>Afklar, byg, kontrollér</em>; <em>Flere perspektiver, så syntese</em>; <em>Udfordr og forbedr</em>). De er <strong>udgangspunkter og ikke anbefalinger: ingen af dem er målt</strong>. De kan kopieres, men ikke ændres. Lav din egen med <strong>+ Ny strategi</strong>:</p>
+<ul>
+<li>skriv roller adskilt af <code>-&gt;</code>, en vej pr. linje,</li>
+<li>sæt en forklaring i klammer til sidst på en linje, fx <code>[ved ikke bestået]</code>,</li>
+<li>en rolle matcher en stol, der hedder <strong>præcis</strong> det (store og små bogstaver er ligegyldige),</li>
+<li>højst 12 roller og 30 veje. Er teksten ugyldig, siger appen, hvilken linje der er galt.</li>
+</ul>
+<p>Biblioteket gælder alle borde. <strong>Hvert bord vælger sin egen strategi</strong>, i biblioteket (<em>Brug til dette bord</em>) eller under ⚙ → <em>Dette bord</em> → <em>Strategi</em> (gemmes med <em>Gem</em>).</p>
+<h3 id="workgraph-tredje-oeje"><a class="anchor" href="#workgraph-tredje-oeje" aria-hidden="true">#</a>Tredje øje</h3>
+<p><strong>Kun når der er valgt en strategi</strong>, får Tredje øje en kort tekst med i sin kontekst: strategiens veje, hvad der faktisk skete, antal svar pr. stol og afvigelserne, og beskeden at bruge grafen til at pege på afvigelser uden at opdigte noget. Uden en valgt strategi er Tredje øje uændret. Knappen <strong>Spørg Tredje øje om forløbet</strong> åbner samtalen med et forslag til spørgsmål.</p>
+<h3 id="workgraph-hvad-logges"><a class="anchor" href="#workgraph-hvad-logges" aria-hidden="true">#</a>Hvad logges?</h3>
+<p>At en strategi blev valgt, gemt eller slettet, og antal roller og veje. Aldrig strategiens navn eller tekst.</p>
+<aside class="callout note"><span class="callout-label">Bemærk</span><div><p>Strategierne og sammenligningen er rene hjælpemidler. Ingen evidens viser endnu, at en bestemt strategi giver bedre resultater end en anden.</p>
+</div></aside>
+
+</section>
+<section class="chapter" id="io" data-title="IN og OUT">
+<header class="chapter-head"><span class="chapter-n">15</span><h2>IN og OUT</h2><p class="chapter-summary">Læg materiale ind til bordet, og få resultater ud som filer, når du beslutter det.</p></header>
+<p>Hvert bord har to mapper på din computer:</p>
+<ul>
+<li><strong>↑ IN</strong>: materiale <em>ind</em>. Notater, tekster, data, udkast.</li>
+<li><strong>↓ OUT</strong>: resultater <em>ud</em>, som filer du kan bruge andre steder.</li>
+</ul>
+<p>Mapperne ligger i <code>Dokumenter/Rundbordet/&lt;projektnavn&gt;/IN</code> og <code>/OUT</code> og oprettes, første gang du bruger dem. Omdøber du projektet senere, bliver mappen, hvor den er. Under bordet viser to felter antal filer, og et klik åbner panelet <em>IN og OUT</em>.</p>
+<p><figure><img src="../img/da/io.png" alt="Panelet IN og OUT med filer" loading="lazy"><figcaption>IN og OUT: filerne, og hvilke stole der læser dem</figcaption></figure></p>
+<h3 id="io-laeg-materiale-i-in"><a class="anchor" href="#io-laeg-materiale-i-in" aria-hidden="true">#</a>Læg materiale i IN</h3>
+<ul>
+<li><strong>Slip filer</strong> et vilkårligt sted i vinduet (IN-feltet lyser op), eller klik <em>Åbn mappe</em> og læg dem ind i Finder/Stifinder.</li>
+<li>Læsbare formater: <code>.txt</code> <code>.md</code> <code>.markdown</code> <code>.csv</code> <code>.tsv</code> <code>.json</code> og <strong><code>.pdf</code></strong>. Andre filer kan ligge i IN, men læses ikke (endnu) af stolene. Fra en PDF hentes kun <strong>teksten</strong> (de første 60 sider); en scannet PDF uden tekstlag giver intet, og filen står så som &quot;ikke medtaget&quot;. Billeder og tabeller i en PDF ses ikke.</li>
+<li>Grænser: højst 5 MB pr. fil lægges i IN (PDF: 20 MB). Ved læsning tages højst ca. 60 KB pr. fil og 150 KB samlet; længere tekst afkortes.</li>
+<li>En fil, der allerede findes, overskrives aldrig; den nye får “ (2)” i navnet.</li>
+</ul>
+<h3 id="io-indbakke-en-mappe-bordet-kun-laeser-fra"><a class="anchor" href="#io-indbakke-en-mappe-bordet-kun-laeser-fra" aria-hidden="true">#</a>Indbakke: en mappe, bordet kun læser fra</h3>
+<p>Hvert bord har sin egen IN og OUT. Derudover kan et bord have en <strong>indbakke</strong>: en mappe et sted på din computer, fx en projektmappe eller en mappe, hvor nye dokumenter lander. Vælg den under ⚙ → <em>Dette bord</em> → <strong>Indbakke</strong> → <em>Vælg mappe …</em>.</p>
+<ul>
+<li><strong>Bordet læser kun.</strong> Programmet ændrer, flytter og sletter aldrig noget i indbakken. Det ser kun på filerne i selve mappen (ikke undermapper, skjulte filer og genveje).</li>
+<li><strong>Nyt siden sidst.</strong> Under IN/OUT står en flise <em>↙ INDBAKKE</em> med antallet af nye filer. En fil er ny, første gang du ser den, og igen, hvis den bliver ændret. Mappen tjekkes, når du åbner bordet eller kommer tilbage til programmet.</li>
+<li><strong>Stolene læser ikke herfra.</strong> Åbn flisen og vælg <em>Hent til IN</em> ved en fil (eller <em>Hent alle nye til IN</em>), så kopieres den til bordets IN. Så gælder de samme regler som for al anden IN: kun stole med <em>Læser IN-mappen</em> får filen med, og indholdet er data, ikke instruktioner. <em>Markér alt som set</em> nulstiller tælleren uden at kopiere noget.</li>
+<li><strong>Grænser:</strong> de samme som for IN (5 MB pr. fil, PDF 20 MB). En fil, der er for stor, kan ikke hentes.</li>
+<li><strong>Hvad logges?</strong> At indbakken er sat, fjernet, og hvor mange filer og bytes der blev hentet, aldrig filnavne eller indhold.</li>
+<li>Du kan ikke vælge bordets egen mappe (IN/OUT), en rodmappe eller programmets datamappe.</li>
+</ul>
+<h3 id="io-billeder-i-in"><a class="anchor" href="#io-billeder-i-in" aria-hidden="true">#</a>Billeder i IN</h3>
+<p>Billeder (<code>.png</code> <code>.jpg</code> <code>.jpeg</code> <code>.webp</code> <code>.gif</code>) kan lægges i IN som andre filer, men behandles anderledes end tekst: de sendes ikke som en tekstblok, men vises direkte til modellen — kun til stole, hvis udbyder faktisk kan se billeder (<strong>Anthropic, OpenAI, Google eller en brugerdefineret udbyder</strong>). Stole på Groq, Mistral, xAI eller DeepSeek får ikke billederne, kun tekstmaterialet, uanset &quot;Læser IN-mappen&quot;. I panelet er et billede mærket <em>billede</em> i stedet for gråtonet som en ulæselig fil.</p>
+<p>Grænser: højst 4 billeder og 5 MB pr. billede (samlet højst 15 MB) sendes pr. kald; resten springes stille over. Som med tekst hentes billederne friskt ved hvert kald.</p>
+<aside class="callout note"><span class="callout-label">Bemærk</span><div><p>Billeder er dyrere at sende end tekst. Bekræftelsen før en kørsel og panelet <em>IN og OUT</em> viser, hvor mange billeder der er klar, og til hvor mange stole.</p>
+</div></aside>
+<h3 id="io-saet-stole-til-at-laese-in"><a class="anchor" href="#io-saet-stole-til-at-laese-in" aria-hidden="true">#</a>Sæt stole til at læse IN</h3>
+<p>Åbn en stol og sæt kryds ved <strong>Læser IN-mappen</strong>. Hver gang stolen svarer, får den indholdet af tekstfilerne — og eventuelle billeder, hvis dens udbyder kan se dem — med som materiale.</p>
+<aside class="callout warning"><span class="callout-label">Pas på</span><div><p>Materialet sendes med <strong>hver gang</strong> stolen svarer, og koster tokens. Bekræftelsen før en kørsel og panelet <em>IN og OUT</em> viser et overslag. Lad kun de stole læse IN, der har brug for det.</p>
+</div></aside>
+<aside class="callout note"><span class="callout-label">Bemærk</span><div><p>Filerne behandles som <em>data</em>. Står der instruktioner inde i en fil eller på et billede, følger stolen dem ikke; kun din opgave og stolens egne instruktioner gælder.</p>
+</div></aside>
+<h3 id="io-faa-resultater-ud-i-out"><a class="anchor" href="#io-faa-resultater-ud-i-out" aria-hidden="true">#</a>Få resultater ud i OUT</h3>
+<p>Noget kommer først i OUT, når <strong>du</strong> vælger det. To veje:</p>
+<ol>
+<li><strong>Rollen OUT Writer</strong> (gruppen <em>Aflevering</em>). Giv den turen, eller videresend et svar til den. Den skriver resultatet som ren filtekst, og appen gemmer det automatisk i OUT og skriver en note i samtalen: <em>↓ Gemt i OUT: navn</em> med et link til mappen.</li>
+<li><strong>Knappen ↓ Gem i OUT</strong> på et vilkårligt svar i den fulde samtale.</li>
+</ol>
+<p>Filer i OUT er altid <code>.md</code>, <code>.txt</code>, <code>.csv</code> eller <code>.json</code>. Appen overskriver aldrig noget; kolliderer navnet, tilføjes “ (2)”.</p>
+<p>OUT Writer får desuden <strong>beslutningsregistret</strong> med og skal forholde sig til hvert punkt: afgjorte spørgsmål med dit svar, åbne i en sektion <em>Åbne spørgsmål</em> (se <a href="#participate">Deltag undervejs</a>).</p>
+<aside class="callout tip"><span class="callout-label">Tip</span><div><p>Kombiner: giv en stol adgang til IN, lad en anden arbejde med indholdet, og lad OUT Writer samle det til en færdig fil.</p>
+</div></aside>
+<h3 id="io-hvad-logges"><a class="anchor" href="#io-hvad-logges" aria-hidden="true">#</a>Hvad logges?</h3>
+<p>Kun fakta: at en fil blev lagt i IN, hvor meget materiale der blev sendt til en stol, og at noget blev gemt i OUT. Aldrig filernes indhold (se <a href="#metrics">Målinger og overdragelse</a>).</p>
+<h3 id="io-sprintplan-som-fil-og-csv"><a class="anchor" href="#io-sprintplan-som-fil-og-csv" aria-hidden="true">#</a>Sprintplan som fil og CSV</h3>
+<p>Afslutter en stol (typisk <strong>OUT Writer</strong>) sit svar med linjen <code>&lt;&lt;SPRINT&gt;&gt;</code> efterfulgt af en JSON-blok med mål, kapacitet og historier, laver appen to filer i OUT i stedet for én:</p>
+<ul>
+<li>en <strong>læsbar plan</strong> (<code>.md</code>) med sprintmål, kapacitet, tabel sorteret efter prioritet, acceptkriterier og risici. Overstiger de planlagte point kapaciteten, står det tydeligt, og</li>
+<li>en <strong>CSV</strong> (<code>.csv</code>) med kolonnerne <em>Title, Description, Priority, Story points, Acceptance criteria, Owner</em>, som kan åbnes i et regneark eller importeres i et planlægningsværktøj. Filen er UTF-8 med BOM, så Excel viser æ, ø og å rigtigt; hvis et importværktøj fejltolker første kolonne, så fjern BOM&#39;en.</li>
+</ul>
+<p>Appen kontrollerer planen: kun point 1, 2, 3, 5, 8 og 13 accepteres, dubletter og ugyldige punkter springes over (du får en advarsel), og højst 30 historier. Tekst, der kunne køre som en formel i et regneark (starter med <code>=</code>, <code>+</code>, <code>-</code> eller <code>@</code>), får et apostrof foran. Kan blokken ikke læses, gemmes teksten, som den er, med en note. Mens Beskyttelse er slået til, får filerne de rigtige værdier tilbage.</p>
+<aside class="callout note"><span class="callout-label">Bemærk</span><div><p>Planen kommer fra en model og kan tage fejl: priser, point og kapacitet er forslag, som du og dit hold skal vurdere.</p>
+</div></aside>
+
+</section>
+<section class="chapter" id="metrics" data-title="Målinger og overdragelse">
+<header class="chapter-head"><span class="chapter-n">16</span><h2>Målinger og overdragelse</h2><p class="chapter-summary">Se hvad bordet har gjort og kostet, og hvordan svar overdrages mellem stole.</p></header>
+<h3 id="metrics-maalinger"><a class="anchor" href="#metrics-maalinger" aria-hidden="true">#</a>Målinger</h3>
+<p>Åbn ⚙ → <em>Dette bord</em> og vælg <strong>Målinger</strong>. Panelet viser rene fakta om det aktive bord:</p>
+<ul>
+<li>Totalt antal <strong>kald</strong>, <strong>tokens</strong>, <strong>pris</strong>, gennemsnitlig <strong>svartid</strong> og <strong>fejl</strong>, og hvilke slags fejl (fx <code>http_429</code> for for mange forespørgsler, <code>http_401</code> for ugyldig nøgle, <code>timeout</code>).</li>
+<li>En tabel <strong>pr. stol</strong> og en <strong>pr. opgave</strong>.</li>
+<li><strong>Overdragelser</strong>: hvor mange, hvor mange der faldt tilbage til fuld tekst, og hvor mange tegn der blev sendt.</li>
+<li><strong>Dine handlinger</strong>: løste behov, anvendte dials, markerede forslag, valgte varianter.</li>
+<li><strong>Eksportér log (JSON)</strong> gemmer det hele i en fil, du selv vælger placeringen af.</li>
+</ul>
+<p><figure><img src="../img/da/metrics.png" alt="Panelet Målinger med tabeller pr. stol og pr. opgave" loading="lazy"><figcaption>Målinger: kald, tokens, tid og pris</figcaption></figure></p>
+<aside class="callout note"><span class="callout-label">Bemærk</span><div><p>Loggen indeholder <strong>aldrig beskedtekst</strong>, kun størrelser, tal, tidspunkter og id&#39;er. Den kan derfor deles uden at afsløre, hvad I talte om.</p>
+</div></aside>
+<p>Loggen gemmer de seneste 2000 hændelser pr. bord.</p>
+<h3 id="metrics-overdragelse-mellem-stole"><a class="anchor" href="#metrics-overdragelse-mellem-stole" aria-hidden="true">#</a>Overdragelse mellem stole</h3>
+<p>Når bordet sender et svar videre, kan det gøre det på to måder. Standard er <strong>fuld tekst</strong>. Du kan vælge pr. bord i <strong>projektpanelet</strong> (klik på navnet midt på bordet):</p>
+<table>
+<thead>
+<tr>
+<th>Tilstand</th>
+<th>Hvad næste stol får</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Struktureret</strong></td>
+<td>Den oprindelige opgave, en kort opsummering og stolens afleverede <strong>fakta, beslutninger, åbne spørgsmål, advarsler og forventet output</strong></td>
+</tr>
+<tr>
+<td><strong>Fuld tekst</strong> (standard)</td>
+<td>Den oprindelige opgave og hele det forrige svar</td>
+</tr>
+</tbody></table>
+<p>I struktureret tilstand slutter stolene deres svar med op til fem ekstra linjer (📋 Fakta · ✔ Beslutninger · ❓ Åbne spørgsmål · ⚠ Advarsler · 📦 Forventet output). Kan en stol ikke levere dem, sender bordet automatisk hele svaret, så intet går tabt. I samtalen ses en lille linje “📋 Overdragelse: …” under svaret.</p>
+<h4 id="metrics-sparer-det-penge"><a class="anchor" href="#metrics-sparer-det-penge" aria-hidden="true">#</a>Sparer det penge?</h4>
+<p>Kort svar: <strong>nej, ikke på korte kæder.</strong> Struktureret overdragelse sender færre tegn videre, men stolene skriver også de ekstra linjer, og outputtokens er dyrere end input. I et forsøg med tre stole (36 kørsler) faldt de videresendte tegn med 38-59 %, men prisen pr. kørsel steg med ca. 30 %, og kvaliteten ændrede sig ikke mærkbart. Værdien ligger i en tydeligere overdragelse, ikke i besparelsen. Forsøget er lille (se <code>evals/RESULTS.md</code>), og længere kæder er ikke testet. <em>Målinger</em> viser tallene for <strong>dit</strong> bord, så du kan vælge den tilstand, der passer bedst.</p>
+<h3 id="metrics-haendelser-om-dine-valg"><a class="anchor" href="#metrics-haendelser-om-dine-valg" aria-hidden="true">#</a>Hændelser om dine valg</h3>
+<p>Når du deltager undervejs, gemmer bordet kun <strong>at</strong> noget skete, og tal, aldrig din tekst:</p>
+<table>
+<thead>
+<tr>
+<th>Hændelse</th>
+<th>Betyder</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>run.paused</code></td>
+<td>Bordet holdt pause (årsag: spørgsmål, altid eller pil; antal spørgsmål)</td>
+</tr>
+<tr>
+<td><code>edge.configured</code></td>
+<td>Du ændrede en pil: pause før næste stol og overdragelsestype (kun valget)</td>
+</tr>
+<tr>
+<td><code>question.answered</code> / <code>question.skipped</code></td>
+<td>Du svarede, eller du udelod bevidst (i pausekortet eller på pilen)</td>
+</tr>
+<tr>
+<td><code>pause.commented</code></td>
+<td>Du skrev en kommentar ved en pause</td>
+</tr>
+<tr>
+<td><code>run.resumed</code></td>
+<td>Kørslen fortsatte efter en pause (antal besvarede og udeladte)</td>
+</tr>
+<tr>
+<td><code>run.closingcheck</code></td>
+<td>Afslutningstjek (antal åbne og afgjorte spørgsmål)</td>
+</tr>
+<tr>
+<td><code>envelope.opened</code> / <code>envelope.sent</code> / <code>envelope.edited</code> / <code>envelope.cancelled</code></td>
+<td>Kuverten blev vist (antal tegn), sendt, rettet (før og efter), eller annulleret</td>
+</tr>
+<tr>
+<td><code>preset.applied</code> / <code>tryout.run</code> / <code>tryout.chosen</code> / <code>tryout.decided</code></td>
+<td>Du valgte en forudindstilling (kun hvilken) og prøvede en dial med og uden (kun valg og antal: om det lykkedes, om du foretrak med, uden eller ingen forskel, og om du beholdt eller slog fra). Aldrig tekst</td>
+</tr>
+<tr>
+<td><code>update.checked</code> / <code>update.downloaded</code></td>
+<td>Du tjekkede for en ny version (kun udfaldet: ny, ens, nyere, ingen adgang, ingen forbindelse) og hentede den (kun om det lykkedes, og om checksummen stemte)</td>
+</tr>
+<tr>
+<td><code>ui.level</code></td>
+<td>Du skiftede visning (kun niveauet: Enkel, Mere eller Avanceret)</td>
+</tr>
+<tr>
+<td><code>proposal.rewritten</code></td>
+<td>En model blev bedt om at formulere et forslag som instruktion (kun om det lykkedes, ingen tekst)</td>
+</tr>
+<tr>
+<td><code>diff.opened</code> / <code>diff.analysed</code></td>
+<td>Uenighedsvisningen blev åbnet (antal svar), og en model pegede på forskelle (antal enige, uenige og uklare)</td>
+</tr>
+<tr>
+<td><code>reflection.scheduled</code></td>
+<td>Du lavede en kalenderfil til et tilbageblik (tidspunkt, antal spørgsmål, om emnet er med)</td>
+</tr>
+<tr>
+<td><code>reflection.scheduled</code></td>
+<td>Du lavede en kalenderfil til et tilbageblik (tidspunkt, antal spørgsmål, om emnet, åbne spørgsmål og afgørelser er med)</td>
+</tr>
+<tr>
+<td><code>owntake.written</code> / <code>owntake.skipped</code> / <code>owntake.compared</code></td>
+<td>Eget bud skrevet (længde), udeladt, eller sammenlignet (dit valg)</td>
+</tr>
+</tbody></table>
+<p>De står i den eksporterede log, og panelet <em>Målinger</em> viser dem som tal under <strong>Din deltagelse</strong>, når der er noget at vise:</p>
+<ul>
+<li><strong>Pauser:</strong> hvor mange, hvor mange ved spørgsmål, &quot;altid&quot; og ved en pil, og hvor mange spørgsmål der blev vist.</li>
+<li><strong>Spørgsmål til dig:</strong> hvor mange du besvarede, hvor mange du bevidst udelod (og hvor stor en andel det er), hvor mange der blev afgjort på pilen, og kommentarer ved pauser.</li>
+<li><strong>Afslutningstjek:</strong> hvor mange kørsler der sluttede med åbne spørgsmål, og hvor mange spørgsmål det i alt var.</li>
+<li><strong>Uenigheder:</strong> hvor mange sammenligninger du har lavet.</li>
+<li><strong>Tilbageblik:</strong> hvor mange kalenderfiler du har lavet.</li>
+<li><strong>Kuverter:</strong> hvor mange der blev vist, sendt (og hvor mange af dem du rettede) og annulleret.</li>
+<li><strong>Eget bud:</strong> skrevet, udeladt og sammenlignet, og hvor mange gange dit bud stod, blev justeret eller skiftet.</li>
+</ul>
+<p>Tallene siger, <strong>hvor meget du er med</strong>, ikke om det virkede. En høj andel bevidst udeladte spørgsmål kan betyde, at pauserne er for mange eller spørgsmålene for små. Det er et tegn på at kigge nærmere, ikke et facit.</p>
+
+</section>
+<section class="chapter" id="prices" data-title="Priser og forbrug">
+<header class="chapter-head"><span class="chapter-n">17</span><h2>Priser og forbrug</h2><p class="chapter-summary">Hold øje med, hvad kaldene koster.</p></header>
+<p>Rundbordet bruger dine egne API-nøgler, så <strong>regningen går direkte til din udbyder</strong>. Appen hjælper dig med at se den løbende.</p>
+<h3 id="prices-forbrug"><a class="anchor" href="#prices-forbrug" aria-hidden="true">#</a>Forbrug</h3>
+<p>Knappen med beløbet øverst (fx <strong>$0.26</strong>) viser det samlede forbrug for det aktive bord. Klik på den for en oversigt pr. stol: antal kald og tokens. Bekræftelsen før en kørsel viser også forbruget indtil nu.</p>
+<h3 id="prices-pristabellen"><a class="anchor" href="#prices-pristabellen" aria-hidden="true">#</a>Pristabellen</h3>
+<p>Vælg <strong>Priser</strong> under ⚙ → <em>Hele programmet</em>. Tabellen har en pris pr. model: dollar pr. million inputtokens og pr. million outputtokens. Den deles af alle stole og borde.</p>
+<ul>
+<li><strong>Tilføj</strong> en model manuelt: model-id og de to priser.</li>
+<li><strong>Opdater automatisk</strong> henter aktuelle priser fra llmpricing.dev for de modeller, du kender.</li>
+<li><strong>Genberegn ventende priser</strong> giver pris til kald, som blev foretaget, før modellen havde en pris.</li>
+</ul>
+<aside class="callout note"><span class="callout-label">Bemærk</span><div><p>Hvert kald <strong>låser den pris, der gjaldt, da det skete</strong>. Ændrer du en pris senere, ændrer det kun fremtidige kald; historiske tal flytter sig ikke.</p>
+</div></aside>
+<h3 id="prices-saadan-holder-du-regningen-nede"><a class="anchor" href="#prices-saadan-holder-du-regningen-nede" aria-hidden="true">#</a>Sådan holder du regningen nede</h3>
+<ul>
+<li>Sæt en <strong>prisgrænse pr. kørsel</strong> i projektpanelet (se <a href="#run">Start bordet</a>).</li>
+<li>Brug små, billige modeller til afklaring og kontrol, og en stærkere kun til det svære.</li>
+<li>Tænd <strong>Omkostningsbevidsthed</strong> (se <a href="#dials">Adfærd og ikoner</a>), så svarene bliver korte.</li>
+<li>Lad kun de stole læse IN, der har brug for materialet (se <a href="#io">IN og OUT</a>).</li>
+<li>Se i <a href="#metrics">Målinger</a>, hvilken stol og hvilken opgave der bruger mest.</li>
+</ul>
+
+</section>
+<section class="chapter" id="git" data-title="Gem i git">
+<header class="chapter-head"><span class="chapter-n">18</span><h2>Gem i git</h2><p class="chapter-summary">Skriv et godkendt svar til et GitHub-repo med ét klik.</p></header>
+<p>Har du et GitHub-repo til projektet, kan du gemme udvalgte svar direkte deri, som en fil der committes og pushes.</p>
+<h3 id="git-opsaetning"><a class="anchor" href="#git-opsaetning" aria-hidden="true">#</a>Opsætning</h3>
+<ol>
+<li>Klik på <strong>projektnavnet midt på bordet</strong> for at åbne <em>Projekt</em>.</li>
+<li>Indsæt <strong>GitHub-repoets adresse</strong>, fx <code>https://github.com/organisation/repo</code>. <em>Opret nyt repo ↗</em> åbner GitHub.</li>
+<li>Indsæt et <strong>personligt adgangstoken</strong> (<em>Personal access token</em>) med rettigheden <code>repo</code>. <em>Opret token ↗</em> fører dig derhen. Tokenet gemmes krypteret på din computer.</li>
+<li>Klik <em>Gem</em>. Øverst står nu <strong>GitHub ●</strong>.</li>
+</ol>
+<h3 id="git-brug"><a class="anchor" href="#git-brug" aria-hidden="true">#</a>Brug</h3>
+<p>I den fulde samtale får hvert svar en knap <strong>💾 Gem i git</strong>. Klik på den, når du har læst svaret og vil beholde det: appen skriver svaret til en fil og committer og pusher. Knappen viser kort <em>Gemmer …</em> og derefter commit-koden.</p>
+<aside class="callout tip"><span class="callout-label">Tip</span><div><p>Du bestemmer selv, hvad der gemmes. Intet pushes automatisk; <em>Gem i git</em> er din udtrykkelige “godkend dette svar”.</p>
+</div></aside>
+<p>Lad tokenfeltet stå tomt for at slå funktionen fra.</p>
+
+</section>
+<section class="chapter" id="voice" data-title="Stemme (ElevenLabs)">
+<header class="chapter-head"><span class="chapter-n">19</span><h2>Stemme (ElevenLabs)</h2><p class="chapter-summary">Lad en stol læse sine svar højt, med en rigtig stemme.</p></header>
+<p>Rundbordet kan læse en stols svar højt via <a href="https://elevenlabs.io" class="external">ElevenLabs</a>, en ekstern tale-til-tale-tjeneste. Det kræver din egen ElevenLabs-konto og nøgle — <strong>én nøgle for hele appen</strong>, ikke én pr. bord, ligesom pristabellen er fælles for alle borde.</p>
+<h3 id="voice-saadan-saetter-du-det-op"><a class="anchor" href="#voice-saadan-saetter-du-det-op" aria-hidden="true">#</a>Sådan sætter du det op</h3>
+<ol>
+<li>Åbn ⚙ → <em>Hele programmet</em> og vælg <strong>Stemme</strong>.</li>
+<li>Indsæt din <strong>ElevenLabs API-nøgle</strong> (<em>Hent nøgle ↗</em> fører dig til ElevenLabs). Klik <em>Gem</em>.</li>
+<li>Klik <strong>Hent stemmer</strong>. Appen henter listen over stemmer på din konto.</li>
+<li>Åbn en stol og vælg en stemme under <strong>Stemme (ElevenLabs)</strong>. Gem stolen. (Til Tredje øje vælges en stemme af sig selv; den kan ændres i Stemme-panelet.)</li>
+</ol>
+<p>Stole uden en valgt stemme læses ikke op — det er stadig standard.</p>
+<h3 id="voice-saadan-bruger-du-det"><a class="anchor" href="#voice-saadan-bruger-du-det" aria-hidden="true">#</a>Sådan bruger du det</h3>
+<p>Har en stol en stemme, får dens svar en knap <strong>🔊 Læs op</strong> i den fulde samtale. Klik på den: knappen viser kort <em>Henter lyd …</em>, derefter <em>Afspiller …</em>, og lyden spilles i appen. Stemmen siger et kort brief om svaret (se <em>Hvad stemmen siger</em> nedenfor), ikke hele teksten.</p>
+<aside class="callout warning"><span class="callout-label">Pas på</span><div><p>Tekst-til-tale koster på din ElevenLabs-konto, uafhængigt af dine AI-udbydere. Et langt svar afkortes ved ca. 4000 tegn.</p>
+</div></aside>
+<aside class="callout note"><span class="callout-label">Bemærk</span><div><p>Nøglen sendes kun direkte til ElevenLabs og gemmes krypteret på din computer, som stolenes egne API-nøgler.</p>
+</div></aside>
+<h3 id="voice-hvad-stemmen-siger"><a class="anchor" href="#voice-hvad-stemmen-siger" aria-hidden="true">#</a>Hvad stemmen siger</h3>
+<p>Stemmen læser <strong>ikke</strong> hele svaret højt. Svar kan være mange linjer kode eller lange tekster, og det er til at læse, ikke til at lytte til. I stedet siger stemmen et <strong>kort brief</strong>: hvad der er sendt, og hvorfor det er værd at kigge på. Fx <em>&quot;Jeg har skrevet noget kode til dig. Kig det igennem, når du har et øjeblik&quot;</em>, <em>&quot;Jeg har lagt nogle valg frem til dig. Vælg det, der passer bedst&quot;</em> eller <em>&quot;Jeg har sendt dig noget at tage stilling til.&quot;</em></p>
+<p>For Tredje øje laves en separat lydbesked (se kapitlet om Tredje øje). For stolenes svar vælger appen briefet ud fra svarets art: kode, valg fra Tredje øje, en vurdering, et spørgsmål til dig, et åbent behov, en lang tekst eller en liste. Formuleringen skifter, så det ikke bliver ens hver gang. Meget korte, rene svar (op til ca. 140 tegn) læses, som de er.</p>
+<p>Mens stemmen taler, vises et lille kort nederst til højre med <strong>bevægelige streger</strong>, hvem der taler, og den tekst, stemmen siger. <strong>Stop</strong> afbryder den med det samme.</p>
+<p>For <strong>stolenes svar</strong> laves briefet lokalt i appen ud fra svarets art, uden et ekstra modelkald, og det indeholder ikke noget af svarets ord (kode, navne, tal). For <strong>Tredje øje</strong> skriver en lille, separat forespørgsel til den samme model en lydbesked på højst ca. 10 sekunder, der siger status og hvad der kræves af dig (se kapitlet om Tredje øje). Den indeholder ord fra Tredje øjes tekst og sendes til ElevenLabs, og kun når Beskyttelse er slået fra.</p>
+<h3 id="voice-hoer-stemmerne"><a class="anchor" href="#voice-hoer-stemmerne" aria-hidden="true">#</a>Hør stemmerne</h3>
+<p>Når du har hentet stemmer, står der en <strong>▶ Prøv</strong>-knap ved hver af dem. Den læser en fast prøvesætning højt med netop den stemme, så du kan høre forskel, før du vælger den til en stol eller til Tredje øje. Prøvesætningen er ikke dine tekster, og den står i loggen over det sendte ud som et kald til ElevenLabs. Hver prøve koster lidt på din ElevenLabs-konto.</p>
+<h3 id="voice-naar-en-stemme-ikke-virker"><a class="anchor" href="#voice-naar-en-stemme-ikke-virker" aria-hidden="true">#</a>Når en stemme ikke virker</h3>
+<p>Fejlen står i klart sprog, både ved knappen og i aktivitetsstrømmen. Den hyppigste er, at <strong>en stemme er slået fra af sin ejer</strong> hos ElevenLabs (det kan ske med delte stemmer fra biblioteket). Så skal du vælge en anden: ⚙ → <em>Hele programmet</em> → <em>Stemme</em> til Tredje øje, eller i stolens panel. Andre årsager, appen kender: stemmen findes ikke, tegnkvoten er brugt op, nøglen er ugyldig eller mangler en rettighed, planen må ikke bruge stemmen, eller for mange kald på én gang. Til sidst står HTTP-koden og ElevenLabs&#39; egen tekst.</p>
+<h3 id="voice-test-noeglen"><a class="anchor" href="#voice-test-noeglen" aria-hidden="true">#</a>Test nøglen</h3>
+<p>Under <strong>Stemme</strong> finder du knappen <strong>Test nøglen</strong>. Den tjekker to ting og skriver resultatet i klartekst: om nøglen kan <strong>hente stemmer</strong>, og om den må bruge <strong>tale-til-tekst</strong> (det, der skal til for at tale med Tredje øje). Testen kører også af sig selv, lige efter du har gemt en ny nøgle. Tale-til-tekst-tjekket sender et lydklip på 0,3 sekunders stilhed, så det koster næsten ingenting.</p>
+<p>Skriver du en ny API-nøgle til en <strong>stol</strong>, testes den også med det samme, når du gemmer, og resultatet står som en systemnote i samtalen.</p>
+<h3 id="voice-tal-med-tredje-oeje"><a class="anchor" href="#voice-tal-med-tredje-oeje" aria-hidden="true">#</a>Tal med Tredje øje</h3>
+<ol>
+<li>Klik <strong>🔎 Tredje øje</strong>. Har du en ElevenLabs-nøgle, vælges en stemme til Tredje øje automatisk første gang (du kan ændre den under <em>Stemme til Tredje øje</em>). Uden en stemme kan du stadig tale, men der kommer ingen lydbesked.</li>
+<li>Klik på <strong>🎤</strong> i dialogen, tal, og klik igen for at stoppe (optagelsen stopper af sig selv efter 90 sekunder).</li>
+<li>Lyden sendes til ElevenLabs, som omsætter den til tekst. Teksten bliver dit <strong>spørgsmål til Tredje øje</strong> og står i dialogen.</li>
+<li>Tredje øje svarer i teksten, og er der en stemme, siger den bagefter en kort lydbesked.</li>
+</ol>
+<p>Første gang beder computeren om lov til at bruge mikrofonen. Siger du tydeligt <strong>&quot;vælg A&quot;</strong>, <strong>&quot;B&quot;</strong> eller <strong>&quot;C&quot;</strong>, mens der ligger åbne valg fra Tredje øje, viser appen først en bekræftelse med det, den forstod. <strong>Intet udføres, før du siger ja.</strong> Alt andet, du siger, behandles som et spørgsmål.</p>
+<aside class="callout warning"><span class="callout-label">Pas på</span><div><p>Tale kan ikke bruges, mens <strong>Beskyttelse</strong> er slået til: lyden sendes til ElevenLabs, og lyd kan ikke have personoplysninger skjult. Både mikrofonen og lydbeskederne fra Tredje øje er derfor slået fra, indtil du slår Beskyttelse fra på bordet. Lydoptagelser står i loggen over det sendte ud som &quot;lyd (kan ikke tjekkes)&quot;.</p>
+</div></aside>
+<aside class="callout note"><span class="callout-label">Bemærk</span><div><p>Lyden gemmes ikke af Rundbordet og sendes kun til ElevenLabs. Tale-til-tekst koster på din ElevenLabs-konto, og din nøgle skal have tilladelse til det; Test nøglen viser, om den har.</p>
+</div></aside>
+
+</section>
+<section class="chapter" id="shield" data-title="Beskyttelse">
+<header class="chapter-head"><span class="chapter-n">20</span><h2>Beskyttelse</h2><p class="chapter-summary">Skjul navne, e-mails, CPR og andre følsomme oplysninger, før noget sendes til en model.</p></header>
+<p>Når <strong>Beskyttelse</strong> er slået til, ændrer Rundbordet teksten <strong>på din egen computer</strong>, før den forlader den: navne, e-mailadresser, CPR-numre, telefonnumre, adresser og IBAN-numre erstattes af stabile pladsholdere som <code>[PERSON_01]</code> og <code>[EMAIL_01]</code>. Modellen ser kun pladsholderne. Når svaret kommer tilbage, sætter appen de rigtige værdier ind igen — kun hos dig.</p>
+<p>Tænk på det som: <strong>original → beskyttet tekst → model → lokalt gendannet svar.</strong></p>
+<h3 id="shield-saadan-slaar-du-det-til"><a class="anchor" href="#shield-saadan-slaar-du-det-til" aria-hidden="true">#</a>Sådan slår du det til</h3>
+<p>Klik på <strong>🛡 Beskyttelse</strong> ved siden af beskedfeltet (eller åbn ⚙ → <em>Dette bord</em> og vælg <em>Beskyttelse</em>). Indstillingen gælder pr. bord. Panelet viser en <strong>forhåndsvisning</strong>: til venstre det, du skriver, til højre det, modellen ville få.</p>
+<h3 id="shield-hvad-der-skjules"><a class="anchor" href="#shield-hvad-der-skjules" aria-hidden="true">#</a>Hvad der skjules</h3>
+<ul>
+<li><strong>Sikre fund</strong> skjules uden at spørge: e-mail, CPR-nummer, telefonnummer, adresse og IBAN.</li>
+<li><strong>Dine egne ord</strong>: navne, firmaer, steder eller sagsnumre, du selv skriver ind i panelet. Store/små bogstaver er ligegyldige, og bøjede former (fx <em>Annes</em>) fanges.</li>
+<li><strong>Mulige efternavne</strong> (ord på <em>-sen</em>, fx <em>Hansen</em>) er usikre. Før afsendelsen spørger appen: sæt flueben ved dem, der <strong>ikke</strong> er navne, så sendes de uændret fremover. Resten skjules og huskes som dine egne ord.</li>
+</ul>
+<p>Teksten, der tjekkes, er hele det, der ville blive sendt: din besked, samtalehistorikken, hukommelsen og tekst fra filer i IN (inkl. PDF).</p>
+<h3 id="shield-svar-og-filer"><a class="anchor" href="#shield-svar-og-filer" aria-hidden="true">#</a>Svar og filer</h3>
+<p>Svar vises med de rigtige værdier understreget med prikker; hold musen over for at se pladsholderen. Vil du se svaret, som modellen så det, så sæt flueben ved <em>Vis svar, som modellen så dem</em>. Når et svar gemmes i <strong>OUT</strong>, får filen de rigtige værdier tilbage. En pladsholder, appen ikke kender, eller som modellen har ændret, bliver stående — og du får en advarsel. Appen gætter aldrig.</p>
+<h3 id="shield-hvis-noget-gaar-galt"><a class="anchor" href="#shield-hvis-noget-gaar-galt" aria-hidden="true">#</a>Hvis noget går galt</h3>
+<ul>
+<li>Slipper noget ubeskyttet igennem, <strong>stopper appen afsendelsen</strong> i stedet for at sende det.</li>
+<li>Fejler forbindelsen, <strong>sendes der ikke automatisk igen</strong>.</li>
+<li>Modellens svar behandles som utroværdigt: det gendannes kun ved at slå pladsholdere op i din lokale oversigt.</li>
+<li>Oversigten over skjulte værdier sendes aldrig til en model og ligger <strong>krypteret</strong> på din computer. <em>Glem skjulte værdier</em> sletter den.</li>
+</ul>
+<h3 id="shield-log-over-det-der-er-sendt-ud"><a class="anchor" href="#shield-log-over-det-der-er-sendt-ud" aria-hidden="true">#</a>Log over det, der er sendt ud</h3>
+<p>Nederst i Beskyttelse-panelet ligger en log over, hvad der har forladt computeren: til hvilken model (eller ElevenLabs, eller GitHub), hvornår, om det var <strong>beskyttet</strong> eller i <strong>klartekst</strong>, og hvor mange oplysninger af hvilken type der var med. Selve værdierne står aldrig i loggen. Loggen føres også, når Beskyttelse er slået fra — så kan du se, om en e-mail eller et CPR-nummer gik ud i klartekst. Billeder kan reglerne ikke læse; de tælles bare med. Hele loggen kan eksporteres under <em>Målinger</em>.</p>
+<h3 id="shield-hvor-ligger-dine-data"><a class="anchor" href="#shield-hvor-ligger-dine-data" aria-hidden="true">#</a>Hvor ligger dine data?</h3>
+<p>Panelet viser også, hvor dine data kan gå hen på dette bord: de udbydere, dine stole bruger, ElevenLabs hvis du har en nøgle, og GitHub hvis du har sat et repo op. Appen sender ikke andet nogen steder hen og har ingen telemetri.</p>
+<p>På computeren gælder: API-nøgler er altid krypteret. Mens Beskyttelse er slået til, er også dine <strong>beskeder, opgavetekster, hukommelse og skjulte værdier</strong> krypteret i konfigurationsfilen. Slår du den fra, gemmes beskeder igen i klartekst. Sikkerhedskopierne (<code>.bak</code>) er den forrige gemte version og kan derfor indeholde klartekst fra før. Filer i IN og OUT ligger som almindelige filer i Dokumenter og er ikke krypteret.</p>
+<h3 id="shield-det-her-kan-den-ikke"><a class="anchor" href="#shield-det-her-kan-den-ikke" aria-hidden="true">#</a>Det her kan den ikke</h3>
+<aside class="callout warning"><span class="callout-label">Pas på</span><div><p>Beskyttelse er <strong>pseudonymisering</strong>, ikke anonymisering. Appen finder identifikatorer — ikke beskrivelser. Skriver du om en persons helbred, økonomi eller private forhold uden at nævne et navn, ser den ingenting. <strong>“Ingen fund” betyder ikke “ingen følsomme oplysninger.”</strong> Læs altid selv igennem, før du sender noget følsomt.</p>
+</div></aside>
+<ul>
+<li><strong>Billeder</strong> i IN sendes ikke, mens Beskyttelse er slået til, fordi tekstregler ikke kan læse billeder.</li>
+<li><strong>Oplæsning</strong> (stemme) er slået fra, mens Beskyttelse er på.</li>
+<li><strong>Gem i git</strong> gemmer svaret med pladsholdere.</li>
+<li>Reglerne er udviklet til danske data. Andre sprog og formater kan slippe igennem.</li>
+</ul>
+
+</section>
+<section class="chapter" id="language" data-title="Sprog">
+<header class="chapter-head"><span class="chapter-n">21</span><h2>Sprog</h2><p class="chapter-summary">Dansk og engelsk i hele appen.</p></header>
+<p>Vælg <strong>Sprog</strong> under ⚙ → <em>Hele programmet</em>: <em>Dansk</em> eller <em>English</em>. Valget gælder:</p>
+<ul>
+<li>hele brugerfladen og appens menuer,</li>
+<li>de faste instruktioner, stolene får sendt (roller, dials, overdragelse),</li>
+<li>denne manual, som åbner på det valgte sprog.</li>
+</ul>
+<p>Skifter du sprog, mens manualen er åben, indlæses den på det nye sprog.</p>
+<p>Dine egne beskeder og stolenes svar skriver du og modellerne på det sprog, I vælger; sproget i appen begrænser det ikke.</p>
+<h3 id="language-udseende-lyst-eller-moerkt"><a class="anchor" href="#language-udseende-lyst-eller-moerkt" aria-hidden="true">#</a>Udseende: lyst eller mørkt</h3>
+<p>Under ⚙ → <em>Hele programmet</em> → <strong>Udseende</strong> vælger du <em>Følg systemet</em>, <em>Lys</em> eller <em>Mørk</em>. Valget gælder hele appen og manualen. På nogle Linux-skriveborde (fx Hyprland) kan appen ikke se, om systemet er mørkt, og så er det her valg den sikre vej: vælg <em>Mørk</em> selv. Udskrift og PDF af manualen er altid lyse.</p>
+
+</section>
+<section class="chapter" id="settings" data-title="Indstillinger">
+<header class="chapter-head"><span class="chapter-n">22</span><h2>Indstillinger</h2><p class="chapter-summary">Det, der gælder ét bord, holdt adskilt fra det, der gælder hele programmet.</p></header>
+<p>Åbn <strong>⚙</strong> øverst til højre. Panelet har to faner, og et bånd øverst på hver fane siger, hvad den gælder for:</p>
+<table>
+<thead>
+<tr>
+<th>Fane</th>
+<th>Gælder</th>
+<th>Indeholder</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Dette bord</strong></td>
+<td>kun det aktive bord</td>
+<td>projektnavn, visning af bordet, hvem tager næste, overdragelse, prisgrænse, GitHub, bordets data (Hukommelse, Beskyttelse, Målinger, Bordfil) og <em>Slet bordet</em></td>
+</tr>
+<tr>
+<td><strong>Hele programmet</strong></td>
+<td>alle borde</td>
+<td>udseende, sprog, Modelprofiler API, Priser, Stemme, Brugermanual, Dine borde, Dine roller, version</td>
+</tr>
+</tbody></table>
+<p>Panelet husker, hvilken fane du sidst brugte.</p>
+<p><figure><img src="../img/da/settings.png" alt="Indstillinger, fanen Dette bord" loading="lazy"><figcaption>Fanen Dette bord</figcaption></figure>
+<figure><img src="../img/da/settings-app.png" alt="Indstillinger, fanen Hele programmet" loading="lazy"><figcaption>Fanen Hele programmet</figcaption></figure></p>
+<h3 id="settings-forloebet-pause-og-ren-kontekst"><a class="anchor" href="#settings-forloebet-pause-og-ren-kontekst" aria-hidden="true">#</a>Forløbet: pause og ren kontekst</h3>
+<p>Under <strong>Dette bord</strong> står fire valg, der ændrer, hvordan en kørsel forløber:</p>
+<ul>
+<li><strong>Mandatet styrer forløbet:</strong> bordet holder pause efter en stol, når dens mandat (✓ ? ⏸) siger det. Se <a href="#participate">Deltag undervejs</a>. Nye borde har det slået til; eksisterende borde er uændrede.</li>
+<li><strong>Se og redigér kuverten:</strong> bordet stopper før hver overdragelse og viser præcis den tekst, næste stol får, så du kan rette den. Se <a href="#participate">Deltag undervejs</a>.</li>
+<li><strong>Eget bud først:</strong> startbekræftelsen får et felt til dit eget bud, som vises ved siden af bordets resultat bagefter. Se <a href="#participate">Deltag undervejs</a>.</li>
+<li><strong>Hver kørsel starter ren:</strong> stolene husker ikke tidligere kørsler.</li>
+</ul>
+<h3 id="settings-modelprofiler-api-udbyder-og-noegle-t-sted"><a class="anchor" href="#settings-modelprofiler-api-udbyder-og-noegle-t-sted" aria-hidden="true">#</a>Modelprofiler API: udbyder og nøgle ét sted</h3>
+<p>Under ⚙ → <em>Hele programmet</em> → <strong>Modelprofiler API …</strong> (den vises på alle niveauer, også Enkel) sætter du udbyder og nøgle op <strong>én gang</strong>. Hver stol vælger en profil i sit panel (<em>Modelprofil API</em>) og vælger selv sin <strong>model</strong>. Nøglen skrives aldrig på stolen.</p>
+<ul>
+<li><strong>Ændrer du profilen, følger alle stole med.</strong> Skifter du nøgle ét sted, gælder det alle de stole, der bruger profilen. Lader du nøglefeltet stå tomt ved en ændring, beholdes den gamle nøgle. Profilens <em>standardmodel</em> er valgfri og bruges kun af en stol, der ikke selv har en model.</li>
+<li><strong>Mangler API, starter bordet ikke.</strong> Før en kørsel tjekkes det, at alle stole har en profil med nøgle og en model. Ellers siger appen, hvad der mangler, og fører dig til stolen eller profilerne. Et banner over beskedfeltet viser det hele tiden, og der sendes intet til nogen model, før du selv trykker Start.</li>
+<li><strong>Fra stolens panel</strong> kan du sætte en profil op uden at miste det, du har skrevet dér; den nye profil vælges bagefter.</li>
+<li><strong>Nøglen ligger kun i profilen</strong>, krypteret på din computer, og stolen gemmes uden nøgle på disken. Den sendes kun til udbyderen.</li>
+<li><strong>Ældre stole:</strong> havde en stol sin egen nøgle, flyttes den ved første start af denne version til en profil (én pr. udbyder og nøgle, fx <em>OpenRouter</em>), og stolen peger på den. Stolens model bevares, og der tages en sikkerhedskopi af opsætningen først (<code>rundbordet-config.json.pre-v4.bak</code> i appens datamappe).</li>
+<li><strong>Sletter du en profil</strong>, beholder de stole, der brugte den, deres opsætning (udbyder, model og nøgle), og peger ikke længere på en profil. Første klik på <em>Slet</em> beder om en bekræftelse og siger, hvor mange stole det rammer.</li>
+<li>Bordfiler gemmer udbyder og model som før, aldrig nøglen.</li>
+</ul>
+<h3 id="settings-dine-roller-begreb-og-rollenavn"><a class="anchor" href="#settings-dine-roller-begreb-og-rollenavn" aria-hidden="true">#</a>Dine roller: begreb og rollenavn</h3>
+<p>En stol har et <strong>begreb</strong> (hvad den er, fx Builder eller OUT Writer) og et valgfrit <strong>rollenavn</strong>. Rollenavnet står lige under begrebet i stolens panel og er <strong>tomt som standard</strong>; skriver du et, bruges det i stedet for begrebet overalt på bordet. Begrebet virker stadig: en stol med begrebet <em>OUT Writer</em> afleverer i OUT, uanset hvad den hedder.</p>
+<p>Under ⚙ → <em>Hele programmet</em> → <strong>Dine roller</strong> gemmer du dine egne roller (rollenavn og begreb), så du kan vælge dem igen på alle stole og borde. De står også som en egen gruppe, <em>Dine roller</em>, i rollelisten og i vælgeren, når du tilføjer en stol, og i stolens panel kan du gemme den aktuelle rolle med <em>Gem rolle i biblioteket</em>. Det vises på alle niveauer.</p>
+<h3 id="settings-dine-borde-omdoeb-dubl-r-backup-gendan-og-slet"><a class="anchor" href="#settings-dine-borde-omdoeb-dubl-r-backup-gendan-og-slet" aria-hidden="true">#</a>Dine borde: omdøb, dublér, backup, gendan og slet</h3>
+<p>Under ⚙ → <em>Hele programmet</em> → <strong>Dine borde</strong> ser du alle dine borde med antal stole, antal beskeder og hvornår hvert bord sidst blev brugt. Det vises på alle niveauer.</p>
+<ul>
+<li><strong>Gem som fil</strong> gemmer ét bord som en læsbar fil (JSON) det sted, du vælger. Filen har bordets opsætning og samtale, som de er gemt. <strong>Den indeholder aldrig API-nøgler, tokens eller adresser.</strong></li>
+<li><strong>Åbn backup …</strong> gendanner en backupfil som et <strong>nyt</strong> bord; dit eksisterende bord røres ikke. Du ser først, hvad filen indeholder (stole, antal beskeder, huskede ting og advarsler), og intet oprettes, før du siger ja. Samtalen og hukommelsen kommer tilbage, og samtalen med Tredje øje er stadig en samtale for sig. En backup har ingen nøgler, så stolene står med <em>API mangler</em>, til du vælger en Modelprofil API. Hedder bordet allerede det samme, får det nye bord endelsen <em>(gendannet)</em>. Var Beskyttelse slået til, er beskederne gemt med pladsholdere, som ikke kan gendannes.</li>
+<li><strong>Omdøb</strong> lader dig rette bordets navn direkte i listen. Enter gemmer, Escape fortryder. Navnet må ikke være tomt eller findes i forvejen.</li>
+<li><strong>Dublér</strong> laver en kopi af opsætningen: stole, instrukser, kontrol, runder og Modelprofil API. Kopien har <strong>ingen samtale, ingen hukommelse, ingen målinger og ingen GitHub-adgang</strong>, og den bliver det åbne bord. Hedder bordet <em>Mit bord</em>, hedder kopien <em>Mit bord (kopi)</em>.</li>
+<li><strong>Slet …</strong> fjerner et bord for altid med stole, samtale, målinger og hukommelse. Du skal skrive bordets navn for at bekræfte, og <em>Gem backup først</em> står lige ved siden af. Filer i IN og OUT på disken røres ikke. Det sidste bord kan ikke slettes.</li>
+</ul>
+<h3 id="settings-visning-enkel-mere-eller-avanceret"><a class="anchor" href="#settings-visning-enkel-mere-eller-avanceret" aria-hidden="true">#</a>Visning: Enkel, Mere eller Avanceret</h3>
+<p>Vælgeren øverst til højre (ved siden af regningen) styrer, <strong>hvor meget der vises</strong>. Intet er fjernet; det er kun en anden standard.</p>
+<table>
+<thead>
+<tr>
+<th>Niveau</th>
+<th>Hvad der vises</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Enkel</strong></td>
+<td>Samtalen, bordet, <strong>Næste skridt</strong>, regningen, Beskyttelse, Modelprofiler API, Dine borde (backup og sletning) og indstillingerne for navn, visning, sprog og udseende. Til dig, der bare vil i gang</td>
+</tr>
+<tr>
+<td><strong>Mere</strong></td>
+<td>Dertil Tilbageblik, ⚖ Uenigheder, Tredje øje, Hukommelse, Stemme, den fulde samtalevisning og indstillingerne for pauser, eget bud først, kuverten og hvem der tager næste</td>
+</tr>
+<tr>
+<td><strong>Avanceret</strong></td>
+<td>Alt, også dials, stolens historik, Pristabel, Målinger, Bordfil, eksport, varianter, runder, strategi og ren kontekst</td>
+</tr>
+</tbody></table>
+<p>Pauser, kontrol, spørgsmål og andre paneler, der åbner af sig selv, vises <strong>uanset niveau</strong>. Har du allerede brugt appen, står den på <strong>Avanceret</strong>, så intet forsvinder, når du opdaterer; kun en helt ny installation starter på <strong>Enkel</strong>. Valget gælder hele appen. Hændelsen <code>ui.level</code> har kun niveauet.</p>
+<h3 id="settings-bordets-data-fire-paneler-som-faner"><a class="anchor" href="#settings-bordets-data-fire-paneler-som-faner" aria-hidden="true">#</a>Bordets data: fire paneler som faner</h3>
+<p><strong>Hukommelse</strong>, <strong>Beskyttelse</strong>, <strong>Målinger</strong> og <strong>Bordfil</strong> åbner som <strong>faner i ét sted</strong> i stedet for fire løse vinduer. Du åbner dem som før (⚙ → <em>Dette bord</em> → <em>Bordets data</em>), og fanelinjen over panelet lader dig skifte mellem dem med et klik eller med piletasterne. Kun ét er åbent ad gangen. Hvert panel virker som før og lukkes med sin ✕ (Beskyttelse med sin Luk-knap, da et klik udenfor ikke lukker den). I <strong>Enkel</strong> vises kun fanen Beskyttelse, i <strong>Mere</strong> også Hukommelse, og i <strong>Avanceret</strong> alle fire.</p>
+<h3 id="settings-visning-af-bordet"><a class="anchor" href="#settings-visning-af-bordet" aria-hidden="true">#</a>Visning af bordet</h3>
+<p><em>Auto</em>, <em>Rundt</em>, <em>Kompakt</em> og <em>Liste</em> vælges under <strong>Dette bord</strong> og gælder <strong>kun det bord</strong>. Et bord kan altså stå som liste, mens et andet står rundt. Valget virker med det samme og gemmes sammen med bordet. Hvad de fire betyder, står i kapitlet <a href="#table">Bordet og stolene</a>.</p>
+<h3 id="settings-nyt-bord-og-hurtig-start"><a class="anchor" href="#settings-nyt-bord-og-hurtig-start" aria-hidden="true">#</a>Nyt bord og Hurtig start</h3>
+<p>Ved siden af bordvælgeren øverst står et <strong>+</strong>. Det viser valgene direkte: et opgavekort, <em>Få et forslag til min opgave</em>, <em>Hurtig start (OpenRouter)</em> eller et tomt bord. Der oprettes intet, før du selv har valgt og startet.</p>
+<h3 id="settings-slet-bordet"><a class="anchor" href="#settings-slet-bordet" aria-hidden="true">#</a>Slet bordet</h3>
+<p>Nederst under <strong>Dette bord</strong> ligger en rød <em>faresone</em>. <em>Slet bordet …</em> kræver, at du <strong>skriver bordets navn</strong>, før den sidste knap kan trykkes. Det forhindrer, at man sletter det forkerte bord ved et uheld. Sletningen fjerner bordets stole, samtale, målinger og hukommelse og kan ikke fortrydes. Filer i IN og OUT på disken røres ikke. Det sidste bord kan ikke slettes.</p>
+<h3 id="settings-lukke-et-panel"><a class="anchor" href="#settings-lukke-et-panel" aria-hidden="true">#</a>Lukke et panel</h3>
+<p>Hvert panel har en <strong>✕</strong> øverst til højre, som altid er synlig, også når panelet ruller. Et klik på et tomt sted ved siden af lukker panelet, hvis du ikke har ændret noget i det. Har du skrevet eller valgt noget, lukker et klik udenfor ikke: panelet viser <em>Ikke gemt</em> og blinker, og klikket udføres ikke, før du har valgt <strong>Gem</strong> eller <strong>Annullér</strong> (eller ✕, som annullerer).</p>
+<h3 id="settings-gem-eller-med-det-samme"><a class="anchor" href="#settings-gem-eller-med-det-samme" aria-hidden="true">#</a>Gem eller med det samme?</h3>
+<p>Bordets tekstfelter (navn, GitHub, prisgrænse, hvem tager næste, overdragelse) gemmes med <strong>Gem</strong>. Visning, udseende og sprog virker med det samme.</p>
+
+</section>
+<section class="chapter" id="shortcuts" data-title="Genveje">
+<header class="chapter-head"><span class="chapter-n">23</span><h2>Genveje</h2><p class="chapter-summary">Hurtige veje rundt i appen.</p></header>
+<table>
+<thead>
+<tr>
+<th>Genvej</th>
+<th>Hvad den gør</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><kbd>F1</kbd></td>
+<td>Åbner manualen</td>
+</tr>
+<tr>
+<td><kbd>⌘</kbd>+<kbd>Enter</kbd> (Mac) · <kbd>Ctrl</kbd>+<kbd>Enter</kbd> (Windows)</td>
+<td>Sender beskeden i skrivefeltet, også i dialogen med Tredje øje</td>
+</tr>
+<tr>
+<td><kbd>⌘</kbd>+<kbd>+</kbd> / <kbd>⌘</kbd>+<kbd>−</kbd> / <kbd>⌘</kbd>+<kbd>0</kbd></td>
+<td>Zoom ind / ud / normal størrelse (Vis-menuen)</td>
+</tr>
+<tr>
+<td><kbd>⌘</kbd>+<kbd>Q</kbd></td>
+<td>Afslutter appen</td>
+</tr>
+</tbody></table>
+<p>Manualen kan også åbnes med <strong>?</strong>-knappen øverst, med <strong>Brugermanual</strong> under ⚙ → <em>Hele programmet</em>, i menuen <em>Hjælp</em>, og med “Læs mere i manualen”-linkene i panelerne.</p>
+<aside class="callout tip"><span class="callout-label">Tip</span><div><p>I manualen kan du søge i feltet øverst til venstre og gemme hele manualen som PDF med knappen nederst.</p>
+</div></aside>
+
+</section>
+<section class="chapter" id="troubleshooting" data-title="Fejlfinding og FAQ">
+<header class="chapter-head"><span class="chapter-n">24</span><h2>Fejlfinding og FAQ</h2><p class="chapter-summary">Løsninger på de mest almindelige problemer.</p></header>
+<h3 id="troubleshooting-en-stol-svarer-ikke"><a class="anchor" href="#troubleshooting-en-stol-svarer-ikke" aria-hidden="true">#</a>En stol svarer ikke</h3>
+<p>Klik på stolen og brug <strong>Test API</strong>. Typiske årsager:</p>
+<table>
+<thead>
+<tr>
+<th>Besked</th>
+<th>Løsning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ugyldig nøgle / 401 / 403</td>
+<td>Nøglen er forkert, udløbet eller uden adgang til modellen. Indsæt en ny.</td>
+</tr>
+<tr>
+<td>Ingen credits / kvoten er brugt op (HTTP 402, eller 429 med <em>insufficient_quota</em>)</td>
+<td>Kontoen hos udbyderen har ikke flere credits. Fyld op eller tjek forbruget hos udbyderen; beskeden siger, hvor, når stedet er kendt. Bordet prøver ikke igen, fordi det ikke hjælper.</td>
+</tr>
+<tr>
+<td>Model findes ikke / 404</td>
+<td>Modelnavnet er stavet forkert eller udfaset. Brug <em>Hent modeller</em>.</td>
+</tr>
+<tr>
+<td>429 / 5xx / timeout</td>
+<td>Forbigående: bordet prøver selv igen op til to gange under en kørsel. Hjælper det ikke, så vent lidt eller vælg en anden model.</td>
+</tr>
+<tr>
+<td>Ingen forbindelse</td>
+<td>Tjek internettet; udbyderen kan også have driftsforstyrrelser.</td>
+</tr>
+<tr>
+<td>“ingen gemt API-nøgle”</td>
+<td>Stolen har ingen nøgle. Åbn den og indsæt en.</td>
+</tr>
+</tbody></table>
+<p>Beskeden fra appen siger i klart sprog, hvad der gik galt og hvad du kan gøre, og viser til sidst HTTP-koden og udbyderens egen tekst (og anmodnings-id, hvis udbyderen sender et), så du kan bruge den, hvis du skriver til udbyderens support.</p>
+<p>Fejl og svartider kan du se i <a href="#metrics">Målinger</a>.</p>
+<h3 id="troubleshooting-ingen-eller-kun-nogle-stole-svarede"><a class="anchor" href="#troubleshooting-ingen-eller-kun-nogle-stole-svarede" aria-hidden="true">#</a>Ingen eller kun nogle stole svarede</h3>
+<p>Efter en kørsel siger statuslinjen kun, hvad der er sket. Svarede ikke alle stole, står det der (fx <em>1 af 2 stole svarede ikke</em>), og årsagen står som en note i samtalen for hver stol. <strong>Dit spørgsmål lægges tilbage i beskedfeltet</strong>, så du kan rette fejlen (en forkert nøgle, en model, der ikke findes, en afbrudt forbindelse, en opbrugt prisgrænse eller et tomt abonnement hos udbyderen) og trykke Send igen. Bekræftelsen viser, hvad der sendes og hvad det forventes at koste, før noget går afsted, så der ikke sendes noget to gange ved en fejl. Svarede ingen stol, er der intet resultat.</p>
+<h3 id="troubleshooting-min-opsaetning-kunne-ikke-laeses"><a class="anchor" href="#troubleshooting-min-opsaetning-kunne-ikke-laeses" aria-hidden="true">#</a>Min opsætning kunne ikke læses</h3>
+<p>Opsætningen skrives først til en midlertidig fil og flyttes så på plads, så en afbrudt skrivning ikke kan ødelægge den. Kan filen alligevel ikke læses, når programmet starter, bruger det den <strong>forrige gemte version</strong> (så din seneste ændring kan mangle), eller starter med et tomt bord, hvis der ingen sikkerhedskopi er, og siger det med en besked øverst. Beskeden viser, hvor kopien af den ulæselige fil ligger; <strong>intet er slettet</strong>. Gem kopien, til du har fået hjælp.</p>
+<h3 id="troubleshooting-jeg-sidder-fast"><a class="anchor" href="#troubleshooting-jeg-sidder-fast" aria-hidden="true">#</a>Jeg sidder fast</h3>
+<p>Hvis noget ikke giver mening, eller du ikke ved, hvad du skal gøre nu: tryk <strong>Jeg sidder fast</strong> øverst. Bordet laver en kort statusbesked om, hvor du var og hvad der skete, så den, du sender den til, kan se, hvad der gik galt.</p>
+<ul>
+<li>Du kan læse hele beskeden, før du bruger den. Du kan skrive en sætning med dine egne ord om, hvad du prøvede at gøre.</li>
+<li>Der står ingen af dine tekster i den: ingen beskeder, bud eller opgaver, ingen nøgler, ingen filnavne og ingen navne på dine stole. Kun version, hvilke paneler der var åbne, hvilke knapper du trykkede på (kun deres id), faste hændelser og tal.</li>
+<li>Intet sendes af sig selv. Du kopierer beskeden eller gemmer den som fil og sender den, hvor du vil.</li>
+<li>Trinene gemmes kun, mens appen er åben, og kun på din computer.</li>
+</ul>
+<h3 id="troubleshooting-installer-paa-linux-fx-omarchy"><a class="anchor" href="#troubleshooting-installer-paa-linux-fx-omarchy" aria-hidden="true">#</a>Installer på Linux (fx Omarchy)</h3>
+<p>Linux-udgaven er en beta. Den er afprøvet på Omarchy (Arch med Hyprland) og virker der, og testes i en Arch-container. Det er ikke dokumentation for andre Linux-distributioner, og kun processoren x64 er med. Skriv, hvis noget ikke virker.</p>
+<p><strong>Fra en pakke (<code>.tar.xz</code>):</strong></p>
+<ol>
+<li>Tjek filen med <code>sha256sum Rundbordet-&lt;version&gt;-x64.tar.xz</code> og sammenlign med den checksum, du fik sammen med filen.</li>
+<li>Pak ud og installer:</li>
+</ol>
+<pre><code>tar xf Rundbordet-&lt;version&gt;-x64.tar.xz
+sudo mv Rundbordet-&lt;version&gt;-x64 /opt/rundbordet
+sudo ln -s /opt/rundbordet/rundbordet /usr/local/bin/rundbordet
+sudo cp -r /opt/rundbordet/share/icons/hicolor /usr/share/icons/
+sudo cp /opt/rundbordet/share/rundbordet.desktop /usr/share/applications/
+</code></pre>
+<ol start="3">
+<li>Start <code>rundbordet</code>. Til nøglerne skal du bruge en nøglering, se <a href="#troubleshooting-linux-fx-omarchy-noeglering">Linux: nøglering</a>.</li>
+</ol>
+<p>Klager appen over «SUID sandbox helper», kan du som nødløsning starte den med <code>rundbordet --no-sandbox</code>.</p>
+<p><strong>Fra kildekoden</strong> (kræver git, Node og npm samt adgang til repoet): <code>git clone</code>, derefter <code>npm ci</code> og <code>npm start</code> i mappen.</p>
+<p>Vinduet hedder <code>rundbordet</code>, så en Hyprland-regel som <code>windowrule = float, class:^(rundbordet)$</code> kan finde det.</p>
+<h3 id="troubleshooting-linux-fx-omarchy-noeglering"><a class="anchor" href="#troubleshooting-linux-fx-omarchy-noeglering" aria-hidden="true">#</a>Linux (fx Omarchy): nøglering</h3>
+<p>På Linux gemmer appen API-nøgler i systemets nøglering (Secret Service, fx gnome-keyring). Findes der ingen, viser appen en rød advarsel under ⚙ → <em>Hele programmet</em> og i Beskyttelse-panelet, og nøglerne er ikke ordentligt beskyttet. Installér og start en nøglering, og start appen igen.</p>
+<p>Vær opmærksom på, at nogle opsætninger logger ind automatisk og bruger en nøglering uden adgangskode (det gør Omarchy som standard). Så ligger nøglerne reelt i klartekst i din hjemmemappe, og det, der beskytter dem, er diskkrypteringen. Slå den til, hvis den ikke er det.</p>
+<h3 id="troubleshooting-spoergsmaal"><a class="anchor" href="#troubleshooting-spoergsmaal" aria-hidden="true">#</a>Spørgsmål</h3>
+<p><strong>Jeg hører ikke Tredje øje.</strong> Lydbeskeden kræver en ElevenLabs-nøgle (⚙ → <em>Hele programmet</em> → Stemme), en valgt stemme til Tredje øje og at <em>Beskyttelse</em> er slået fra. Mangler noget, står det under dialogen, med en knap til at vælge stemme; går afspilningen galt (fx forbrugsgrænse hos ElevenLabs), står fejlen der også. Brug <em>Test nøglen</em> og <em>▶ Prøv</em> under Stemme for at se, om nøgle og stemme virker.</p>
+<p><strong>Hvor gemmes mine data?</strong> Lokalt på din computer, i appens datamappe: på Mac <code>~/Library/Application Support/rundbordet-app/</code>, på Windows <code>%APPDATA%\rundbordet-app\</code>. Filen hedder <code>rundbordet-config.json</code>. Dine IN/OUT-filer ligger i <code>Dokumenter/Rundbordet/</code>.</p>
+<p><strong>Er mine API-nøgler sikre?</strong> De krypteres med styresystemets nøglering (macOS Nøglering, Windows DPAPI) og sendes kun direkte til den udbyder, nøglen hører til. Første gang kan Mac&#39;en spørge, om appen må bruge nøgleringen; svar <em>Tillad</em>.</p>
+<p><strong>Kan jeg tage mine data med til en anden computer?</strong> Kopiér <code>rundbordet-config.json</code>. Nøglerne er krypteret til den enkelte computer og skal indtastes igen. Du kan også eksportere en måling som JSON (se <a href="#metrics">Målinger</a>).</p>
+<p><strong>Hvad sker der ved en opdatering?</strong> Installer den nye version oven på den gamle; dine borde bevares. Før en ændring af dataformatet laver appen selv en sikkerhedskopi (<code>.pre-vN.bak</code>) ved siden af filen. Sikkerhedskopierne kan indeholde gamle, ukrypterede nøgler fra tidligere versioner; slet dem, når du er tryg.</p>
+<p><strong>Mac siger, at appen ikke kan åbnes, fordi udvikleren ikke kan bekræftes.</strong> Version 0.x er endnu ikke signeret hos Apple. På macOS 15 og nyere: tryk <em>Færdig</em>, åbn <em>Systemindstillinger → Anonymitet og sikkerhed</em>, rul ned til <em>Sikkerhed</em>, tryk <em>Åbn alligevel</em> ved Rundbordet, og bekræft med din adgangskode eller Touch ID. På ældre macOS kan du i stedet højreklikke på appen, vælge <em>Åbn</em> og bekræfte. Du skal kun gøre det første gang.</p>
+<p><strong>Skærmen er tom ved opstart.</strong> Luk appen og åbn den igen. Hvis en dialog fra nøgleringen ligger bag andre vinduer, så find og besvar den. Vedvarer det, så notér version og revision fra ⚙ → <em>Hele programmet</em>, når du henvender dig.</p>
+<p><strong>Konfigurationsfilen kan ikke læses.</strong> Appen lægger den urørt ved siden af som <code>rundbordet-config.json.unreadable-…</code> og starter forfra, så intet overskrives.</p>
+<p><strong>Kan jeg bruge lokale modeller?</strong> Ja, hvis de tilbyder et OpenAI-kompatibelt API: vælg <em>Andet (OpenAI-kompatibel)</em> og skriv base-URL&#39;en.</p>
+<p><strong>Bordet stoppede midt i en kørsel.</strong> Statuslinjen siger hvorfor. Det kan være en <strong>pause</strong> (mandatet ? eller ⏸; pausekortet står ved bordet), en <strong>kontrolstol</strong>, der ikke bestod, <strong>prisgrænsen</strong>, eller at du trykkede <em>Stop</em>.</p>
+<p><strong>Bordet venter på en kuvert.</strong> Er <strong>Se og redigér kuverten</strong> slået til under ⚙ → <em>Dette bord</em>, stopper bordet før hver overdragelse. Tryk <em>Send kuverten</em> (eller <em>Stop kørslen</em>). Vil du ikke have det, så slå indstillingen fra.</p>
+<p><strong>Der kommer ingen pause, selvom en stol har ?.</strong> Tjek, at <strong>Mandatet styrer forløbet</strong> er slået til under ⚙ → <em>Dette bord</em> (eksisterende borde har det slået fra), at stolens spørgsmål begynder med VURDERING: (eller ikke peger på en stol), og at det ikke er den sidste stol. Efter den sidste stol er der ingen pause. Se <a href="#participate">Deltag undervejs</a>.</p>
+<p><strong>Hvad betyder mærket på pilen?</strong> Et gult tal er åbne spørgsmål til dig, rødt betyder, at bordet venter på dig i pausekortet, og et grønt ✓ betyder, at spørgsmålet er afgjort. Tryk på pilen for at svare.</p>
+<p><strong>Jeg ser ikke sammenligningen med mit eget bud.</strong> Den vises kun, når <strong>Eget bud først</strong> er slået til, du skrev et bud (et tomt felt er en bevidst udeladelse), og kørslen blev gennemført (ikke stoppet).</p>
+<p><strong>Hvorfor ser stolene ikke mit eget bud?</strong> Det er bevidst: så bordets resultat er et uafhængigt bud, du kan sammenligne med. Vil du have, at en stol bruger det, så skriv det i opgaven eller i et svar i pausekortet.</p>
+
+</section>
+<section class="chapter" id="glossary" data-title="Ordliste">
+<header class="chapter-head"><span class="chapter-n">25</span><h2>Ordliste</h2><p class="chapter-summary">De ord, appen bruger.</p></header>
+<table>
+<thead>
+<tr>
+<th>Ord</th>
+<th>Betydning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Bord</strong></td>
+<td>Et projekt: en samling stole, en samtale og indstillinger. Du kan have flere borde.</td>
+</tr>
+<tr>
+<td><strong>Stol</strong></td>
+<td>En plads ved bordet med en rolle, en model og en API-nøgle.</td>
+</tr>
+<tr>
+<td><strong>Rolle</strong></td>
+<td>Stolens navn og udgangspunkt, fx Clarifier.</td>
+</tr>
+<tr>
+<td><strong>Tur / krone</strong></td>
+<td>Markør for hvilken stol der står for tur.</td>
+</tr>
+<tr>
+<td><strong>Kørsel</strong></td>
+<td>Bordet går rundt i alle stole på én opgave.</td>
+</tr>
+<tr>
+<td><strong>Opgave</strong></td>
+<td>Det, du skriver til bordet; sendes uændret med i hver stols kald.</td>
+</tr>
+<tr>
+<td><strong>Dial</strong></td>
+<td>En af ti adfærdsindstillinger med tilstand og styrke 1-10.</td>
+</tr>
+<tr>
+<td><strong>Ikon</strong></td>
+<td>Mandat, arbejdsform eller information; vises på stolen og tæller med i instruktionen.</td>
+</tr>
+<tr>
+<td><strong>Systeminstruktion</strong></td>
+<td>Den samlede tekst, en stol får sendt før din besked.</td>
+</tr>
+<tr>
+<td><strong>Behov</strong></td>
+<td>Stolens forslag til, hvad der mangler, hvem der kan løse det, og hvad der kan justeres (🔭👉🎚).</td>
+</tr>
+<tr>
+<td><strong>Forslag</strong></td>
+<td>En markeret besked, der kan blive en fast tilføjelse til en stols instruktion, når du godkender.</td>
+</tr>
+<tr>
+<td><strong>Overdragelse</strong></td>
+<td>Det, en stol afleverer til den næste: fakta, beslutninger, åbne spørgsmål, advarsler, forventet output.</td>
+</tr>
+<tr>
+<td><strong>Opgaveanker</strong></td>
+<td>Den oprindelige opgave, som følger med i hvert led, så den ikke forsvinder.</td>
+</tr>
+<tr>
+<td><strong>Visning</strong></td>
+<td>Bordet kan vises rundt, kompakt eller som liste. Auto vælger efter bredden.</td>
+</tr>
+<tr>
+<td><strong>Statusord</strong></td>
+<td>Det, en stol viser om sig selv: Arbejder, Har turen, Næste i rækken, Færdig, Kontrol ikke bestået, Behov til dig m.fl. Kun det, appen kan dokumentere.</td>
+</tr>
+<tr>
+<td><strong>Lydbesked</strong></td>
+<td>En kort besked (højst ca. 10 sekunder), Tredje øje siger om status og hvad der kræves af dig.</td>
+</tr>
+<tr>
+<td><strong>Stemme</strong></td>
+<td>En stemme fra ElevenLabs, tildelt en stol, så dens svar kan læses højt.</td>
+</tr>
+<tr>
+<td><strong>Kontrolstol</strong></td>
+<td>En stol, der vurderer forrige arbejde og giver dom: bestået eller ikke bestået.</td>
+</tr>
+<tr>
+<td><strong>Tilbagesendelse</strong></td>
+<td>Arbejdet sendes tilbage til en tidligere stol efter en kontrol, der ikke bestod: af dig, eller af sig selv, hvis du har slået runder til.</td>
+</tr>
+<tr>
+<td><strong>Runde</strong></td>
+<td>Ét gennemløb af arbejde og kontrol. Ved ikke bestået kan bordet sende tilbage, op til et loft.</td>
+</tr>
+<tr>
+<td><strong>Hukommelse</strong></td>
+<td>Punkter, du vil have bordet til at huske; lægges i alle stoles instruktion.</td>
+</tr>
+<tr>
+<td><strong>Observation</strong></td>
+<td>Fund fra regler på hændelseslogen, med beviser; koster ingen modelkald.</td>
+</tr>
+<tr>
+<td><strong>Tredje øje</strong></td>
+<td>Uafhængig vurdering af processen ved bordet.</td>
+</tr>
+<tr>
+<td><strong>Variant</strong></td>
+<td>Et af flere parallelle svar med forskellig dial-indstilling.</td>
+</tr>
+<tr>
+<td><strong>IN / OUT</strong></td>
+<td>Mapper til materiale ind og resultater ud.</td>
+</tr>
+<tr>
+<td><strong>OUT Writer</strong></td>
+<td>Rolle, der skriver resultatet som fil i OUT.</td>
+</tr>
+<tr>
+<td><strong>Token</strong></td>
+<td>Måleenhed for tekst hos AI-udbydere; prisen regnes pr. million tokens.</td>
+</tr>
+<tr>
+<td><strong>Revision</strong></td>
+<td>Kortkoden for den præcise programversion, vist ved siden af versionsnummeret.</td>
+</tr>
+<tr>
+<td><strong>Beskyttelse</strong></td>
+<td>Skjuler følsomme oplysninger lokalt, før teksten sendes til en model, og gendanner dem i svaret.</td>
+</tr>
+<tr>
+<td><strong>Pladsholder</strong></td>
+<td>Stabil erstatning som <code>[PERSON_01]</code>, som modellen ser i stedet for den rigtige værdi.</td>
+</tr>
+<tr>
+<td><strong>Mandat</strong></td>
+<td>Ikon på stolen: ✓ kør videre, ? stop ved spørgsmål til dig, ⏸ stop altid efter stolen. Styrer forløbet, når <em>Mandatet styrer forløbet</em> er slået til.</td>
+</tr>
+<tr>
+<td><strong>Pause / pausekort</strong></td>
+<td>Bordet holder pause efter en stol og viser dens spørgsmål til dig, med felt til dit svar.</td>
+</tr>
+<tr>
+<td><strong>Spørgsmål til dig</strong></td>
+<td>Et behov, der begynder med VURDERING: eller ikke peger på en stol, så kun du kan afgøre det. Et behov, der begynder med FAKTA:, kan en stol eller en fil svare på.</td>
+</tr>
+<tr>
+<td><strong>Pil</strong></td>
+<td>Forbindelsen mellem to stole. Viser overdragelsen og har et mærke, når der er åbne spørgsmål.</td>
+</tr>
+<tr>
+<td><strong>Beslutningsregister</strong></td>
+<td>Dine afgørelser og de åbne spørgsmål i en opgave. Følger med i hver overdragelse.</td>
+</tr>
+<tr>
+<td><strong>Afslutningstjek</strong></td>
+<td>Efter en kørsel: antal og liste over åbne spørgsmål (regler, ingen model).</td>
+</tr>
+<tr>
+<td><strong>Pil-indstilling</strong></td>
+<td>Pause før næste stol og overdragelsestype for en bestemt pil. Findes i pilens panel.</td>
+</tr>
+<tr>
+<td><strong>Modelprofil API</strong></td>
+<td>Udbyder, model og nøgle sat op ét sted. En stol kan pege på en profil, og ændres profilen, følger stolen med.</td>
+</tr>
+<tr>
+<td><strong>Uenighed</strong></td>
+<td>Et punkt, hvor to svar siger noget forskelligt. Du kan lade en model pege på dem og selv tage stilling.</td>
+</tr>
+<tr>
+<td><strong>Tilbageblik</strong></td>
+<td>En kalenderfil (.ics) med refleksionsspørgsmål, der minder dig om at se tilbage på en beslutning. Appen sender intet.</td>
+</tr>
+<tr>
+<td><strong>Kuvert</strong></td>
+<td>Den tekst, næste stol får: opgaven, forrige svar, beslutningsregistret og dine noter. Kan ses og rettes, før den sendes.</td>
+</tr>
+<tr>
+<td><strong>Eget bud</strong></td>
+<td>Dit eget svar, skrevet før bordet kører og vist ved siden af resultatet. Stolene ser det ikke.</td>
+</tr>
+<tr>
+<td><strong>Skabelon</strong></td>
+<td>Et færdigt bord (roller, mandater, instruktioner) med et mærke for, hvor meget du er med.</td>
+</tr>
+</tbody></table>
+
+</section>
+<section class="chapter" id="about" data-title="Om Rundbordet">
+<header class="chapter-head"><span class="chapter-n">26</span><h2>Om Rundbordet</h2><p class="chapter-summary">Version, privatliv og ændringer.</p></header>
+<h3 id="about-version"><a class="anchor" href="#about-version" aria-hidden="true">#</a>Version</h3>
+<p>Denne manual hører til <strong>Rundbordet 0.41.0</strong> (revision <code>005a873</code>). Versionen står også nederst under ⚙ → <em>Hele programmet</em> og i <em>Om Rundbordet</em>.</p>
+<p>Versionsnumre følger formen <strong>HOVED.MINDRE.RETTELSE</strong>: en ny <em>rettelse</em> fikser fejl, en ny <em>mindre</em> version tilføjer funktioner, og en ny <em>hovedversion</em> kan ændre, hvordan appen bruges. <em>Revisionen</em> peger på den præcise kode, versionen blev bygget af.</p>
+<h3 id="about-privatliv"><a class="anchor" href="#about-privatliv" aria-hidden="true">#</a>Privatliv</h3>
+<ul>
+<li>Dine borde, beskeder og indstillinger gemmes <strong>kun på din computer</strong>.</li>
+<li>API-nøgler krypteres med styresystemets nøglering og sendes <strong>kun til den udbyder, de hører til</strong>.</li>
+<li>Appen sender <strong>ingen målinger eller brugsdata</strong> til os. <em>Målinger</em> i appen er en lokal log, som kun du kan eksportere.</li>
+<li>Dine beskeder og materiale sendes til de AI-udbydere, du selv har sat på stolene, og er underlagt deres vilkår.</li>
+</ul>
+<h3 id="about-aendringer"><a class="anchor" href="#about-aendringer" aria-hidden="true">#</a>Ændringer</h3>
+<p>Format følger <a href="https://keepachangelog.com/da/1.1.0/" class="external">Keep a Changelog</a>, versioner følger <a href="https://semver.org/lang/da/" class="external">SemVer</a>.</p>
+<h4 id="about-ikke-udgivet"><a class="anchor" href="#about-ikke-udgivet" aria-hidden="true">#</a>[Ikke udgivet]</h4>
+<h4 id="about-0-41-0-2026-11-09"><a class="anchor" href="#about-0-41-0-2026-11-09" aria-hidden="true">#</a>[0.41.0] – 2026-11-09</h4>
+<p><strong>Ændret</strong></p>
+<ul>
+<li><strong>Rettet:</strong> feltet til Tredje øje i samtalen manglede sin tekst til skærmlæsere (nøglen <code>talkInputLabel</code> fandtes ikke). En ny test sikrer, at alle tekster findes på både dansk og engelsk, og at ingen tekstnøgle defineres to gange.</li>
+<li><strong>Download-siden og manualen passer til forretningsmodellen og til det, der er afprøvet.</strong> Siden (genereret af <code>scripts/build-web.js</code>) beskriver nu hver for sig: gratis brug (også uden licens), egen API-nøgle og egne udgifter, opdateringslicens (engangsbetalt; adgang til opdateringsfunktionen i appen) og betalte introduktionsforløb, uden opfundne priser, betalingslink eller vilkår. Linux nævnes som afprøvet på Omarchy (x64), ikke som dokumentation for andre distributioner. Teksten «licens og pris er ikke besluttet» er fjernet.</li>
+<li><strong>Forslaget i startguiden forklarer sig med almindelige ord:</strong> <em>Sådan går det</em> (bordtypens egen beskrivelse), hvor mange stole der kaldes og hvad du får ud af det, ud over begrundelsen og om forslaget bygger på faste regler eller en models vurdering.</li>
+<li><strong>Ærlig status efter en fejl.</strong> Efter en kørsel stod der «Færdig — alle stole har svaret», selv når nogle stole ikke svarede. Nu siger statuslinjen, hvor mange der ikke svarede (eller at ingen gjorde, og der intet resultat er), og dit spørgsmål lægges tilbage i beskedfeltet, så du kan prøve igen uden at skrive det om. Resultatkortet vises kun, når der er et svar.</li>
+<li><strong>Pris og nøgle forklares, og bekræftelsen før start viser et skøn.</strong> Under nøglefelterne står, at et ChatGPT- eller Claude-abonnement ikke i sig selv giver en API-nøgle, at du betaler udbyderen direkte, hvor nøglen gemmes, og hvem der modtager opgaven; nøgletjekket sender ingen opgave. Bekræftelsen før start viser et <strong>skønnet forbrug</strong> ud fra stolenes seneste kald (eller siger, at det ikke kan skønnes, og nævner modeller uden listepris), hvilken udbyder der modtager opgaven, og prisgrænsens faktiske begrænsninger (listepris, tjekkes mellem stolene, et kald kan gå over). Der er ingen påstande om, at API er billigere end et abonnement.</li>
+<li><strong>Første skærm spørger «Hvad vil du gerne have hjælp til?».</strong> Øverst et felt, hvor du beskriver din opgave eller indsætter en tekst, og knappen <em>Få et forslag til min opgave</em>; teksten følger med ind i startguiden. Under det de fire eksempler og den indspillede demo. Der er færre knapper (kun hurtig start og tomt bord som de små veje), og introen siger, at du ikke skal vælge modeller, roller eller indstillinger først.</li>
+<li><strong>Tydeligere navne på pause og mandat.</strong> Pilens pause hedder nu <em>Stop her: du læser, før næste stol starter (altid)</em>. Mandatet hedder ✓ <em>Fortsætter selv, uden at spørge dig</em>, ? <em>Spørger dig, når den er i tvivl</em> og ⏸ <em>Stopper altid efter sig selv: du læser resultatet</em>, og teksterne siger, at mandatet ⏸ og pilens pause giver det samme stop. Hjælpen forklarer forskellen.</li>
+<li><strong>Ny stol uden rolleknapper på Enkel og Mere.</strong> Panelet viser kun <em>+ Ny stol</em> og en afkrydsning <em>Skriver til OUT</em> (stolen gemmer sit svar som en fil i OUT). Rolleknapperne er kun under Avanceret.</li>
+<li><strong>Pilene viser kun den planlagte rækkefølge.</strong> En overdragelse, der gik et andet sted hen end rækkefølgen siger, tegnes som en mærket genvej (prik-streg-linje med navnene som tip), så en stol ikke ser ud til at have flere planlagte pile. En lille forklaring nederst til venstre på bordet viser, hvad linjerne betyder.</li>
+<li><strong>«+» ved bordvælgeren åbner valgene direkte</strong> (opgavekort, <em>Jeg har en anden opgave …</em>, <em>Hurtig start</em> og tomt bord) i stedet for en rullemenu. Der oprettes intet bord, før du selv har valgt og startet.</li>
+<li><strong>Dit gemte arbejde og din licens skrives nu sikkert.</strong> Opsætningen og licensfilen skrives først til en midlertidig fil og flyttes så på plads, så en afbrudt skrivning ikke kan ødelægge den eneste gyldige fil. En ulæselig fil bliver ikke længere til sikkerhedskopi oven på den gode kopi. Kan opsætningen ikke læses ved start, bruger programmet den forrige gemte version, eller starter tomt, og <strong>siger det med en besked</strong> og stedet for kopien af den ulæselige fil, i stedet for lydløst at se ud, som om dit arbejde er væk.</li>
+<li><strong>Licens og opdatering:</strong> umulige datoer (fx 30. februar) afvises, en installer til en forkert arkitektur vælges aldrig (Linux x64 er med), og en fejl ved gemning, fjernelse eller download låser ikke knapperne og sletter ikke den indtastede licenstekst.</li>
+<li><strong>Tredje øje er tydeligere.</strong> Første gang forklarer et lille kort, hvad Tredje øje er og at du altid vælger. Bagefter er det flydende øje, når intet kræver dig, grønt og blinker blidt (ikke ved <em>reducer bevægelse</em>), og et tryk åbner selve Tredje øje i stedet for Overblik. Kræver noget dig, skifter øjet farve og får sin markering som før.</li>
+<li><strong>Stolens ikoner (✓ ? ⏸, 🧠 ♥ 👣, ● ▤ ✂) har en tekst ved hover og tastaturfokus</strong> med det samme, i stedet for browserens forsinkede tip, som ikke altid kom frem (fx ved fødderne og saksen).</li>
+<li><strong>Ingen åbne behov</strong> vises som et lille ✓ med teksten som tip, der forsvinder af sig selv, i stedet for et kort oven på knapperne.</li>
+<li><strong>Tekstfeltet i startguiden</strong> har nu fuld bredde og en rimelig højde, så opgaven er let at skrive og læse.</li>
+<li><strong>Begrebslisten på stolen vises kun under Avanceret.</strong> På Enkel og Mere har en ny stol kun et navn (feltet hedder <em>Navn</em>, og uden navn gemmes intet); en eksisterende stol beholder sit begreb. Før fik en ny stol stiltiende begrebet <em>Builder</em>.</li>
+</ul>
+<p><strong>Tilføjet</strong></p>
+<h3 id="about-ophavsret"><a class="anchor" href="#about-ophavsret" aria-hidden="true">#</a>Ophavsret</h3>
+<p>© 2026 eterapeut.dk. Se <code>LICENSE</code> og <code>THIRD-PARTY-NOTICES.md</code> for licens og tredjepartskomponenter (bl.a. skrifttyperne Fraunces, Work Sans og JetBrains Mono, som følger med under SIL Open Font License).</p>
+
+</section>
+<footer class="foot"><a href="#" id="toTop">↑ Til toppen</a></footer>
+</main>
+</div>
+<script>
+// Manualens lille klientlogik: aktiv-markering i indholdsfortegnelsen, søgning, sprogskift
+// (bevarer kapitlet) og PDF-eksport via appens preload (falder tilbage til print).
+(function () {
+  var chapters = Array.prototype.slice.call(document.querySelectorAll(".chapter"));
+  var links = {};
+  Array.prototype.forEach.call(document.querySelectorAll(".toc a"), function (a) {
+    links[a.getAttribute("data-ch")] = a;
+  });
+
+  // Scrollspy
+  function setActive(id) {
+    Object.keys(links).forEach(function (k) {
+      links[k].classList.toggle("active", k === id);
+    });
+    if (links[id]) links[id].scrollIntoView({ block: "nearest" });
+  }
+  if ("IntersectionObserver" in window) {
+    var obs = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) setActive(e.target.id);
+        });
+      },
+      { rootMargin: "-10% 0px -75% 0px" }
+    );
+    chapters.forEach(function (c) {
+      obs.observe(c);
+    });
+  }
+
+  // Sprogskift bevarer kapitlet/afsnittet
+  var lang = document.getElementById("langLink");
+  function syncLangLink() {
+    if (!lang) return;
+    lang.setAttribute("href", document.body.getAttribute("data-other") + location.hash);
+  }
+  window.addEventListener("hashchange", syncLangLink);
+  syncLangLink();
+
+  // Søgning: filtrerer kapitler og fremhæver træf
+  var search = document.getElementById("search");
+  var noHits = document.getElementById("noHits");
+  function clearMarks() {
+    Array.prototype.forEach.call(document.querySelectorAll("mark.hit"), function (m) {
+      var p = m.parentNode;
+      p.replaceChild(document.createTextNode(m.textContent), m);
+      p.normalize();
+    });
+  }
+  function markIn(node, re) {
+    var walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT, null);
+    var texts = [];
+    while (walker.nextNode()) texts.push(walker.currentNode);
+    texts.forEach(function (tn) {
+      if (!re.test(tn.nodeValue) || /^(SCRIPT|STYLE)$/.test(tn.parentNode.nodeName)) return;
+      re.lastIndex = 0;
+      var span = document.createElement("span");
+      span.innerHTML = tn.nodeValue.replace(/[&<>]/g, function (c) {
+        return { "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c];
+      }).replace(re, "<mark class=\"hit\">$&</mark>");
+      tn.parentNode.replaceChild(span, tn);
+    });
+  }
+  search.addEventListener("input", function () {
+    clearMarks();
+    var q = search.value.trim();
+    var shown = 0;
+    var re = q ? new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi") : null;
+    chapters.forEach(function (c) {
+      var hit = !q || c.textContent.toLowerCase().indexOf(q.toLowerCase()) >= 0;
+      c.hidden = !hit;
+      if (links[c.id]) links[c.id].parentNode.hidden = !hit;
+      if (hit) shown += 1;
+      if (hit && re && q.length > 1) markIn(c, re);
+    });
+    noHits.hidden = shown > 0;
+  });
+
+  // PDF
+  document.getElementById("pdfBtn").addEventListener("click", function () {
+    if (window.helpApi && window.helpApi.savePdf) window.helpApi.savePdf();
+    else window.print();
+  });
+  document.getElementById("toTop").addEventListener("click", function (e) {
+    e.preventDefault();
+    window.scrollTo({ top: 0 });
+  });
+  if (!location.hash) setActive(chapters[0] && chapters[0].id);
+})();
+
+</script>
+</body>
+</html>
