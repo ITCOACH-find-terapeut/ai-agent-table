@@ -129,7 +129,7 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <body data-lang="en" data-other="manual.da.html" data-nohits="No chapters match.">
 <div class="shell">
 <aside class="sidebar" id="sidebar">
-  <div class="brand"><span class="brand-mark">◯</span><div><div class="brand-name">Rundbordet</div><div class="brand-sub">Version 0.43.0 · rev 74b6b44+</div></div></div>
+  <div class="brand"><span class="brand-mark">◯</span><div><div class="brand-name">Rundbordet</div><div class="brand-sub">Version 0.44.0 · rev 84ffe2d+</div></div></div>
   <input type="search" id="search" placeholder="Search the manual …" aria-label="Search the manual …">
   <nav aria-label="Contents"><ol class="toc" id="toc">
 <li><a href="#getting-started" data-ch="getting-started"><span class="toc-n">01</span>Getting started in five minutes</a></li>
@@ -230,7 +230,7 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <p>On the seat itself you see:</p>
 <ul>
 <li>The <strong>role name</strong>, a <strong>status word</strong> and one <strong>activity line</strong>. The status word is what the app can document: <em>Working</em> (a model call is running), <em>Has the turn</em>, <em>Next in line</em>, <em>Waiting</em>, <em>Done</em>, <em>Check failed</em>, <em>Needs you</em>, <em>Waiting for you</em> (the table is paused and waiting for your answer), <em>Paused</em> or <em>Failed</em>. The line below says what happened or is awaited, for example <em>Answering now · model name</em>, <em>Waiting for Clarifier</em> or <em>Handed over to Builder</em>. Nothing is shown that the app does not know.</li>
-<li><strong>The seat&#39;s card on hover:</strong> hold the mouse over (or tab to) a seat and <strong>the middle of the table shows the seat&#39;s card</strong> instead of the table name, until the mouse leaves the seat. The most important comes first: <strong>mandate</strong> and <strong>way of working</strong>. Then <em>How I work</em> lists the seat&#39;s additions as short &quot;I&quot; sentences (for example <em>I challenge proposals I disagree with</em>) with the dial&#39;s name and strength beside it, and <em>Switched off</em> lists what is off. At the bottom in small type are the model, whether it is a checking seat, whether it reads IN and the number of own additions. In the list view, which has no middle, the card appears at the seat. The small icons for changing mandate and way of working appear the same way (see <a href="#dials">Behaviour and icons</a>).</li>
+<li><strong>Preview of a seat:</strong> hold the mouse over a seat, or tab to it, and <strong>the table&#39;s nameplate shows three short lines</strong>: the seat&#39;s <strong>role</strong> (or its name, if that differs from the role, with the role below), the <strong>task</strong> in one sentence and the <strong>mandate</strong> in short (<em>Continues on its own</em>, <em>Asks when in doubt</em> or <em>Waits for you</em>). The task is the first sentence of the seat&#39;s own instructions; if it has none, the role&#39;s default description is used. When the mouse or focus leaves the seat, or you press <strong>Esc</strong>, the table&#39;s name and status come back; the status is kept up to date meanwhile. In the list view the same appears in the field above the list. The type is the same size as on the plate, and long texts are cut with &quot;…&quot;. <strong>Click the seat</strong> to open its properties panel: the full description, model, provider, way of working, additions and the other settings. Seats can be reached with Tab and opened with Enter. The small icons for changing mandate and way of working appear the same way (see <a href="#dials">Behaviour and icons</a>).</li>
 <li>A small <strong>dot</strong> in the corner shows that the seat&#39;s API key has been tested: green means the test worked.</li>
 <li>A <strong>crown</strong> 👑 if the seat has the turn (see <a href="#turn">Whose turn it is</a>).</li>
 </ul>
@@ -1877,7 +1877,7 @@ sudo cp /opt/rundbordet/share/rundbordet.desktop /usr/share/applications/
 <section class="chapter" id="about" data-title="About Rundbordet">
 <header class="chapter-head"><span class="chapter-n">26</span><h2>About Rundbordet</h2><p class="chapter-summary">Version, privacy and changes.</p></header>
 <h3 id="about-version"><a class="anchor" href="#about-version" aria-hidden="true">#</a>Version</h3>
-<p>This manual belongs to <strong>Rundbordet 0.43.0</strong> (revision <code>74b6b44+</code>). The version is also shown at the bottom of ⚙ → <em>Whole app</em> and in <em>About Rundbordet</em>.</p>
+<p>This manual belongs to <strong>Rundbordet 0.44.0</strong> (revision <code>84ffe2d+</code>). The version is also shown at the bottom of ⚙ → <em>Whole app</em> and in <em>About Rundbordet</em>.</p>
 <p>Version numbers take the form <strong>MAJOR.MINOR.PATCH</strong>: a new <em>patch</em> fixes bugs, a new <em>minor</em> version adds features, and a new <em>major</em> version may change how the app is used. The <em>revision</em> points to the exact code the version was built from.</p>
 <h3 id="about-privacy"><a class="anchor" href="#about-privacy" aria-hidden="true">#</a>Privacy</h3>
 <ul>
@@ -1890,6 +1890,12 @@ sudo cp /opt/rundbordet/share/rundbordet.desktop /usr/share/applications/
 <p>The list of changes is kept in Danish:</p>
 <p>Format følger <a href="https://keepachangelog.com/da/1.1.0/" class="external">Keep a Changelog</a>, versioner følger <a href="https://semver.org/lang/da/" class="external">SemVer</a>.</p>
 <h4 id="about-ikke-udgivet"><a class="anchor" href="#about-ikke-udgivet" aria-hidden="true">#</a>[Ikke udgivet]</h4>
+<h4 id="about-0-44-0-2026-11-10"><a class="anchor" href="#about-0-44-0-2026-11-10" aria-hidden="true">#</a>[0.44.0] – 2026-11-10</h4>
+<p><strong>Ændret</strong></p>
+<ul>
+<li><strong>Rollover på en stol viser en kort forhåndsvisning i bordets navneplade i stedet for en stor boks.</strong> Tre linjer: <strong>rolle</strong> (eller stolens navn som overskrift, hvis det afviger fra rollen, med rollen under), <strong>opgave</strong> i én sætning og <strong>mandat</strong> kort (<em>Fortsætter selv</em>, <em>Spørger ved tvivl</em>, <em>Afventer dig</em>). Opgaven er første sætning af stolens egne instruktioner, ellers rollens standardbeskrivelse (nye tekster til alle 27 roller, dansk og engelsk). Det virker i rund, kompakt og liste (i listen i feltet over listen). Pladens størrelse og placering er uændret, skriften er ikke gjort mindre (lange tekster afkortes), og intet dækker stole eller forbindelser. Musen eller fokus væk og <strong>Esc</strong> gendanner pladen, hvis status er opdateret imens. Alt andet om stolen (model, udbyder, arbejdsform, tilføjelser, fuld beskrivelse) ligger i egenskabspanelet, som et klik åbner. Den store boks (0.43: kortet i midten) og dens tekster er fjernet.</li>
+<li><strong>Stolene kan nås med tastaturet:</strong> Tab til en stol, Enter eller mellemrum åbner dens panel, og fokus viser forhåndsvisningen. Før var stolene kun til at klikke på.</li>
+</ul>
 <h4 id="about-0-43-0-2026-11-10"><a class="anchor" href="#about-0-43-0-2026-11-10" aria-hidden="true">#</a>[0.43.0] – 2026-11-10</h4>
 <p><strong>Ændret</strong></p>
 <ul>
@@ -1912,11 +1918,6 @@ sudo cp /opt/rundbordet/share/rundbordet.desktop /usr/share/applications/
 </ul>
 <h4 id="about-0-41-0-2026-11-09"><a class="anchor" href="#about-0-41-0-2026-11-09" aria-hidden="true">#</a>[0.41.0] – 2026-11-09</h4>
 <p><strong>Ændret</strong></p>
-<ul>
-<li><strong>Rettet:</strong> feltet til Tredje øje i samtalen manglede sin tekst til skærmlæsere (nøglen <code>talkInputLabel</code> fandtes ikke). En ny test sikrer, at alle tekster findes på både dansk og engelsk, og at ingen tekstnøgle defineres to gange.</li>
-<li><strong>Download-siden og manualen passer til forretningsmodellen og til det, der er afprøvet.</strong> Siden (genereret af <code>scripts/build-web.js</code>) beskriver nu hver for sig: gratis brug (også uden licens), egen API-nøgle og egne udgifter, opdateringslicens (engangsbetalt; adgang til opdateringsfunktionen i appen) og betalte introduktionsforløb, uden opfundne priser, betalingslink eller vilkår. Linux nævnes som afprøvet på Omarchy (x64), ikke som dokumentation for andre distributioner. Teksten «licens og pris er ikke besluttet» er fjernet.</li>
-<li><strong>Forslaget i startguiden forklarer sig med almindelige ord:</strong> <em>Sådan går det</em> (bordtypens egen beskrivelse), hvor mange stole der kaldes og hvad du får ud af det, ud over begrundelsen og om forslaget bygger på faste regler eller en models vurdering.</li>
-</ul>
 <h3 id="about-copyright"><a class="anchor" href="#about-copyright" aria-hidden="true">#</a>Copyright</h3>
 <p>© 2026 eterapeut.dk. See <code>LICENSE</code> and <code>THIRD-PARTY-NOTICES.md</code> for the licence and third-party components (including the fonts Fraunces, Work Sans and JetBrains Mono, which are bundled under the SIL Open Font License).</p>
 

@@ -46,20 +46,22 @@
       centreContext(board)
     );
     plaque.innerHTML = "";
+    var main = document.createElement("div");
+    main.className = "plaque-main";
     var h1 = document.createElement("h1");
     h1.textContent = v.name || "Intelligo Lab";
-    plaque.appendChild(h1);
+    main.appendChild(h1);
     var status = document.createElement("p");
     status.className = "centre-status state-" + v.state.key;
     status.textContent = centreStateText(v.state);
-    plaque.appendChild(status);
+    main.appendChild(status);
     if (v.spend) {
       var spend = document.createElement("p");
       spend.className = "centre-spend";
       spend.textContent = v.spend.limitUsd != null
         ? t("centreSpendLimit", { usd: formatUsd(v.spend.usd), limit: formatUsd(v.spend.limitUsd) })
         : t("centreSpend", { usd: formatUsd(v.spend.usd) });
-      plaque.appendChild(spend);
+      main.appendChild(spend);
     }
     var gh = document.createElement("p");
     if (v.github.connected) {
@@ -69,14 +71,17 @@
       gh.className = "hint gh-off";
       gh.textContent = t("centreGithubOff") + " · " + t("clickToSetGithubRepo");
     }
-    plaque.appendChild(gh);
+    main.appendChild(gh);
     if (v.shield) {
       var sh = document.createElement("p");
       sh.className = "centre-shield";
       sh.textContent = t("centreShield");
-      plaque.appendChild(sh);
+      main.appendChild(sh);
     }
+    plaque.appendChild(main);
     plaque.onclick = openBoardPanel;
+    // Står musen eller fokus på en stol, ligger forhåndsvisningen oven på den (opdaterede) plaket.
+    applyPlaquePreview();
   }
 
   // isAuto: ikonet lyser, fordi dialen står på "Efter behov" (modellen vælger selv), ikke "Til". Vises som en kontur i stedet for fuldt tændt.
@@ -317,151 +322,86 @@
     }
   }
 
-  // Sekundær information: vises ved hover/fokus, i bordets midte (rundt og kompakt) eller over stolen (liste).
-  // Øverst det vigtigste (mandat og arbejdsform), så «Sådan arbejder jeg» med de tilføjelser, der er til, i jeg-form, så det, der er slået fra,
-  // og nederst med småt model, rolle og det tekniske. ALLE ti dials står her (de aktive som en sætning, de øvrige under «Slået fra»), også dem, der er slået fra.
-  function seatDetailHtml(seat) {
+  // Forhåndsvisning af en stol i bordets plaket: rolle, opgave og mandat i tre korte linjer, så længe musen eller tastaturfokus er på stolen.
+  // Plaketten (status, forbrug, GitHub) tegnes stadig under visningen, så den står opdateret, når forhåndsvisningen forlades. Alt andet om
+  // stolen (model, udbyder, arbejdsform, tilføjelser, den fulde beskrivelse) står i stolens egenskabspanel, som et klik åbner.
+  var previewSeatId = null;
+
+  function seatPreviewHtml(seat) {
     var synced = window.RundbordSeatSync.reconcile(null, seat);
-    var view = { dials: synced.dials };
-    var icons = synced.icons;
+    var p = window.RundbordSeatPreview.build(seat, t, synced.icons.mandate);
     var mandate = MANDATE_ICONS.filter(function (m) {
-      return m.key === icons.mandate;
+      return m.key === p.mandateKey;
     })[0];
-    var work = WORK_ICONS.filter(function (w) {
-      return icons.work && icons.work[w.key];
-    }).map(function (w) {
-      return iconTitle(w).split(" (")[0];
-    });
-    var info = INFO_ICONS.filter(function (n) {
-      return icons.info && icons.info[n.key];
-    }).map(function (n) {
-      return iconTitle(n).split(" — ")[0];
-    });
-    var additions = String(seat.customInstruction || "").split("\n").filter(function (l) {
-      return l.trim();
-    }).length;
-    var role = typeof seat.role === "string" && seat.role && seat.role !== seat.name ? seat.role : "";
-    var dones = [];
-    var offs = [];
-    DIAL_GROUPS.forEach(function (g) {
-      g.dials.forEach(function (key) {
-        var dial = dialByKey(key);
-        var d = (view.dials || {})[key] || {};
-        var state = d.state || dial.states[0];
-        var line = iDoLine(key, state);
-        if (!line) {
-          // Selvstændighed «kun forslag» er en sætning (jeg foreslår kun); øvrige, der er slået fra, står samlet nederst.
-          offs.push(dialLabel(dial));
-          return;
-        }
-        var tag = dialLabel(dial) + (dial.hasStrength && state !== "off" && d.strength ? " " + d.strength + "/10" : "");
-        dones.push('<li><span class="sd-do">' + escapeHtml(line) + '</span> <span class="sd-tag">' + escapeHtml(tag) + "</span></li>");
-      });
-    });
-    var small = [
-      escapeHtml(t("seatDetailModel")) + ' <span class="sd-mono">' + escapeHtml((seat.model || "?") + " · " + (seat.provider || "")) + "</span>",
-      seat.checks ? escapeHtml(t("seatDetailChecks")) : "",
-      seat.readsIn ? escapeHtml(t("seatDetailReadsIn")) : "",
-      additions ? escapeHtml(t("seatDetailAdditions")) + " " + additions : "",
-    ].filter(Boolean);
     return (
-      '<div class="seat-detail" role="group" aria-label="' + escapeHtml(t("seatDetailLabel", { seat: seat.name })) + '">' +
-      '<p class="sd-head"><span class="sd-name">' + escapeHtml(seat.name) + "</span>" + (role ? ' <span class="sd-role">' + escapeHtml(role) + "</span>" : "") + "</p>" +
-      (mandate ? '<p class="sd-mandate"><span class="sd-ic" aria-hidden="true">' + mandate.icon + "</span><span><span class=\"sd-k\">" + escapeHtml(t("seatDetailMandate")) + "</span> " + escapeHtml(iconTitle(mandate)) + "</span></p>" : "") +
-      '<p class="sd-work"><span class="sd-k">' + escapeHtml(t("seatDetailWork")) + "</span> " + (work.length ? escapeHtml(work.join(" · ")) : '<span class="sd-off">' + escapeHtml(t("seatDetailNone")) + "</span>") + "</p>" +
-      (info.length ? '<p class="sd-work"><span class="sd-k">' + escapeHtml(t("seatDetailInfo")) + "</span> " + escapeHtml(info.join(" · ")) + "</p>" : "") +
-      (dones.length ? '<p class="sd-sub">' + escapeHtml(t("seatDetailHow")) + "</p><ul class=\"sd-dos\">" + dones.join("") + "</ul>" : "") +
-      (offs.length ? '<p class="sd-offline"><span class="sd-k">' + escapeHtml(t("seatDetailOff")) + "</span> " + escapeHtml(offs.join(" · ")) + "</p>" : "") +
-      '<p class="sd-small">' + small.join(" · ") + "</p>" +
+      '<div class="plaque-preview" role="group" aria-label="' + escapeHtml(t("previewAria", { seat: seat.name })) + '">' +
+      '<p class="pv-head">' + escapeHtml(p.heading) + "</p>" +
+      '<p class="pv-task">' + escapeHtml(p.task) + "</p>" +
+      '<p class="pv-meta">' + (p.role ? '<span class="pv-role">' + escapeHtml(p.role) + '</span><span class="pv-sep" aria-hidden="true"> · </span>' : "") +
+      '<span class="pv-mandate"><span class="pv-ic" aria-hidden="true">' + (mandate ? mandate.icon : "") + "</span> " + escapeHtml(p.mandate) + "</span></p>" +
       "</div>"
     );
   }
 
-  // Dialens tilstand som en «jeg gør»-sætning til stolens kort. Tom, når dialen er slået fra (den står så under «Slået fra»).
-  function iDoLine(key, state) {
-    if (key === "action") return t(state === "off" ? "iDoActionOff" : state === "auto" ? "iDoActionAuto" : "iDoActionOn");
-    if (key === "modifyRules") return state === "suggest" ? t("iDoRulesSuggest") : state === "yes" ? t("iDoRulesYes") : "";
-    if (state === "off" || state === "no") return "";
-    var base = { reason: "Reason", challenge: "Challenge", curiosity: "Curiosity", risk: "Risk", selfCheck: "SelfCheck", humanImpact: "Human", uncertainty: "Uncertainty", cost: "Cost" }[key];
-    if (!base) return "";
-    return t("iDo" + base + (state === "auto" ? "Auto" : "On"));
-  }
-
-  // Stolekortet i bordets midte: følger musen/fokus på en stol, og plaketten kommer tilbage, når intet er under musen.
-  var seatCardTimer = null;
-  function cancelSeatCardHide() {
-    if (seatCardTimer) clearTimeout(seatCardTimer);
-    seatCardTimer = null;
-  }
-  // Musen skal kunne flyttes fra stolen ind over kortet uden at det forsvinder (WCAG 1.4.13 «hoverable»): lukningen venter et øjeblik.
-  function hideSeatCardSoon() {
-    cancelSeatCardHide();
-    seatCardTimer = setTimeout(function () {
-      seatCardTimer = null;
-      hideSeatCard();
-    }, 350);
-  }
-
-  function showSeatCard(seatEl) {
-    cancelSeatCardHide();
+  function applyPlaquePreview() {
+    var plaque = document.getElementById("plaque");
     var box = document.getElementById("tableBox");
-    var card = document.getElementById("seatCard");
-    if (!box || !card || !seatEl || box.getAttribute("data-view") === "list") return;
-    var src = seatEl.querySelector(".seat-detail");
-    if (!src) return;
-    card.innerHTML = src.outerHTML;
-    card.hidden = false;
-    box.classList.add("has-seatcard");
+    if (!plaque) return;
+    var old = plaque.querySelector(".plaque-preview");
+    if (old) old.remove();
+    var board = currentBoard();
+    var seat = previewSeatId && board ? board.seats.filter(function (s) { return s.id === previewSeatId; })[0] : null;
+    if (!seat) previewSeatId = null;
+    plaque.classList.toggle("previewing", Boolean(seat));
+    if (box) box.classList.toggle("has-preview", Boolean(seat));
+    if (!seat) return;
+    plaque.insertAdjacentHTML("beforeend", seatPreviewHtml(seat));
+    // Pladsen er den samme som pladens egen: er der ikke plads til to linjer opgave, bliver det til én (skriften gøres ikke mindre).
+    var pv = plaque.querySelector(".plaque-preview");
+    if (pv && pv.scrollHeight > pv.clientHeight + 1) pv.querySelector(".pv-task").classList.add("one-line");
   }
 
-  function hideSeatCard() {
-    cancelSeatCardHide();
-    var box = document.getElementById("tableBox");
-    var card = document.getElementById("seatCard");
-    if (!card) return;
-    card.hidden = true;
-    card.innerHTML = "";
-    if (box) box.classList.remove("has-seatcard");
+  function showSeatPreview(seatEl) {
+    var id = seatEl && seatEl.getAttribute("data-seat-id");
+    if (!id) return;
+    previewSeatId = id;
+    applyPlaquePreview();
   }
 
-  function bindSeatCard(box) {
-    if (box._seatCardBound) return;
-    box._seatCardBound = true;
+  function hideSeatPreview() {
+    previewSeatId = null;
+    applyPlaquePreview();
+  }
+
+  function bindSeatPreview(box) {
+    if (box._seatPreviewBound) return;
+    box._seatPreviewBound = true;
     function seatOf(target) {
       return target && target.closest ? target.closest(".seat") : null;
     }
     box.addEventListener("mouseover", function (e) {
       var s = seatOf(e.target);
-      if (s) showSeatCard(s);
+      if (s) showSeatPreview(s);
     });
-    function inCard(node) {
-      return Boolean(node && node.closest && node.closest("#seatCard"));
-    }
     box.addEventListener("mouseout", function (e) {
       var from = seatOf(e.target);
       var to = seatOf(e.relatedTarget);
-      if (from && from !== to && !inCard(e.relatedTarget)) hideSeatCardSoon();
-      else if (inCard(e.target) && !inCard(e.relatedTarget) && !to) hideSeatCardSoon();
-    });
-    box.addEventListener("mouseover", function (e) {
-      if (inCard(e.target)) cancelSeatCardHide();
+      if (from && from !== to) hideSeatPreview();
     });
     box.addEventListener("focusin", function (e) {
       var s = seatOf(e.target);
-      if (s) showSeatCard(s);
+      if (s) showSeatPreview(s);
     });
     box.addEventListener("focusout", function (e) {
       var from = seatOf(e.target);
       var to = seatOf(e.relatedTarget);
-      if (from && from !== to) hideSeatCard();
+      if (from && from !== to) hideSeatPreview();
     });
-    // Esc lukker kortet uden at flytte musen eller fokus (WCAG 1.4.13: indhold ved hover eller fokus skal kunne afvises).
+    // Esc gendanner plaketten uden at flytte musen eller fokus (WCAG 1.4.13: indhold ved hover eller fokus skal kunne afvises).
     document.addEventListener("keydown", function (e) {
-      var card = document.getElementById("seatCard");
-      if (e.key === "Escape" && card && !card.hidden) hideSeatCard();
+      if (e.key === "Escape" && previewSeatId) hideSeatPreview();
     });
   }
-
 
   // Tegner stolene i den valgte visning (se renderer/21-tableview.js): rundt, kompakt eller liste.
   // Rundt er som før (frie positioner, træk, hover-symboler). Kompakt og liste bruger de samme data og de samme klik.
@@ -493,6 +433,7 @@
       var pos = custom ? seat.pos : slotPosition(i);
       posById[seat.id] = pos;
       var el = document.createElement("div");
+      el.setAttribute("data-seat-id", seat.id);
       el.className = "seat" + (mode === "compact" ? " seat-compact" : mode === "list" ? " seat-row" : "");
       if (mode !== "list") {
         el.style.left = pos.x + "%";
@@ -509,7 +450,6 @@
       var stateClass = " sv-" + statusKey + (sv.decide ? " sv-decide" : "");
       var aria = escapeHtml(seat.name + ": " + statusWord + (activity ? ", " + activity : ""));
       var crown = sv.turn ? '<span class="crown-badge" title="' + escapeHtml(t("hasTurnTitle")) + '">👑</span>' : "";
-      var detail = seatDetailHtml(seat);
       if (mode === "compact") {
         var glyph = { working: "●", handing: "●", receiving: "●", "check-failed": "!", "pause-ask": "!", need: "!", failed: "✕", done: "✓", next: "→" }[statusKey] || "…";
         el.innerHTML =
@@ -517,7 +457,7 @@
           '<div class="coaster' + stateClass + '" style="--seat-color:' + seatColorVar(seat.color) + '" aria-label="' + aria + '">' +
           '<p class="role">' + escapeHtml(seat.name) + "</p>" +
           '<span class="cglyph st-' + statusKey + '" aria-hidden="true">' + glyph + "</span></div>" +
-          detail + iconRowHtml(seat);
+          iconRowHtml(seat);
       } else if (mode === "list") {
         el.innerHTML =
           '<div class="coaster' + stateClass + '" style="--seat-color:' + seatColorVar(seat.color) + '" aria-label="' + aria + '">' +
@@ -527,7 +467,7 @@
           '<p class="status-word st-' + statusKey + '">' + escapeHtml(statusWord) + "</p>" +
           (activity ? '<p class="seat-activity">' + escapeHtml(activity) + "</p>" : "") + "</span>" +
           '<span class="row-model">' + escapeHtml(seat.model || seat.provider || "") + "</span></div>" +
-          detail + iconRowHtml(seat);
+          iconRowHtml(seat);
       } else {
         el.innerHTML =
           crown +
@@ -538,10 +478,20 @@
           (activity ? '<p class="seat-activity">' + escapeHtml(activity) + "</p>" : "") +
           '<span class="seat-drag-handle" title="' + escapeHtml(t("dragHandleTitle")) + '"></span>' +
           "</div>" +
-          detail + iconRowHtml(seat);
+          iconRowHtml(seat);
       }
-      el.querySelector(".coaster").addEventListener("click", function () {
+      var coaster = el.querySelector(".coaster");
+      coaster.addEventListener("click", function () {
         openSeatPanel(seat);
+      });
+      // Stolen kan nås med Tab og åbnes med Enter eller mellemrum; fokus viser den samme forhåndsvisning som rollover.
+      coaster.setAttribute("tabindex", "0");
+      coaster.setAttribute("role", "button");
+      coaster.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openSeatPanel(seat);
+        }
       });
       if (el.querySelector(".crown-badge")) {
         el.querySelector(".crown-badge").addEventListener("click", function (e) {
@@ -589,10 +539,10 @@
       box.insertAdjacentHTML("beforeend", handoffLinksSvg(edgeList, posById) + handoffChipsHtml(edgeList, posById, box.clientWidth, box.clientHeight) + handoffLegendHtml(edgeList));
       bindHandoffLinks(box);
     }
-    bindSeatCard(box);
-    hideSeatCard();
+    bindSeatPreview(box);
     var under = box.querySelector(".seat:hover, .seat:focus-within");
-    if (under) showSeatCard(under);
+    previewSeatId = under ? under.getAttribute("data-seat-id") : null;
+    applyPlaquePreview();
     if (typeof renderOpenNeedsPanel === "function") renderOpenNeedsPanel();
   }
 

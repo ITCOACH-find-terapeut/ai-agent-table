@@ -129,7 +129,7 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <body data-lang="da" data-other="manual.en.html" data-nohits="Ingen kapitler matcher.">
 <div class="shell">
 <aside class="sidebar" id="sidebar">
-  <div class="brand"><span class="brand-mark">◯</span><div><div class="brand-name">Rundbordet</div><div class="brand-sub">Version 0.43.0 · rev 74b6b44+</div></div></div>
+  <div class="brand"><span class="brand-mark">◯</span><div><div class="brand-name">Rundbordet</div><div class="brand-sub">Version 0.44.0 · rev 84ffe2d+</div></div></div>
   <input type="search" id="search" placeholder="Søg i manualen …" aria-label="Søg i manualen …">
   <nav aria-label="Indhold"><ol class="toc" id="toc">
 <li><a href="#getting-started" data-ch="getting-started"><span class="toc-n">01</span>Kom i gang på fem minutter</a></li>
@@ -230,7 +230,7 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <p>På selve stolen ser du:</p>
 <ul>
 <li><strong>Rollens navn</strong>, et <strong>statusord</strong> og én <strong>aktivitetslinje</strong>. Statusordet er det, appen kan dokumentere: <em>Arbejder</em> (et modelkald kører), <em>Har turen</em>, <em>Næste i rækken</em>, <em>Venter</em>, <em>Færdig</em>, <em>Kontrol ikke bestået</em>, <em>Behov til dig</em>, <em>Venter på dig</em> (bordet holder pause og venter på dit svar), <em>Pauset</em> eller <em>Fejlet</em>. Linjen under siger, hvad der skete eller afventes, fx <em>Svarer nu · modelnavn</em>, <em>Afventer Clarifier</em> eller <em>Afleverede til Builder</em>. Intet vises, som appen ikke ved.</li>
-<li><strong>Stolens kort ved hover:</strong> hold musen over (eller tab til) en stol, og <strong>bordets midte viser stolens kort</strong> i stedet for bordets navn, til musen forlader stolen. Øverst står det vigtigste: <strong>mandat</strong> og <strong>arbejdsform</strong>. Så følger <em>Sådan arbejder jeg</em>, hvor stolens tilføjelser står som korte «jeg»-sætninger (fx <em>Jeg udfordrer forslag, jeg er uenig i</em>) med dialens navn og styrke ved siden af, og <em>Slået fra</em> med dem, der er slået fra. Nederst med småt står model, om den er kontrolstol, om den læser IN og antal egne tilføjelser. I listevisningen, hvor der ingen midte er, vises kortet ved stolen. De små ikoner til at ændre mandat og arbejdsform kommer frem på samme måde (se <a href="#dials">Adfærd og ikoner</a>).</li>
+<li><strong>Forhåndsvisning af en stol:</strong> hold musen over en stol, eller tab til den, og <strong>bordets navneplade viser tre korte linjer</strong>: stolens <strong>rolle</strong> (eller navn, hvis det afviger fra rollen, med rollen under), <strong>opgaven</strong> i én sætning og <strong>mandatet</strong> kort (<em>Fortsætter selv</em>, <em>Spørger ved tvivl</em> eller <em>Afventer dig</em>). Opgaven er første sætning af stolens egne instruktioner; har stolen ingen, bruges rollens standardbeskrivelse. Når musen eller fokus forlader stolen, eller du trykker <strong>Esc</strong>, kommer bordets navn og status tilbage; statussen er opdateret imens. I listevisningen vises det samme i feltet over listen. Skriften er den samme som på pladen, og lange tekster afkortes med «…». <strong>Klik på stolen</strong> åbner dens egenskabspanel: den fulde beskrivelse, model, udbyder, arbejdsform, tilføjelser og de øvrige indstillinger. Stolene kan nås med Tab og åbnes med Enter. De små ikoner til at ændre mandat og arbejdsform kommer frem på samme måde (se <a href="#dials">Adfærd og ikoner</a>).</li>
 <li>En lille <strong>prik</strong> i hjørnet viser, at stolens API-nøgle er testet: grøn betyder, at testen virkede.</li>
 <li>Et <strong>kronemærke</strong> 👑, hvis stolen har turen (se <a href="#turn">Hvem har turen</a>).</li>
 </ul>
@@ -1877,7 +1877,7 @@ sudo cp /opt/rundbordet/share/rundbordet.desktop /usr/share/applications/
 <section class="chapter" id="about" data-title="Om Rundbordet">
 <header class="chapter-head"><span class="chapter-n">26</span><h2>Om Rundbordet</h2><p class="chapter-summary">Version, privatliv og ændringer.</p></header>
 <h3 id="about-version"><a class="anchor" href="#about-version" aria-hidden="true">#</a>Version</h3>
-<p>Denne manual hører til <strong>Rundbordet 0.43.0</strong> (revision <code>74b6b44+</code>). Versionen står også nederst under ⚙ → <em>Hele programmet</em> og i <em>Om Rundbordet</em>.</p>
+<p>Denne manual hører til <strong>Rundbordet 0.44.0</strong> (revision <code>84ffe2d+</code>). Versionen står også nederst under ⚙ → <em>Hele programmet</em> og i <em>Om Rundbordet</em>.</p>
 <p>Versionsnumre følger formen <strong>HOVED.MINDRE.RETTELSE</strong>: en ny <em>rettelse</em> fikser fejl, en ny <em>mindre</em> version tilføjer funktioner, og en ny <em>hovedversion</em> kan ændre, hvordan appen bruges. <em>Revisionen</em> peger på den præcise kode, versionen blev bygget af.</p>
 <h3 id="about-privatliv"><a class="anchor" href="#about-privatliv" aria-hidden="true">#</a>Privatliv</h3>
 <ul>
@@ -1889,6 +1889,12 @@ sudo cp /opt/rundbordet/share/rundbordet.desktop /usr/share/applications/
 <h3 id="about-aendringer"><a class="anchor" href="#about-aendringer" aria-hidden="true">#</a>Ændringer</h3>
 <p>Format følger <a href="https://keepachangelog.com/da/1.1.0/" class="external">Keep a Changelog</a>, versioner følger <a href="https://semver.org/lang/da/" class="external">SemVer</a>.</p>
 <h4 id="about-ikke-udgivet"><a class="anchor" href="#about-ikke-udgivet" aria-hidden="true">#</a>[Ikke udgivet]</h4>
+<h4 id="about-0-44-0-2026-11-10"><a class="anchor" href="#about-0-44-0-2026-11-10" aria-hidden="true">#</a>[0.44.0] – 2026-11-10</h4>
+<p><strong>Ændret</strong></p>
+<ul>
+<li><strong>Rollover på en stol viser en kort forhåndsvisning i bordets navneplade i stedet for en stor boks.</strong> Tre linjer: <strong>rolle</strong> (eller stolens navn som overskrift, hvis det afviger fra rollen, med rollen under), <strong>opgave</strong> i én sætning og <strong>mandat</strong> kort (<em>Fortsætter selv</em>, <em>Spørger ved tvivl</em>, <em>Afventer dig</em>). Opgaven er første sætning af stolens egne instruktioner, ellers rollens standardbeskrivelse (nye tekster til alle 27 roller, dansk og engelsk). Det virker i rund, kompakt og liste (i listen i feltet over listen). Pladens størrelse og placering er uændret, skriften er ikke gjort mindre (lange tekster afkortes), og intet dækker stole eller forbindelser. Musen eller fokus væk og <strong>Esc</strong> gendanner pladen, hvis status er opdateret imens. Alt andet om stolen (model, udbyder, arbejdsform, tilføjelser, fuld beskrivelse) ligger i egenskabspanelet, som et klik åbner. Den store boks (0.43: kortet i midten) og dens tekster er fjernet.</li>
+<li><strong>Stolene kan nås med tastaturet:</strong> Tab til en stol, Enter eller mellemrum åbner dens panel, og fokus viser forhåndsvisningen. Før var stolene kun til at klikke på.</li>
+</ul>
 <h4 id="about-0-43-0-2026-11-10"><a class="anchor" href="#about-0-43-0-2026-11-10" aria-hidden="true">#</a>[0.43.0] – 2026-11-10</h4>
 <p><strong>Ændret</strong></p>
 <ul>
@@ -1911,11 +1917,6 @@ sudo cp /opt/rundbordet/share/rundbordet.desktop /usr/share/applications/
 </ul>
 <h4 id="about-0-41-0-2026-11-09"><a class="anchor" href="#about-0-41-0-2026-11-09" aria-hidden="true">#</a>[0.41.0] – 2026-11-09</h4>
 <p><strong>Ændret</strong></p>
-<ul>
-<li><strong>Rettet:</strong> feltet til Tredje øje i samtalen manglede sin tekst til skærmlæsere (nøglen <code>talkInputLabel</code> fandtes ikke). En ny test sikrer, at alle tekster findes på både dansk og engelsk, og at ingen tekstnøgle defineres to gange.</li>
-<li><strong>Download-siden og manualen passer til forretningsmodellen og til det, der er afprøvet.</strong> Siden (genereret af <code>scripts/build-web.js</code>) beskriver nu hver for sig: gratis brug (også uden licens), egen API-nøgle og egne udgifter, opdateringslicens (engangsbetalt; adgang til opdateringsfunktionen i appen) og betalte introduktionsforløb, uden opfundne priser, betalingslink eller vilkår. Linux nævnes som afprøvet på Omarchy (x64), ikke som dokumentation for andre distributioner. Teksten «licens og pris er ikke besluttet» er fjernet.</li>
-<li><strong>Forslaget i startguiden forklarer sig med almindelige ord:</strong> <em>Sådan går det</em> (bordtypens egen beskrivelse), hvor mange stole der kaldes og hvad du får ud af det, ud over begrundelsen og om forslaget bygger på faste regler eller en models vurdering.</li>
-</ul>
 <h3 id="about-ophavsret"><a class="anchor" href="#about-ophavsret" aria-hidden="true">#</a>Ophavsret</h3>
 <p>© 2026 eterapeut.dk. Se <code>LICENSE</code> og <code>THIRD-PARTY-NOTICES.md</code> for licens og tredjepartskomponenter (bl.a. skrifttyperne Fraunces, Work Sans og JetBrains Mono, som følger med under SIL Open Font License).</p>
 
