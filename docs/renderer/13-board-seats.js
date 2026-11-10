@@ -49,7 +49,7 @@
     var main = document.createElement("div");
     main.className = "plaque-main";
     var h1 = document.createElement("h1");
-    h1.textContent = v.name || "Intelligo Lab";
+    h1.textContent = v.name || "Mit første bord";
     main.appendChild(h1);
     var status = document.createElement("p");
     status.className = "centre-status state-" + v.state.key;

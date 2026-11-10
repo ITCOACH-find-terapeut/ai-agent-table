@@ -3,7 +3,7 @@
 // synkroniseret med da.js, ikke selve teksten.
 window.RUNDBORD_LOCALES = window.RUNDBORD_LOCALES || {};
 window.RUNDBORD_LOCALES.en = {
-  srIntro: "Rundbordet: local control panel for setting up roles, language models, API keys, and GitHub repos for one or more AI team tables.",
+  srIntro: "Rundbordet lets several AI models work together on your task, so you can follow along and decide along the way.",
 
   boardSelectAriaLabel: "Select table",
   openPricesBtn: "Prices",
@@ -87,6 +87,8 @@ window.RUNDBORD_LOCALES.en = {
   sendsOpenrouterNote: "passes it on to the model's own provider",
   sendsCustomHost: "an address of your own ({host})",
   sendsCustom: "an address of your own",
+  keyExplainMore: "Where is the key stored, and what is sent where?",
+  keyGetHint: "You create an account with OpenRouter and make a key there (the account normally needs some credit). Then come back here and paste it.",
   keyExplainTitle: "About the key and the price",
   keyExplainSubscription: "A ChatGPT or Claude subscription does not in itself give an API key. You get an API key from the provider, and it is billed separately by usage.",
   keyExplainPays: "You pay the provider directly for what the table uses. Rundbordet takes no payment for the usage, and the price depends on the model, the material and the number of calls; more seats and repeats can raise it.",

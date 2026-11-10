@@ -28,7 +28,10 @@
       ];
       // OpenRouter giver adgang til mange modeller med én nøgle, så den bruges af alle stole og af Tredje øje: den skal kun sættes én gang.
       if (provider === "OpenRouter") lines.splice(2, 0, t("keyExplainShared"));
-      box.innerHTML = "<strong>" + escapeHtml(t("keyExplainTitle")) + "</strong><ul>" + lines.map(function (l) { return "<li>" + escapeHtml(l) + "</li>"; }).join("") + "</ul>";
+      // De to vigtigste punkter (abonnement er ikke en nøgle; du betaler udbyderen) står altid; resten er sammenfoldet, så hovedknappen ikke ligger under en lang tekst.
+      var item = function (l) { return "<li>" + escapeHtml(l) + "</li>"; };
+      box.innerHTML = "<strong>" + escapeHtml(t("keyExplainTitle")) + "</strong><ul>" + lines.slice(0, 2).map(item).join("") + "</ul>" +
+        '<details class="key-more"><summary>' + escapeHtml(t("keyExplainMore")) + "</summary><ul>" + lines.slice(2).map(item).join("") + "</ul></details>";
     });
   }
 

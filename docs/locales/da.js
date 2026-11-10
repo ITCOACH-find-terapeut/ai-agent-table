@@ -5,7 +5,7 @@
 window.RUNDBORD_LOCALES = window.RUNDBORD_LOCALES || {};
 window.RUNDBORD_LOCALES.da = {
   // Tilgængelighed
-  srIntro: "Rundbordet: lokalt kontrolpanel til at sætte roller, sprogmodeller, API-nøgler og GitHub-repo op for et eller flere AI-team-borde.",
+  srIntro: "Rundbordet lader flere AI-modeller arbejde sammen om din opgave, så du selv kan følge med og bestemme undervejs.",
 
   // Bord-linje
   boardSelectAriaLabel: "Vælg bord",
@@ -99,6 +99,8 @@ window.RUNDBORD_LOCALES.da = {
   sendsCustomHost: "en egen adresse ({host})",
   sendsCustom: "en egen adresse",
   keyExplainTitle: "Om nøglen og prisen",
+  keyExplainMore: "Hvor gemmes nøglen, og hvad sendes hvorhen?",
+  keyGetHint: "Du opretter en konto hos OpenRouter og laver en nøgle der (der skal normalt lidt kredit på kontoen). Kom så tilbage hertil, og indsæt den.",
   keyExplainSubscription: "Et ChatGPT- eller Claude-abonnement giver ikke i sig selv en API-nøgle. En API-nøgle får du hos udbyderen, og den afregnes særskilt efter forbrug.",
   keyExplainPays: "Du betaler udbyderen direkte for det, bordet bruger. Rundbordet tager ingen betaling for forbruget, og prisen afhænger af model, materiale og antal kald; flere stole og gentagelser kan øge den.",
   keyExplainShared: "Den samme nøgle bruges af alle stole og af Tredje øje (som hjælper dig undervejs), så du kun sætter den én gang. Nye stole får automatisk en model, du ikke selv skal vælge.",

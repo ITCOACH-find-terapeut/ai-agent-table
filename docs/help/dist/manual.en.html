@@ -129,7 +129,7 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <body data-lang="en" data-other="manual.da.html" data-nohits="No chapters match.">
 <div class="shell">
 <aside class="sidebar" id="sidebar">
-  <div class="brand"><span class="brand-mark">◯</span><div><div class="brand-name">Rundbordet</div><div class="brand-sub">Version 0.44.0 · rev 84ffe2d+</div></div></div>
+  <div class="brand"><span class="brand-mark">◯</span><div><div class="brand-name">Rundbordet</div><div class="brand-sub">Version 0.45.0 · rev dev</div></div></div>
   <input type="search" id="search" placeholder="Search the manual …" aria-label="Search the manual …">
   <nav aria-label="Contents"><ol class="toc" id="toc">
 <li><a href="#getting-started" data-ch="getting-started"><span class="toc-n">01</span>Getting started in five minutes</a></li>
@@ -196,12 +196,14 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <p><strong>You can change all three</strong> before anything is created; it then says <em>You chose this yourself</em>. The suggestion is made by fixed rules in the app, and <strong>nothing is sent anywhere in that part</strong>.</p>
 <p>If you want the Third Eye to read the task and adjust the table and thinking, press <em>Let the Third Eye read the task</em> (after you have checked the key and seen the models). You first see <strong>exactly what is sent</strong> (your task and a short list of the table types; your answers to the three questions are not sent), which model is used, and an <strong>estimate of the price</strong>. Only when you press <em>Send</em> is one request made. The answer is accepted only if it is one of the known choices; otherwise nothing changes. The request is included in the table&#39;s bill as the Third Eye&#39;s expense. The Third Eye never touches the view.</p>
 <h3 id="getting-started-what-you-need"><a class="anchor" href="#getting-started-what-you-need" aria-hidden="true">#</a>What you need</h3>
+<p>If you follow the suggestion above, you only need <strong>one OpenRouter key</strong>. If you want to set the table up yourself, seat by seat and possibly with several providers, the following applies.</p>
 <ul>
 <li>An <strong>API key</strong> from at least one provider (Anthropic, OpenAI, Google Gemini, Groq, Mistral, xAI, DeepSeek or an OpenAI-compatible service). You get the key from the provider; the seat panel has a <em>Get key</em> link.</li>
-<li>A few dollars on the provider account. Small models typically cost well under a cent per reply.</li>
-<li>Mac, Windows or Linux. If your Mac will not open the app, or you need Linux (e.g. Omarchy), see <a href="#troubleshooting-install-on-linux-e-g-omarchy">Install on Linux</a> and <a href="#troubleshooting">Troubleshooting</a>.</li>
+<li>Some credit on the provider account. The price depends on the model and the material; the app shows the list prices and an estimate before you start.</li>
+<li>A <strong>Mac</strong>. Windows has not been tested by us yet, and Linux has only been tried on Omarchy. If the Mac will not open the app because it is not signed yet, the solution is under <a href="#troubleshooting-questions">Questions in Troubleshooting</a>. On Linux (e.g. Omarchy): <a href="#troubleshooting-install-on-linux-e-g-omarchy">Install on Linux</a>.</li>
 </ul>
-<h3 id="getting-started-how-to-do-it"><a class="anchor" href="#getting-started-how-to-do-it" aria-hidden="true">#</a>How to do it</h3>
+<h3 id="getting-started-want-to-set-it-up-yourself-seat-by-seat"><a class="anchor" href="#getting-started-want-to-set-it-up-yourself-seat-by-seat" aria-hidden="true">#</a>Want to set it up yourself, seat by seat?</h3>
+<p>The following is the manual way. It is for you if you want to choose the provider and model on each seat yourself; otherwise follow the suggestion above.</p>
 <ol>
 <li><strong>Add a seat.</strong> Click the dashed circle with <strong>+</strong> at the table. Press <em>+ New seat</em> and give the seat a name; to pick a ready-made concept (for example <em>Orchestrator</em>), open the group <em>Ready-made concepts</em>.</li>
 <li><strong>Choose an API model profile and a model.</strong> If you have no profile yet, set one up with provider and key (the button is in the seat panel). Then choose the model on the seat (type the name or click <em>Fetch models</em>).</li>
@@ -1877,7 +1879,7 @@ sudo cp /opt/rundbordet/share/rundbordet.desktop /usr/share/applications/
 <section class="chapter" id="about" data-title="About Rundbordet">
 <header class="chapter-head"><span class="chapter-n">26</span><h2>About Rundbordet</h2><p class="chapter-summary">Version, privacy and changes.</p></header>
 <h3 id="about-version"><a class="anchor" href="#about-version" aria-hidden="true">#</a>Version</h3>
-<p>This manual belongs to <strong>Rundbordet 0.44.0</strong> (revision <code>84ffe2d+</code>). The version is also shown at the bottom of ⚙ → <em>Whole app</em> and in <em>About Rundbordet</em>.</p>
+<p>This manual belongs to <strong>Rundbordet 0.45.0</strong> (revision <code>dev</code>). The version is also shown at the bottom of ⚙ → <em>Whole app</em> and in <em>About Rundbordet</em>.</p>
 <p>Version numbers take the form <strong>MAJOR.MINOR.PATCH</strong>: a new <em>patch</em> fixes bugs, a new <em>minor</em> version adds features, and a new <em>major</em> version may change how the app is used. The <em>revision</em> points to the exact code the version was built from.</p>
 <h3 id="about-privacy"><a class="anchor" href="#about-privacy" aria-hidden="true">#</a>Privacy</h3>
 <ul>
@@ -1890,6 +1892,16 @@ sudo cp /opt/rundbordet/share/rundbordet.desktop /usr/share/applications/
 <p>The list of changes is kept in Danish:</p>
 <p>Format følger <a href="https://keepachangelog.com/da/1.1.0/" class="external">Keep a Changelog</a>, versioner følger <a href="https://semver.org/lang/da/" class="external">SemVer</a>.</p>
 <h4 id="about-ikke-udgivet"><a class="anchor" href="#about-ikke-udgivet" aria-hidden="true">#</a>[Ikke udgivet]</h4>
+<h4 id="about-0-45-0-2026-11-10"><a class="anchor" href="#about-0-45-0-2026-11-10" aria-hidden="true">#</a>[0.45.0] – 2026-11-10</h4>
+<p><strong>Ændret</strong>
+Kun tekst og layout (efter en gennemgang som ny bruger, se <code>brugertest/GENNEMGANG-NY-BRUGER.md</code>). Appens funktion er uændret. Den usignerede app og nøglen hos en ekstern udbyder er stadig friktion, der bevidst ikke er skjult.</p>
+<ul>
+<li><strong>Hent-siden begynder med, hvad Rundbordet er, og fire trin</strong> i stedet for en tabel med kontrolsummer. Trinnene: find din computer (også hvordan du ser, om en Mac har Apple-chip eller Intel), installér, åbn (med forklaringen af macOS- og Windows-advarslen lige dér, hvor den bruges) og skaf en nøgle. Kontrolsummerne er flyttet ned i en sammenfoldet «For den nysgerrige: kontrollér filen» med en kommando.</li>
+<li><strong>Velkomstskærmen er ryddet for teknisk tekst.</strong> Så længe den vises, skjules sætningen om «stole-rækkefølgen» og «modelkald», «Ingen har turen endnu» og «Intet GitHub-repo»; de kommer, når bordet har stole. Et nyt bord hedder «Mit første bord» (før «Intelligo Lab»).</li>
+<li><strong>Nøgleforklaringen er kortere.</strong> <em>Abonnement er ikke en API-nøgle</em> og <em>du betaler udbyderen</em> står altid synligt; resten (hvor nøglen gemmes, hvad der sendes hvorhen) er sammenfoldet, så hovedknappen ikke ligger under en lang tekst. Ved linket til OpenRouter står nu en kort forklaring på, hvad man gør dér, og at man skal komme tilbage.</li>
+<li><strong>Manualen:</strong> «Kom i gang» skelner nu mellem forslaget (én OpenRouter-nøgle) og den manuelle vej («Vil du sætte det op selv, stol for stol?»). Sætningen om, at små modeller «typisk koster under en øre pr. svar», er fjernet, fordi tallet ikke er dokumenteret; appen viser listepriser og et skøn i stedet. «Mac, Windows eller Linux» er rettet til, hvad der er afprøvet. Mac-advarslen er linket fra «Det skal du bruge».</li>
+<li>Skærmlæserbeskrivelsen af appen er skrevet om i almindeligt sprog.</li>
+</ul>
 <h4 id="about-0-44-0-2026-11-10"><a class="anchor" href="#about-0-44-0-2026-11-10" aria-hidden="true">#</a>[0.44.0] – 2026-11-10</h4>
 <p><strong>Ændret</strong></p>
 <ul>
@@ -1910,13 +1922,6 @@ sudo cp /opt/rundbordet/share/rundbordet.desktop /usr/share/applications/
 <li><strong>GitHub-tokenet står ikke længere i git-adressen.</strong> «Gem i git» brugte <code>https://&lt;token&gt;@github.com/…</code> i <code>git clone</code> og <code>remote set-url</code>, så tokenet stod i git-processens argumenter (synlige for andre brugere på maskinen) og i klartekst i <code>.git/config</code> i arbejdskopien. Nu gives det kun som en HTTP-header i git-processens miljø og kun til den ene vært, og adressen er uden token. En ældre arbejdskopi, hvor tokenet stod i adressen, ryddes ved næste «Gem i git». Kræver git 2.31 eller nyere. En test kører ægte git mod en lokal server og tjekker, at headeren når frem, og at tokenet ikke står i argumenterne.</li>
 </ul>
 <h4 id="about-0-42-0-2026-11-09"><a class="anchor" href="#about-0-42-0-2026-11-09" aria-hidden="true">#</a>[0.42.0] – 2026-11-09</h4>
-<p><strong>Ændret</strong></p>
-<ul>
-<li><strong>Ingen visningsniveauer mere: alt er med, og det sjældne ligger i grupper.</strong> Vælgeren <em>Visning</em> (Enkel, Mere, Avanceret) er fjernet, og intet skjules længere. I stedet ligger det, du sjældnere bruger, i en <strong>sammenfoldet gruppe lige dér, hvor det hører hjemme</strong>: <em>Flere valg til kørslen</em> (rækkefølge, runder, kontrol, strategi, ren kontekst) og <em>Gem i GitHub</em> under bordets indstillinger, <em>Flere valg til udseendet</em> (ventelag, Tredje øje-ikon) under programmets, <em>Vælg et begreb</em> på en stol, <em>Færdige begreber</em> når du tilføjer en stol og <em>Vælg model til Tredje øje</em> ved Tredje øje. Værktøjerne (Tilbageblik, Uenigheder, Hukommelse, Målinger, Bordfil, Pristabel, Stemme, varianter) er altid med. En ny stol er stadig bare et navn og eventuelt <em>Skriver til OUT</em>. Startguiden spørger kun om, hvor vigtigt svaret er (spørgsmålene om erfaring og lyst til at styre er væk, og den foreslår ikke længere en visning). Hændelsen <code>ui.level</code> og <code>lib/uilevel.js</code> er fjernet; et gammelt <code>uiLevel</code> i en opsætning ignoreres.</li>
-<li><strong>Nøglen sættes ét sted, og alle stole bruger den.</strong> Velkomsten og Hurtig start gemmer din OpenRouter-nøgle som en <strong>standardprofil</strong> med en billig standardmodel (fra OpenRouters startforslag) i stedet for at skrive nøglen på hver stol. Stole uden egen nøgle og uden valgt profil peger automatisk på standardprofilen (OpenRouter, ellers den eneste profil med en nøgle), også nye stole og stole fra ældre borde. Det nye stolepanel har standardprofilen og dens model valgt på forhånd, så en ny stol kan gemmes uden at sætte API op. Rører ikke en stol med egen nøgle, en lokal model (Anden adresse) eller en anden udbyders model.</li>
-<li><strong>Tredje øje beder selv om nøglen, hvor den skal bruges.</strong> Mangler Tredje øje en nøgle, står der et felt øverst i Tredje øje: indsæt din OpenRouter-nøgle og tryk <em>Gem og tjek nøglen</em>. Den tjekkes mod OpenRouter (intet sendes), gemmes som standardprofil, og så virker både Tredje øje og alle stole. Nøgletrinnet i velkomsten siger nu, at den samme nøgle bruges af alle stole og af Tredje øje.</li>
-</ul>
-<h4 id="about-0-41-0-2026-11-09"><a class="anchor" href="#about-0-41-0-2026-11-09" aria-hidden="true">#</a>[0.41.0] – 2026-11-09</h4>
 <p><strong>Ændret</strong></p>
 <h3 id="about-copyright"><a class="anchor" href="#about-copyright" aria-hidden="true">#</a>Copyright</h3>
 <p>© 2026 eterapeut.dk. See <code>LICENSE</code> and <code>THIRD-PARTY-NOTICES.md</code> for the licence and third-party components (including the fonts Fraunces, Work Sans and JetBrains Mono, which are bundled under the SIL Open Font License).</p>

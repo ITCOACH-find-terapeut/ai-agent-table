@@ -106,6 +106,10 @@ html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-
 .table-box[data-view="compact"] .plaque .centre-spend,.table-box[data-view="compact"] .plaque .centre-shield{display:none;}
 .table-box[data-view="compact"] .plaque .centre-status{font-size:10px;margin-top:.15rem;}
 .table-box[data-view="list"] .plaque .centre-status,.table-box[data-view="list"] .plaque .centre-spend,.table-box[data-view="list"] .plaque .gh,.table-box[data-view="list"] .plaque .hint,.table-box[data-view="list"] .plaque .centre-shield{display:inline-block;margin:.2rem .8rem 0 0;}
+/* Mens velkomstskærmen vises, står der kun det, en ny bruger har brug for: den tekniske statuslinje, «Ingen har turen» og GitHub-teksten kommer, når bordet har stole. */
+body:has(#welcomePanel:not([hidden])) #runStatus,body:has(#welcomePanel:not([hidden])) #turnLine,body:has(#welcomePanel:not([hidden])) #ghStatus{display:none;}
+.key-more{margin:var(--space-2) 0 0;}
+.key-more summary{cursor:pointer;color:var(--ink-secondary);font-size:var(--fs-xs);}
 .plaque .hint{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-muted);margin:.35rem 0 0;}
 /* Forhåndsvisning af en stol (rollover/fokus): ligger oven på plaketten og erstatter dens indhold, uden at ændre plaketens størrelse. Plaketten tegnes stadig under (skjult), så den er opdateret, når musen forlader stolen. */
 .plaque.previewing .plaque-main{visibility:hidden;}
@@ -749,7 +753,7 @@ button.btn-danger{color:var(--danger);border-color:var(--danger);background:var(
 .welcome-ask textarea{width:100%;box-sizing:border-box;}
 .welcome-ask .eyebrow{margin:.6rem 0 0;}
 .welcome-demo{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:.6rem 0 1rem;padding:.7rem .9rem;border:1px dashed var(--surface-line);border-radius:10px;background:var(--bg);}
-.welcome-demo p{margin:.15rem 0 0;}
+.welcome-demo p{margin:.15rem 0 0;font-size:var(--fs-s,14px);color:var(--ink-secondary);}
 .welcome-demo .btn{flex:none;}
 .welcome-ask[hidden],.welcome-demo[hidden],.role-preset-eye[hidden]{display:none;}
 .result-text{white-space:pre-wrap;word-break:break-word;max-height:22rem;overflow:auto;padding:.6rem .75rem;border:1px solid var(--surface-line);border-radius:8px;background:var(--bg);font-size:13.5px;line-height:1.55;}
@@ -1445,6 +1449,7 @@ body.drag-files .io-in .io-drop{display:block;}
         <button type="button" class="btn btn-primary" id="talkKeySaveBtn" data-i18n="talkKeySaveBtn"></button>
       </div>
       <p class="note"><a href="#" id="talkKeyLink" data-i18n="quickStartGetKey"></a></p>
+      <p class="note" data-i18n="keyGetHint"></p>
       <p class="note" id="talkKeyStatus" role="status"></p>
     </div>
     <div class="talk-thread" id="talkThread" aria-live="polite"></div>
@@ -1532,6 +1537,7 @@ body.drag-files .io-in .io-drop{display:block;}
       <label for="quickStartKey" data-i18n="quickStartKeyLabel"></label>
       <input type="password" id="quickStartKey" autocomplete="off" spellcheck="false" data-i18n-placeholder="quickStartKeyPlaceholder">
       <p class="note"><a href="#" id="quickStartKeyLink" data-i18n="quickStartGetKey"></a></p>
+      <p class="note" data-i18n="keyGetHint"></p>
     </div>
     <div class="key-explain" data-key-explain data-provider="OpenRouter"></div>
     <div class="row">
@@ -1635,6 +1641,7 @@ body.drag-files .io-in .io-drop{display:block;}
         <label for="welcomeKey" data-i18n="quickStartKeyLabel"></label>
         <input type="password" id="welcomeKey" autocomplete="off" spellcheck="false" data-i18n-placeholder="quickStartKeyPlaceholder">
         <p class="note"><a href="#" id="welcomeKeyLink" data-i18n="quickStartGetKey"></a></p>
+      <p class="note" data-i18n="keyGetHint"></p>
       </div>
       <div class="key-explain" data-key-explain data-provider="OpenRouter"></div>
       <p class="note" id="welcomeKeyReused" data-i18n="welcomeKeyReused" hidden></p>
