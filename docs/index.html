@@ -127,11 +127,32 @@ html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-
 .coaster.sv-working{border-color:var(--accent);}
 .seat-detail{display:none;position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);z-index:30;width:max-content;max-width:320px;text-align:left;background:var(--surface);border:1px solid var(--ink-muted);border-radius:var(--radius-m);padding:var(--space-2) var(--space-3);box-shadow:0 6px 22px rgba(0,0,0,.25);pointer-events:none;}
 .seat:hover .seat-detail,.seat:focus-within .seat-detail{display:block;}
-.seat-detail p{margin:2px 0;font-size:var(--fs-xs);line-height:1.4;color:var(--ink);}
+.seat-detail p{margin:0;font-size:var(--fs-xs);line-height:1.4;color:var(--ink);}
 .seat-detail .sd-k{color:var(--ink-muted);}
-.seat-detail .sd-on{color:var(--ink);}
 .seat-detail .sd-off{color:var(--ink-muted);}
 .seat-detail .sd-mono{font-family:var(--font-mono);font-size:10.5px;}
+.seat-detail .sd-head{display:flex;align-items:baseline;gap:var(--space-2);margin-bottom:var(--space-1);}
+.seat-detail .sd-name{font-family:var(--font-display);font-weight:600;font-size:var(--fs-s,14px);}
+.seat-detail .sd-role{font-family:var(--font-mono);font-size:10px;letter-spacing:.04em;color:var(--ink-muted);border:1px solid var(--line,var(--ink-muted));border-radius:999px;padding:0 7px;}
+.seat-detail .sd-mandate{display:flex;align-items:flex-start;gap:var(--space-2);margin:var(--space-1) 0;font-weight:500;}
+.seat-detail .sd-ic{flex:none;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:var(--accent-text);font-size:11px;line-height:1;}
+.seat-detail .sd-mandate .sd-k{font-weight:400;}
+.seat-detail .sd-work{margin:2px 0;}
+.seat-detail .sd-sub{margin:var(--space-2) 0 2px;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);}
+.seat-detail .sd-dos{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px;}
+.seat-detail .sd-dos li{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;font-size:var(--fs-xs);line-height:1.35;}
+.seat-detail .sd-tag{font-family:var(--font-mono);font-size:9.5px;color:var(--ink-muted);white-space:nowrap;}
+.seat-detail .sd-offline{margin:var(--space-2) 0 0;color:var(--ink-muted);}
+.seat-detail .sd-small{margin:var(--space-2) 0 0;padding-top:var(--space-1);border-top:1px solid var(--line,rgba(128,128,128,.25));font-size:10px;line-height:1.4;color:var(--ink-muted);}
+.seat-card{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:clamp(250px,72%,380px);z-index:25;background:var(--surface);border:1px solid var(--brass);border-radius:10px;padding:var(--space-3) var(--space-3) var(--space-2);box-shadow:0 8px 26px rgba(0,0,0,.18);}
+.seat-card[hidden]{display:none;}
+.seat-card .seat-detail{display:block;position:static;transform:none;width:auto;max-width:none;background:none;border:0;border-radius:0;padding:0;box-shadow:none;}
+.table-box.has-seatcard .plaque{visibility:hidden;}
+.table-box[data-view="compact"] .seat-card{width:clamp(250px,78%,380px);}
+@media (prefers-reduced-motion:no-preference){.seat-card:not([hidden]){animation:seatcard-in .12s ease-out;}}
+@keyframes seatcard-in{from{opacity:0;transform:translate(-50%,-48%);}to{opacity:1;transform:translate(-50%,-50%);}}
+/* I rund og kompakt visning vises kortet i midten; den lille boks over stolen bruges kun i listen. */
+.table-box:not([data-view="list"]) .seat .seat-detail{display:none !important;}
 @media (prefers-reduced-motion:reduce){.coaster .status-word.st-working,.coaster .status-word.st-handing,.coaster .status-word.st-receiving{animation:none;}}
 .seat-status-row{display:flex;align-items:center;gap:1px;padding-left:4px;margin-top:4px;font-size:12px;opacity:.8;}
 .seat-status-more{font-family:var(--font-mono);font-size:10px;color:var(--ink-muted);margin-left:3px;}
@@ -174,7 +195,7 @@ html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-
 .seat-icons .icon-btn:hover::after,.seat-icons .icon-btn:focus-visible::after{opacity:1;visibility:visible;}
 .seat-icons .icon-btn:first-child::after{left:0;transform:none;}
 .seat-icons .icon-btn:last-child::after{left:auto;right:0;transform:none;}
-.icon-btn{font-size:12px;line-height:1;width:20px;height:20px;padding:0;border:none;background:none;cursor:pointer;opacity:.3;border-radius:4px;color:var(--ink);}
+.icon-btn{font-size:13px;line-height:1;width:24px;height:24px;padding:0;border:none;background:none;cursor:pointer;opacity:.3;border-radius:4px;color:var(--ink);}
 .icon-btn:hover{opacity:.7;}
 .icon-btn.active{opacity:1;background:var(--bg);}
 .icon-btn.auto{opacity:.75;background:none;outline:1px dashed var(--ink-muted);outline-offset:-2px;}
@@ -859,8 +880,8 @@ body.drag-files .io-in .io-drop{display:block;}
 #tableTemplates .btn{display:inline-flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;}
 .tpl-tag{font-family:var(--font-mono);font-size:10.5px;color:var(--ink-muted);}
 .tpl-tag.tpl-high{color:var(--accent-strong);}
-.handoff-chip{position:absolute;z-index:4;width:20px;height:20px;padding:0;border-radius:50%;border:1px solid var(--surface-line);background:var(--surface);color:var(--ink-muted);display:grid;place-items:center;cursor:pointer;transform:translate(-50%,-50%);}
-.handoff-chip svg{width:11px;height:11px;}
+.handoff-chip{position:absolute;z-index:4;width:24px;height:24px;padding:0;border-radius:50%;border:1px solid var(--surface-line);background:var(--surface);color:var(--ink-muted);display:grid;place-items:center;cursor:pointer;transform:translate(-50%,-50%);}
+.handoff-chip svg{width:12px;height:12px;}
 .ho-q-badge{position:absolute;top:-6px;right:-6px;min-width:13px;height:13px;padding:0 3px;border-radius:7px;font-family:var(--font-mono);font-size:9px;line-height:13px;text-align:center;background:var(--attn);color:var(--surface);}
 .ho-q-badge.ho-q-blocking{background:var(--danger);}
 .ho-q-badge.ho-q-clear{background:var(--accent-strong);}
@@ -892,13 +913,15 @@ body.drag-files .io-in .io-drop{display:block;}
 .handoff-edge.ho-seq{stroke:var(--ink-secondary);stroke-width:1.4;stroke-dasharray:6 3;opacity:.7;}
 .handoff-edge.ho-manual,.handoff-edge.ho-shortcut{stroke-dasharray:8 3 1 3;}
 .handoff-chip.ho-shortcut{border-style:dotted;border-width:2px;}
-.handoff-legend{position:absolute;left:8px;bottom:6px;display:flex;flex-wrap:wrap;gap:4px 12px;font-size:10.5px;line-height:1.2;color:var(--ink-muted);pointer-events:none;z-index:1;}
+.handoff-legend{position:absolute;left:0;right:0;top:-2.2rem;display:flex;flex-wrap:wrap;gap:2px 14px;font-size:10.5px;line-height:1.2;color:var(--ink-muted);pointer-events:none;z-index:1;}
 .handoff-legend span{display:inline-flex;align-items:center;gap:5px;}
 .handoff-legend svg{width:22px;height:6px;flex:none;}
 .handoff-legend line{stroke:currentColor;stroke-width:1.6;}
 .handoff-chip.ho-done{color:var(--accent-strong);border-color:var(--accent-strong);}
 .handoff-chip.ho-live{color:var(--accent-text);background:var(--accent-strong);border-color:var(--accent-strong);animation:chip-pulse 1s ease-in-out infinite;}
 .table-box[data-view="compact"] .handoff-chip{width:16px;height:16px;}
+/* Kompakt: mærket er lille, men klikfladen er stadig mindst 24 × 24 px (WCAG 2.2 SC 2.5.8). */
+.table-box[data-view="compact"] .handoff-chip::before{content:"";position:absolute;inset:-4px;}
 .table-box[data-view="compact"] .handoff-chip svg{width:9px;height:9px;}
 @keyframes chip-pulse{0%,100%{box-shadow:0 0 0 0 rgba(79,156,133,.5);}50%{box-shadow:0 0 0 5px rgba(79,156,133,0);}}
 .handoff-row{display:flex;align-items:center;gap:var(--space-2);padding:0 0 0 var(--space-4);font-size:var(--fs-xs);color:var(--ink-muted);min-height:20px;}
@@ -1673,6 +1696,7 @@ body.drag-files .io-in .io-drop{display:block;}
       <div class="table-box" id="tableBox" data-view="round">
         <div class="table-top"></div>
         <div class="plaque" id="plaque"></div>
+        <div class="seat-card" id="seatCard" hidden></div>
       </div>
       <p class="full-note" id="fullNote" hidden data-i18n="fullNote"></p>
       <div class="io-band" id="ioBand" data-i18n-title="ioBandTitle">
@@ -2202,6 +2226,7 @@ body.drag-files .io-in .io-drop{display:block;}
 <script src="locales/da.js"></script>
 <script src="locales/en.js"></script>
 <script src="lib/metrics.js"></script>
+<script src="lib/untrusted.js"></script>
 <script src="lib/handoff.js"></script>
 <script src="lib/io.js"></script>
 <script src="lib/orchestrator.js"></script>

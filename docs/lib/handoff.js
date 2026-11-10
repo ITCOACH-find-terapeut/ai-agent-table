@@ -8,9 +8,9 @@
 // uden fed skrift. Kan blokken ikke bruges, returneres null, og relæet falder
 // tilbage til at sende hele svaret (som før).
 (function (root, factory) {
-  if (typeof module === "object" && module.exports) module.exports = factory();
-  else root.RundbordHandoff = factory();
-})(typeof window !== "undefined" ? window : this, function () {
+  if (typeof module === "object" && module.exports) module.exports = factory(require("./untrusted.js"));
+  else root.RundbordHandoff = factory(root.RundbordUntrusted);
+})(typeof window !== "undefined" ? window : this, function (untrusted) {
   var FIELD_BY_EMOJI = {
     "📋": "facts",
     "✔": "decisions",
@@ -75,18 +75,34 @@
   //  body          — forrige stols svar UDEN blokken (stripNeedsSummary)
   //  readback      — forrige stols første sætning
   //  handoff       — parse()-resultat (eller null)
+  //  id            — valgfri markør-id til afgrænsningen af forrige stols svar (ellers tilfældig; kun tests angiver den)
   //  mode          — "structured" | "full" | "anchor" (kun opgaven og brugerens afgørelser, ikke forrige stols svar; kræver originalTask)
   // Returnerer { text, mode, fallbackReason, charsFull, charsSent }.
   function buildRelayText(opts) {
     var t = opts.t;
     var summary = opts.summary;
+    // Forrige stols svar er DATA, ikke instruktioner: det står mellem en start- og slutmarkør med tilfældig id (lib/untrusted.js).
+    var id = opts.id || untrusted.nonce();
+    function wrapPrevious(text) {
+      return untrusted.wrap(
+        text,
+        function (i) {
+          return t("relayPrevStart", { seat: opts.sourceName, id: i });
+        },
+        function (i) {
+          return t("relayPrevEnd", { id: i });
+        },
+        id
+      );
+    }
     if (opts.mode === "anchor" && opts.originalTask) {
       var anchor = t("relayOriginalTaskHeader") + "\n" + String(opts.originalTask).trim() + "\n\n" + t("relayAnchorOnlyNote", { seat: opts.sourceName });
       return { text: anchor, mode: "anchor", fallbackReason: null, charsFull: String(opts.body || "").length, charsSent: anchor.length };
     }
     if (!summary) {
       // Ingen behovsblok → ingen kontekst at bygge; send svaret som det er.
-      return { text: opts.body, mode: "full", fallbackReason: "no_needs_block", charsFull: opts.body.length, charsSent: opts.body.length };
+      var plain = wrapPrevious(opts.body) + "\n\n" + t("relayPrevDataNote");
+      return { text: plain, mode: "full", fallbackReason: "no_needs_block", charsFull: plain.length, charsSent: plain.length };
     }
 
     var head =
@@ -97,7 +113,7 @@
       (summary.adjust ? t("relaySuggestedAdjustLine", { adjust: summary.adjust }) + "\n" : "");
     var tail = opts.originalTask ? "\n\n" + t("relayImportantBlock") : "";
 
-    var full = head + "\n" + t("relayUseAsBasisNote") + "\n\n---\n\n" + opts.body + tail;
+    var full = head + "\n" + t("relayUseAsBasisNote") + " " + t("relayPrevDataNote") + "\n\n" + wrapPrevious(opts.body) + tail;
 
     var handoff = opts.handoff;
     if (opts.mode !== "structured") {
@@ -119,7 +135,7 @@
       if (handoff[pair[0]].length) parts.push(t(pair[1]) + "\n" + bulletList(handoff[pair[0]]));
     });
     var structured =
-      head + "\n" + parts.join("\n\n") + "\n\n" + t("relayHandoffNote") + "\n\n" + t("relayUseAsBasisNote") + tail;
+      head + "\n" + wrapPrevious(parts.join("\n\n")) + "\n\n" + t("relayHandoffNote") + "\n\n" + t("relayUseAsBasisNote") + " " + t("relayPrevDataNote") + tail;
     return { text: structured, mode: "structured", fallbackReason: null, charsFull: full.length, charsSent: structured.length };
   }
 

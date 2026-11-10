@@ -1,9 +1,9 @@
 // Ren logik til ↑IN / ↓OUT: udtræk af OUT Writers fil, materiale-blok til
 // stolens prompt og en grov tokenskøn. window.RundbordIO i appen, require() i tests.
 (function (root, factory) {
-  if (typeof module === "object" && module.exports) module.exports = factory();
-  else root.RundbordIO = factory();
-})(typeof window !== "undefined" ? window : this, function () {
+  if (typeof module === "object" && module.exports) module.exports = factory(require("./untrusted.js"));
+  else root.RundbordIO = factory(root.RundbordUntrusted);
+})(typeof window !== "undefined" ? window : this, function (untrusted) {
   function unwrapFence(text) {
     var m = /^\s*```[^\n]*\n([\s\S]*?)\n```\s*$/.exec(text);
     return m ? m[1] : text;
@@ -29,12 +29,14 @@
     return { name: name, content: unwrapFence(whole.trim()) + "\n", fallback: true };
   }
 
-  // Materialet gives til stolen som DATA — overskriften siger eksplicit at
-  // instruktioner inde i filerne ikke skal følges (beskyttelse mod at en fil
-  // forsøger at styre stolen).
-  function buildMaterialBlock(data, t) {
+  // Materialet gives til stolen som DATA: overskriften siger eksplicit, at instruktioner inde i filerne
+  // ikke skal følges, og hele blokken står mellem en start- og en slutmarkør med en tilfældig id pr. kald,
+  // så en fil ikke kan efterligne slutningen og fortsætte som om, den var bordets egen tekst.
+  // id er valgfri (tests); ellers vælges den tilfældigt.
+  function buildMaterialBlock(data, t, id) {
     if (!data || !data.files || !data.files.length) return "";
-    var parts = [t("inMaterialHeader")];
+    id = id || untrusted.nonce();
+    var parts = [t("inMaterialHeader", { id: id })];
     data.files.forEach(function (f) {
       parts.push(t("inMaterialFile", { name: f.name }) + "\n" + f.text + (f.truncated ? "\n" + t("inMaterialTruncated", { chars: f.chars }) : ""));
     });
@@ -42,7 +44,7 @@
       return s.name;
     });
     if (skipped.length) parts.push(t("inMaterialSkipped", { names: skipped.join(", ") }));
-    return parts.join("\n\n");
+    return t("inMaterialStart", { id: id }) + "\n" + parts.join("\n\n") + "\n" + t("inMaterialEnd", { id: id });
   }
 
   function estimateTokens(chars) {

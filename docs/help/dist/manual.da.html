@@ -129,7 +129,7 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <body data-lang="da" data-other="manual.en.html" data-nohits="Ingen kapitler matcher.">
 <div class="shell">
 <aside class="sidebar" id="sidebar">
-  <div class="brand"><span class="brand-mark">◯</span><div><div class="brand-name">Rundbordet</div><div class="brand-sub">Version 0.42.0 · rev c852136</div></div></div>
+  <div class="brand"><span class="brand-mark">◯</span><div><div class="brand-name">Rundbordet</div><div class="brand-sub">Version 0.43.0 · rev 74b6b44+</div></div></div>
   <input type="search" id="search" placeholder="Søg i manualen …" aria-label="Søg i manualen …">
   <nav aria-label="Indhold"><ol class="toc" id="toc">
 <li><a href="#getting-started" data-ch="getting-started"><span class="toc-n">01</span>Kom i gang på fem minutter</a></li>
@@ -230,7 +230,7 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <p>På selve stolen ser du:</p>
 <ul>
 <li><strong>Rollens navn</strong>, et <strong>statusord</strong> og én <strong>aktivitetslinje</strong>. Statusordet er det, appen kan dokumentere: <em>Arbejder</em> (et modelkald kører), <em>Har turen</em>, <em>Næste i rækken</em>, <em>Venter</em>, <em>Færdig</em>, <em>Kontrol ikke bestået</em>, <em>Behov til dig</em>, <em>Venter på dig</em> (bordet holder pause og venter på dit svar), <em>Pauset</em> eller <em>Fejlet</em>. Linjen under siger, hvad der skete eller afventes, fx <em>Svarer nu · modelnavn</em>, <em>Afventer Clarifier</em> eller <em>Afleverede til Builder</em>. Intet vises, som appen ikke ved.</li>
-<li><strong>Detaljer ved hover:</strong> hold musen over (eller tab til) stolen for model, udbyder, mandat, arbejdsform, aktive indstillinger, om den er kontrolstol og om den læser IN. De små ikoner til at ændre mandat og arbejdsform kommer frem på samme måde (se <a href="#dials">Adfærd og ikoner</a>).</li>
+<li><strong>Stolens kort ved hover:</strong> hold musen over (eller tab til) en stol, og <strong>bordets midte viser stolens kort</strong> i stedet for bordets navn, til musen forlader stolen. Øverst står det vigtigste: <strong>mandat</strong> og <strong>arbejdsform</strong>. Så følger <em>Sådan arbejder jeg</em>, hvor stolens tilføjelser står som korte «jeg»-sætninger (fx <em>Jeg udfordrer forslag, jeg er uenig i</em>) med dialens navn og styrke ved siden af, og <em>Slået fra</em> med dem, der er slået fra. Nederst med småt står model, om den er kontrolstol, om den læser IN og antal egne tilføjelser. I listevisningen, hvor der ingen midte er, vises kortet ved stolen. De små ikoner til at ændre mandat og arbejdsform kommer frem på samme måde (se <a href="#dials">Adfærd og ikoner</a>).</li>
 <li>En lille <strong>prik</strong> i hjørnet viser, at stolens API-nøgle er testet: grøn betyder, at testen virkede.</li>
 <li>Et <strong>kronemærke</strong> 👑, hvis stolen har turen (se <a href="#turn">Hvem har turen</a>).</li>
 </ul>
@@ -727,7 +727,7 @@ mark.hit{background:var(--mark);border-radius:3px;}
 </tr>
 <tr>
 <td>💾 Gem i git</td>
-<td><em>Under Mere.</em> Skriver svaret til en fil i dit GitHub-repo (kun hvis repo og token er sat)</td>
+<td><em>Under Mere.</em> Skriver svaret til en fil i dit GitHub-repo (kun hvis repo og token er sat). Tokenet sendes kun til GitHub og står hverken i git-adressen eller i arbejdskopiens opsætning</td>
 </tr>
 <tr>
 <td>Husk</td>
@@ -1205,7 +1205,7 @@ Reviewer -&gt; Builder [ved ikke bestået]
 <p>Åbn en stol og sæt kryds ved <strong>Læser IN-mappen</strong>. Hver gang stolen svarer, får den indholdet af tekstfilerne — og eventuelle billeder, hvis dens udbyder kan se dem — med som materiale.</p>
 <aside class="callout warning"><span class="callout-label">Pas på</span><div><p>Materialet sendes med <strong>hver gang</strong> stolen svarer, og koster tokens. Bekræftelsen før en kørsel og panelet <em>IN og OUT</em> viser et overslag. Lad kun de stole læse IN, der har brug for det.</p>
 </div></aside>
-<aside class="callout note"><span class="callout-label">Bemærk</span><div><p>Filerne behandles som <em>data</em>. Står der instruktioner inde i en fil eller på et billede, følger stolen dem ikke; kun din opgave og stolens egne instruktioner gælder.</p>
+<aside class="callout note"><span class="callout-label">Bemærk</span><div><p>Filerne sendes som <em>data</em>: de står mellem en start- og en slutmarkør med en tilfældig kode, der skifter for hvert kald, og stolen får besked om ikke at følge instruktioner, der står inde i dem. Det samme gælder det forrige svar, en stol får af en anden stol. Det er en afbødning og ikke en garanti: en model kan stadig lade sig påvirke af en tekst, du ikke selv har skrevet. Læs derfor resultatet, før du bruger det, og lad en stol, der læser filer fra andre, stoppe efter sig selv (<em>Mandat</em>), når meget afhænger af svaret.</p>
 </div></aside>
 <h3 id="io-faa-resultater-ud-i-out"><a class="anchor" href="#io-faa-resultater-ud-i-out" aria-hidden="true">#</a>Få resultater ud i OUT</h3>
 <p>Noget kommer først i OUT, når <strong>du</strong> vælger det. To veje:</p>
@@ -1877,7 +1877,7 @@ sudo cp /opt/rundbordet/share/rundbordet.desktop /usr/share/applications/
 <section class="chapter" id="about" data-title="Om Rundbordet">
 <header class="chapter-head"><span class="chapter-n">26</span><h2>Om Rundbordet</h2><p class="chapter-summary">Version, privatliv og ændringer.</p></header>
 <h3 id="about-version"><a class="anchor" href="#about-version" aria-hidden="true">#</a>Version</h3>
-<p>Denne manual hører til <strong>Rundbordet 0.42.0</strong> (revision <code>c852136</code>). Versionen står også nederst under ⚙ → <em>Hele programmet</em> og i <em>Om Rundbordet</em>.</p>
+<p>Denne manual hører til <strong>Rundbordet 0.43.0</strong> (revision <code>74b6b44+</code>). Versionen står også nederst under ⚙ → <em>Hele programmet</em> og i <em>Om Rundbordet</em>.</p>
 <p>Versionsnumre følger formen <strong>HOVED.MINDRE.RETTELSE</strong>: en ny <em>rettelse</em> fikser fejl, en ny <em>mindre</em> version tilføjer funktioner, og en ny <em>hovedversion</em> kan ændre, hvordan appen bruges. <em>Revisionen</em> peger på den præcise kode, versionen blev bygget af.</p>
 <h3 id="about-privatliv"><a class="anchor" href="#about-privatliv" aria-hidden="true">#</a>Privatliv</h3>
 <ul>
@@ -1889,6 +1889,19 @@ sudo cp /opt/rundbordet/share/rundbordet.desktop /usr/share/applications/
 <h3 id="about-aendringer"><a class="anchor" href="#about-aendringer" aria-hidden="true">#</a>Ændringer</h3>
 <p>Format følger <a href="https://keepachangelog.com/da/1.1.0/" class="external">Keep a Changelog</a>, versioner følger <a href="https://semver.org/lang/da/" class="external">SemVer</a>.</p>
 <h4 id="about-ikke-udgivet"><a class="anchor" href="#about-ikke-udgivet" aria-hidden="true">#</a>[Ikke udgivet]</h4>
+<h4 id="about-0-43-0-2026-11-10"><a class="anchor" href="#about-0-43-0-2026-11-10" aria-hidden="true">#</a>[0.43.0] – 2026-11-10</h4>
+<p><strong>Ændret</strong></p>
+<ul>
+<li><strong>Stolens kort vises i bordets midte, når du holder musen over (eller tabber til) en stol,</strong> i stedet for en boks, der lå over andre stole. Kortet erstatter bordets navn, så længe musen er på stolen. Øverst står det vigtigste, <strong>mandat og arbejdsform</strong>, så <em>Sådan arbejder jeg</em>, hvor de tilføjelser, der er til, står som korte «jeg»-sætninger med dialens navn og styrke ved siden af (fx <em>Jeg udfordrer forslag, jeg er uenig i · Modsigelse 7/10</em>), så <em>Slået fra</em>, og nederst med småt model, kontrolstol, læs IN og antal egne tilføjelser. Rollen vises ved navnet, når stolen har en. I listevisningen vises kortet ved stolen som før.</li>
+<li><strong>Stolens kort kan holdes med musen.</strong> Flytter du musen fra stolen ind over kortet i midten, bliver det stående; det lukkes, når musen forlader både stol og kort, eller med Esc (WCAG 1.4.13).</li>
+<li><strong>Klikfladerne er mindst 24 × 24 px:</strong> stolens ikonknapper og pilenes mærker (også i kompakt visning, hvor mærket er lille, men klikfladen er udvidet; WCAG 2.2 SC 2.5.8).</li>
+<li><strong>Materiale og overdragne svar sendes som afgrænsede data.</strong> Filer fra IN og det forrige svar, en stol får af en anden stol, står nu mellem en start- og en slutmarkør med en tilfældig kode, der skifter for hvert kald, så en tekst ikke kan efterligne slutmarkøren og fortsætte som bordets egen tekst. Stolen får besked om ikke at følge instruktioner inde i dem. Det er en afbødning, ikke en garanti; hjælpen siger det nu ærligt i stedet for at love, at stolen ikke følger dem.</li>
+</ul>
+<p><strong>Rettet</strong></p>
+<ul>
+<li><strong>Forklaringen til pilene (Planlagt rækkefølge, Overdragelse sket, Genvej uden for rækkefølgen) lagde sig oven i sig selv</strong> for hver gentegning af bordet, så teksten blev dobbelt med streger henover, og den lå oven på bordets «+». Nu tegnes den kun én gang og ligger over bordet. En test sikrer, at der kun er én forklaring efter flere gentegninger.</li>
+<li><strong>GitHub-tokenet står ikke længere i git-adressen.</strong> «Gem i git» brugte <code>https://&lt;token&gt;@github.com/…</code> i <code>git clone</code> og <code>remote set-url</code>, så tokenet stod i git-processens argumenter (synlige for andre brugere på maskinen) og i klartekst i <code>.git/config</code> i arbejdskopien. Nu gives det kun som en HTTP-header i git-processens miljø og kun til den ene vært, og adressen er uden token. En ældre arbejdskopi, hvor tokenet stod i adressen, ryddes ved næste «Gem i git». Kræver git 2.31 eller nyere. En test kører ægte git mod en lokal server og tjekker, at headeren når frem, og at tokenet ikke står i argumenterne.</li>
+</ul>
 <h4 id="about-0-42-0-2026-11-09"><a class="anchor" href="#about-0-42-0-2026-11-09" aria-hidden="true">#</a>[0.42.0] – 2026-11-09</h4>
 <p><strong>Ændret</strong></p>
 <ul>
@@ -1902,13 +1915,6 @@ sudo cp /opt/rundbordet/share/rundbordet.desktop /usr/share/applications/
 <li><strong>Rettet:</strong> feltet til Tredje øje i samtalen manglede sin tekst til skærmlæsere (nøglen <code>talkInputLabel</code> fandtes ikke). En ny test sikrer, at alle tekster findes på både dansk og engelsk, og at ingen tekstnøgle defineres to gange.</li>
 <li><strong>Download-siden og manualen passer til forretningsmodellen og til det, der er afprøvet.</strong> Siden (genereret af <code>scripts/build-web.js</code>) beskriver nu hver for sig: gratis brug (også uden licens), egen API-nøgle og egne udgifter, opdateringslicens (engangsbetalt; adgang til opdateringsfunktionen i appen) og betalte introduktionsforløb, uden opfundne priser, betalingslink eller vilkår. Linux nævnes som afprøvet på Omarchy (x64), ikke som dokumentation for andre distributioner. Teksten «licens og pris er ikke besluttet» er fjernet.</li>
 <li><strong>Forslaget i startguiden forklarer sig med almindelige ord:</strong> <em>Sådan går det</em> (bordtypens egen beskrivelse), hvor mange stole der kaldes og hvad du får ud af det, ud over begrundelsen og om forslaget bygger på faste regler eller en models vurdering.</li>
-<li><strong>Ærlig status efter en fejl.</strong> Efter en kørsel stod der «Færdig — alle stole har svaret», selv når nogle stole ikke svarede. Nu siger statuslinjen, hvor mange der ikke svarede (eller at ingen gjorde, og der intet resultat er), og dit spørgsmål lægges tilbage i beskedfeltet, så du kan prøve igen uden at skrive det om. Resultatkortet vises kun, når der er et svar.</li>
-<li><strong>Pris og nøgle forklares, og bekræftelsen før start viser et skøn.</strong> Under nøglefelterne står, at et ChatGPT- eller Claude-abonnement ikke i sig selv giver en API-nøgle, at du betaler udbyderen direkte, hvor nøglen gemmes, og hvem der modtager opgaven; nøgletjekket sender ingen opgave. Bekræftelsen før start viser et <strong>skønnet forbrug</strong> ud fra stolenes seneste kald (eller siger, at det ikke kan skønnes, og nævner modeller uden listepris), hvilken udbyder der modtager opgaven, og prisgrænsens faktiske begrænsninger (listepris, tjekkes mellem stolene, et kald kan gå over). Der er ingen påstande om, at API er billigere end et abonnement.</li>
-<li><strong>Første skærm spørger «Hvad vil du gerne have hjælp til?».</strong> Øverst et felt, hvor du beskriver din opgave eller indsætter en tekst, og knappen <em>Få et forslag til min opgave</em>; teksten følger med ind i startguiden. Under det de fire eksempler og den indspillede demo. Der er færre knapper (kun hurtig start og tomt bord som de små veje), og introen siger, at du ikke skal vælge modeller, roller eller indstillinger først.</li>
-<li><strong>Tydeligere navne på pause og mandat.</strong> Pilens pause hedder nu <em>Stop her: du læser, før næste stol starter (altid)</em>. Mandatet hedder ✓ <em>Fortsætter selv, uden at spørge dig</em>, ? <em>Spørger dig, når den er i tvivl</em> og ⏸ <em>Stopper altid efter sig selv: du læser resultatet</em>, og teksterne siger, at mandatet ⏸ og pilens pause giver det samme stop. Hjælpen forklarer forskellen.</li>
-<li><strong>Ny stol uden rolleknapper på Enkel og Mere.</strong> Panelet viser kun <em>+ Ny stol</em> og en afkrydsning <em>Skriver til OUT</em> (stolen gemmer sit svar som en fil i OUT). Rolleknapperne er kun under Avanceret.</li>
-<li><strong>Pilene viser kun den planlagte rækkefølge.</strong> En overdragelse, der gik et andet sted hen end rækkefølgen siger, tegnes som en mærket genvej (prik-streg-linje med navnene som tip), så en stol ikke ser ud til at have flere planlagte pile. En lille forklaring nederst til venstre på bordet viser, hvad linjerne betyder.</li>
-<li><strong>«+» ved bordvælgeren åbner valgene direkte</strong> (opgavekort, <em>Jeg har en anden opgave …</em>, <em>Hurtig start</em> og tomt bord) i stedet for en rullemenu. Der oprettes intet bord, før du selv har valgt og startet.</li>
 </ul>
 <h3 id="about-ophavsret"><a class="anchor" href="#about-ophavsret" aria-hidden="true">#</a>Ophavsret</h3>
 <p>© 2026 eterapeut.dk. Se <code>LICENSE</code> og <code>THIRD-PARTY-NOTICES.md</code> for licens og tredjepartskomponenter (bl.a. skrifttyperne Fraunces, Work Sans og JetBrains Mono, som følger med under SIL Open Font License).</p>
