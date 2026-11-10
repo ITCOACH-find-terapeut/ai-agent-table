@@ -84,7 +84,7 @@
     if (String(why || "").indexOf("model:") === 0) return t("guideWhyModel", { text: why.slice(6) });
     if (kind === "template") return t("guideWhyTemplate_" + (why === "default" ? "default" : String(why).replace("rule:", "")));
     if (kind === "preset") return t("guideWhyPreset_answers") + (g.sug.preset === "fast" ? " " + t("guideWhyPreset_fastNote") : "");
-    return t("guideWhyLevel_" + g.sug.level);
+    return "";
   }
 
   function renderGuideProposal() {
@@ -100,8 +100,6 @@
     guideEl("guideTemplateSelect").value = sug.template;
     guideEl("guidePresetSelect").innerHTML = Guide.PRESET_KEYS.map(function (k) { return '<option value="' + k + '">' + escapeHtml(t("preset" + guideCap(k))) + "</option>"; }).join("");
     guideEl("guidePresetSelect").value = sug.preset;
-    guideEl("guideLevelSelect").innerHTML = Guide.LEVELS.map(function (k) { return '<option value="' + k + '">' + escapeHtml(t("uiLevel" + guideCap(k))) + "</option>"; }).join("");
-    guideEl("guideLevelSelect").value = sug.level;
     // Med almindelige ord: hvad der sker, hvor mange stole der kaldes, og hvad du får ud af det (bordtypens egen beskrivelse, ikke noget opdigtet)
     var tpl = window.RundbordTemplates.list(loc).filter(function (x) { return x.key === sug.template; })[0];
     var plan = guideBuildSetup(sug);
@@ -113,13 +111,12 @@
       : "";
     guideEl("guideWhyTemplate").textContent = guideWhyText("template", sug.templateWhy);
     guideEl("guideWhyPreset").textContent = guideWhyText("preset", sug.presetWhy);
-    guideEl("guideWhyLevel").textContent = sug.levelWhy === "user" ? t("guideWhyUser") : guideWhyText("level", sug.levelWhy);
     guideEl("guideSource").textContent = t(sug.source === "model" ? "guideSourceModel" : "guideSourceRules");
     guideEl("guideAskBtn").hidden = false;
     guideEl("guideAskPreview").hidden = true;
   }
 
-  // Brugerens eget valg i en af de tre vælgere: bordet bygges om, og modellerne vises igen, hvis de er hentet.
+  // Brugerens eget valg i en af de to vælgere: bordet bygges om, og modellerne vises igen, hvis de er hentet.
   function guideChoose(kind, value) {
     var g = welcomeState.guide;
     if (!g) return;
@@ -127,14 +124,11 @@
     if (kind === "template") {
       g.sug.template = Guide.validChoice("template", value, g.sug.template);
       g.sug.templateWhy = "user";
-    } else if (kind === "preset") {
+    } else {
       g.sug.preset = Guide.validChoice("preset", value, g.sug.preset);
       g.sug.presetWhy = "user";
-    } else {
-      g.sug.level = Guide.validChoice("level", value, g.sug.level);
-      g.sug.levelWhy = "user";
     }
-    if (kind !== "level") guideRebuild();
+    guideRebuild();
     renderGuideProposal();
   }
 
@@ -215,7 +209,7 @@
       });
   }
 
-  // Efter at bordet er oprettet: Tredje øjes læsning bogføres på det nye bord (så prisen ikke går tabt), og visningen sættes til det, brugeren endte på.
+  // Efter at bordet er oprettet: Tredje øjes læsning bogføres på det nye bord (så prisen ikke går tabt), .
   function applyGuideOutcome(st) {
     var g = st.guide;
     if (!g) return Promise.resolve();
@@ -227,14 +221,7 @@
         });
       });
     });
-    return chain
-      .then(function () {
-        return window.rundbord.setUiLevel(g.sug.level);
-      })
-      .then(function (s) {
-        store = s;
-        applyUiLevel();
-      });
+    return chain;
   }
 
   function bindGuide() {
@@ -243,7 +230,6 @@
     guideEl("guideBackBtn").addEventListener("click", welcomeCardsView);
     guideEl("guideTemplateSelect").addEventListener("change", function () { guideChoose("template", this.value); });
     guideEl("guidePresetSelect").addEventListener("change", function () { guideChoose("preset", this.value); });
-    guideEl("guideLevelSelect").addEventListener("change", function () { guideChoose("level", this.value); });
     guideEl("guideAskBtn").addEventListener("click", guideAskOpen);
     guideEl("guideAskCancelBtn").addEventListener("click", guideAskCancel);
     guideEl("guideAskSendBtn").addEventListener("click", guideAskSend);

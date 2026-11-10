@@ -72,9 +72,12 @@
       .createBoard(t("quickStartBoardName"))
       .then(function (s) {
         store = s;
+        return ensureDefaultOpenRouter(st.key, st.starter);
+      })
+      .then(function (profileId) {
         var seats = st.starter.map(function (r, i) {
           return {
-            id: uid(), name: r.role, provider: "openrouter", model: r.model || "", baseUrl: "", apiKey: st.key, hasKey: true,
+            id: uid(), name: r.role, provider: "openrouter", model: r.model || "", baseUrl: "", modelId: profileId || "", apiKey: profileId ? "" : st.key, hasKey: true,
             customInstruction: "", color: SWATCHES[i % SWATCHES.length], calls: [], icons: defaultIcons(), dials: defaultDials(), readsIn: false, checks: false, voiceId: "",
           };
         });

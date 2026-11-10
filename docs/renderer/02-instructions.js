@@ -172,6 +172,8 @@
   function thirdEyeDefaultValue(profiles, values) {
     var saved = store && store.thirdEyeModelId;
     if (saved && values.indexOf("profile:" + saved) >= 0) return "profile:" + saved;
+    var standard = window.RundbordModels.defaultProfile(store);
+    if (standard && values.indexOf("profile:" + standard.id) >= 0) return "profile:" + standard.id;
     var openrouter = profiles.filter(function (p) {
       return p.provider === "openrouter";
     })[0];

@@ -1,8 +1,7 @@
 // Startguide: fra en opgave i egne ord til et foreslået bord, uden at brugeren skal kende stole, dials eller tilvalg.
-// Tre ting foreslås, og brugeren kan ændre hver af dem, før noget oprettes:
+// To ting foreslås, og brugeren kan ændre hver af dem, før noget oprettes:
 //   Bord       = en af skabelonerne (lib/templates.js), valgt ud fra opgaven (regler uden modelkald, eller Tredje øje, hvis brugeren beder om det).
 //   Tænkning   = en forudindstilling (lib/addons.js: Hurtig, Grundig, Kritisk), ud fra hvor vigtigt det er, at svaret er rigtigt.
-//   Visning    = Enkel, Mere eller Avanceret, ud fra brugerens erfaring og lyst til at styre. Det afgøres altid af brugerens svar, aldrig af en model.
 // Intet sendes nogen steder fra denne fil. En modelrespons accepteres kun, hvis den er et af de kendte valg (lukket liste); alt andet kasseres.
 // Ren logik uden DOM, netværk og Electron. window.RundbordGuide i appen, require() i node-tests.
 (function (root, factory) {
@@ -11,17 +10,12 @@
 })(typeof window !== "undefined" ? window : this, function () {
   var TEMPLATE_KEYS = ["facts", "pair", "scrum", "learning", "decision", "letter"];
   var PRESET_KEYS = ["fast", "thorough", "critical"];
-  var LEVELS = ["simple", "more", "advanced"];
   var MAX_TASK = 1500;
   var MAX_WHY = 200;
 
-  // De tre spørgsmål. Svarene er i stigende orden (første = mindst).
-  var QUESTIONS = [
-    { key: "involve", options: ["low", "mid", "high"] },
-    { key: "experience", options: ["none", "some", "lots"] },
-    { key: "stakes", options: ["low", "mid", "high"] },
-  ];
-  var DEFAULT_ANSWERS = { involve: "mid", experience: "none", stakes: "mid" };
+  // Spørgsmålet. Svarene er i stigende orden (første = mindst).
+  var QUESTIONS = [{ key: "stakes", options: ["low", "mid", "high"] }];
+  var DEFAULT_ANSWERS = { stakes: "mid" };
 
   function cleanAnswers(a) {
     var out = {};
@@ -29,14 +23,6 @@
       out[q.key] = a && q.options.indexOf(a[q.key]) >= 0 ? a[q.key] : DEFAULT_ANSWERS[q.key];
     });
     return out;
-  }
-
-  // Erfaring afgør visningen; vil du styre hvert skridt, får du mindst Mere (så du kan se, hvad der foregår).
-  function levelFrom(answers) {
-    var a = cleanAnswers(answers);
-    var level = a.experience === "lots" ? "advanced" : a.experience === "some" ? "more" : "simple";
-    if (a.involve === "high" && level === "simple") level = "more";
-    return level;
   }
 
   // Hvor vigtigt det er, at svaret er rigtigt, afgør tænkningen.
@@ -76,8 +62,6 @@
       templateWhy: tpl.why,
       preset: presetFrom(answers),
       presetWhy: "answers",
-      level: levelFrom(answers),
-      levelWhy: "answers",
       source: "rules",
     };
   }
@@ -139,8 +123,6 @@
       templateWhy: parsed.templateWhy ? "model:" + parsed.templateWhy : base.templateWhy,
       preset: parsed.preset || base.preset,
       presetWhy: parsed.preset && parsed.presetWhy ? "model:" + parsed.presetWhy : base.presetWhy,
-      level: base.level,
-      levelWhy: base.levelWhy,
       source: "model",
     };
   }
@@ -177,13 +159,13 @@
 
   // Det valg, der er foreslået, er altid et kendt valg (også efter ændringer fra brugerens egne vælgere)
   function validChoice(kind, value, fallback) {
-    var list = kind === "template" ? TEMPLATE_KEYS : kind === "preset" ? PRESET_KEYS : LEVELS;
+    var list = kind === "template" ? TEMPLATE_KEYS : PRESET_KEYS;
     return list.indexOf(value) >= 0 ? value : fallback;
   }
 
   return {
-    TEMPLATE_KEYS: TEMPLATE_KEYS, PRESET_KEYS: PRESET_KEYS, LEVELS: LEVELS, QUESTIONS: QUESTIONS, DEFAULT_ANSWERS: DEFAULT_ANSWERS, MAX_TASK: MAX_TASK,
-    cleanAnswers: cleanAnswers, cleanTask: cleanTask, levelFrom: levelFrom, presetFrom: presetFrom, templateFromTask: templateFromTask, suggest: suggest,
+    TEMPLATE_KEYS: TEMPLATE_KEYS, PRESET_KEYS: PRESET_KEYS, QUESTIONS: QUESTIONS, DEFAULT_ANSWERS: DEFAULT_ANSWERS, MAX_TASK: MAX_TASK,
+    cleanAnswers: cleanAnswers, cleanTask: cleanTask, presetFrom: presetFrom, templateFromTask: templateFromTask, suggest: suggest,
     buildRequest: buildRequest, parseReply: parseReply, withModel: withModel, estimateTokens: estimateTokens, estimateCostUsd: estimateCostUsd, validChoice: validChoice, mergeUp: mergeUp,
   };
 });

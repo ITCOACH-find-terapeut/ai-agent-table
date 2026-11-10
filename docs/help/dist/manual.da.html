@@ -129,7 +129,7 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <body data-lang="da" data-other="manual.en.html" data-nohits="Ingen kapitler matcher.">
 <div class="shell">
 <aside class="sidebar" id="sidebar">
-  <div class="brand"><span class="brand-mark">◯</span><div><div class="brand-name">Rundbordet</div><div class="brand-sub">Version 0.41.0 · rev 005a873</div></div></div>
+  <div class="brand"><span class="brand-mark">◯</span><div><div class="brand-name">Rundbordet</div><div class="brand-sub">Version 0.42.0 · rev c852136</div></div></div>
   <input type="search" id="search" placeholder="Søg i manualen …" aria-label="Søg i manualen …">
   <nav aria-label="Indhold"><ol class="toc" id="toc">
 <li><a href="#getting-started" data-ch="getting-started"><span class="toc-n">01</span>Kom i gang på fem minutter</a></li>
@@ -192,7 +192,6 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <li><strong>Sådan går det:</strong> med almindelige ord, hvad bordet gør (bordtypens egen beskrivelse), hvor mange stole der kaldes, og hvad du får ud af det. Der er ikke flere stole eller kald, end bordtypen kræver.</li>
 <li><strong>Bord:</strong> en af bordtyperne (Læring, Beslutning, Fakta, Brev, to stole til at bygge, Scrum), valgt ud fra ordene i din opgave. Kan appen ikke se en bestemt type, foreslår den <em>Læring</em>, fordi du så tænker først, og siger, at det er et udgangspunkt.</li>
 <li><strong>Tænkning:</strong> <em>Hurtig</em>, <em>Grundig</em> eller <em>Kritisk</em>, ud fra hvor vigtigt det er, at svaret er rigtigt. Forudindstillingen lægges oven på bordets egen opsætning og slår aldrig noget fra, som bordet har slået til. Det er ønsker til modellen, ikke en garanti.</li>
-<li><strong>Visning:</strong> <em>Enkel</em>, <em>Mere</em> eller <em>Avanceret</em>, ud fra din erfaring og din lyst til at styre. Det afgøres altid af dine egne svar. Du kan skifte i toppen, når som helst.</li>
 </ul>
 <p><strong>Du kan ændre alle tre</strong>, før noget oprettes; så står der <em>Du har valgt det selv</em>. Forslaget laves af faste regler i appen, og <strong>i den del sendes intet nogen steder</strong>.</p>
 <p>Vil du have Tredje øje til at læse opgaven og rette bord og tænkning, så tryk <em>Lad Tredje øje læse opgaven</em> (efter at du har tjekket nøglen og set modellerne). Du ser først <strong>præcis, hvad der sendes</strong> (din opgave og en kort liste over bordtyperne; svarene på de tre spørgsmål sendes ikke), hvilken model der bruges, og et <strong>overslag over prisen</strong>. Først når du trykker <em>Send</em>, sendes ét kald. Svaret godtages kun, hvis det er et af de kendte valg; ellers ændres intet. Kaldet er med i bordets regning som Tredje øjes udgift. Visningen rører Tredje øje aldrig.</p>
@@ -204,7 +203,7 @@ mark.hit{background:var(--mark);border-radius:3px;}
 </ul>
 <h3 id="getting-started-saadan-goer-du"><a class="anchor" href="#getting-started-saadan-goer-du" aria-hidden="true">#</a>Sådan gør du</h3>
 <ol>
-<li><strong>Tilføj en stol.</strong> Klik på den stiplede cirkel med <strong>+</strong> ved bordet. Under <em>Avanceret</em> vælger du en rolle, fx <em>Orchestrator</em>; ellers trykker du <em>+ Ny stol</em> og giver stolen et navn.</li>
+<li><strong>Tilføj en stol.</strong> Klik på den stiplede cirkel med <strong>+</strong> ved bordet. Tryk <em>+ Ny stol</em> og giv stolen et navn; vil du vælge et færdigt begreb (fx <em>Orchestrator</em>), åbner du gruppen <em>Færdige begreber</em>.</li>
 <li><strong>Vælg Modelprofil API og model.</strong> Har du ingen profil endnu, så sæt en op med udbyder og nøgle (knappen står i stolens panel). Vælg derefter modellen på stolen (skriv navnet eller klik <em>Hent modeller</em>).</li>
 <li><strong>Test.</strong> Klik <em>Test API</em>. Får du besked om, at forbindelsen virker, er nøgle og model i orden.</li>
 <li><strong>Gem.</strong> Stolen sætter sig ved bordet.</li>
@@ -363,7 +362,7 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <p>Når du vælger en rolle, får stolen navnet som sin identitet (“Du er Clarifier.”). Rollen er <strong>ikke</strong> en færdigskrevet personlighed; hvordan stolen arbejder, afgøres af indstillingerne under <a href="#dials">Adfærd og ikoner</a>. Vælg rollen efter hvad du vil bruge stolen til.</p>
 <h3 id="roles-begreb-og-rollenavn"><a class="anchor" href="#roles-begreb-og-rollenavn" aria-hidden="true">#</a>Begreb og rollenavn</h3>
 <p>Rollen på listen er stolens <strong>begreb</strong>. <em>Rollenavn</em> står lige under og er tomt som standard; skriver du et navn der, bruges det i stedet for begrebet overalt på bordet (i samtalen, på stolen og i modtagerlisten). Begrebet gælder stadig: en stol med begrebet <em>OUT Writer</em> afleverer i OUT, uanset hvad den hedder. Dine egne roller kan gemmes under ⚙ → <em>Hele programmet</em> → <em>Dine roller</em> (se <a href="#settings">Indstillinger</a>).</p>
-<p>Listen med begreber, og rolleknapperne når du tilføjer en stol, vises kun under visningen <strong>Avanceret</strong>. På <strong>Enkel</strong> og <strong>Mere</strong> trykker du <em>+ Ny stol</em> og giver stolen et navn; vil du have, at stolen gemmer sit svar som en fil i OUT, sætter du kryds i <em>Skriver til OUT</em> først. Du giver altså en ny stol bare et navn, og en eksisterende stol beholder sit begreb. Skifter du begreb under Avanceret, står det i stolens historik (<em>Begreb: Builder → Reviewer</em>), og du kan rulle det tilbage.</p>
+<p>Når du tilføjer en stol, trykker du <em>+ Ny stol</em> og giver stolen et navn; de færdige begreber ligger i den sammenfoldede gruppe <em>Færdige begreber</em>, og på selve stolen i gruppen <em>Vælg et begreb</em>; vil du have, at stolen gemmer sit svar som en fil i OUT, sætter du kryds i <em>Skriver til OUT</em> først. Du giver altså en ny stol bare et navn, og en eksisterende stol beholder sit begreb. Skifter du begreb, står det i stolens historik (<em>Begreb: Builder → Reviewer</em>), og du kan rulle det tilbage.</p>
 <h3 id="roles-rollernes-startindstillinger"><a class="anchor" href="#roles-rollernes-startindstillinger" aria-hidden="true">#</a>Rollernes startindstillinger</h3>
 <p>Et begreb er ellers kun et navn, men hvert begreb kan få <strong>startindstillinger</strong>: hvor grundig og kritisk stolen er (dials), egne instruktioner, om den er kontrolstol, og om den læser IN-mappen. Appen har forslag til de vigtigste roller (Orchestrator, Clarifier, Researcher, Builder, Tester, Reviewer, Documenter og OUT Writer).</p>
 <ul>
@@ -535,8 +534,8 @@ mark.hit{background:var(--mark);border-radius:3px;}
 </tbody></table>
 <p>De færdige borde under <em>Skabeloner</em> er sat op efter, hvor meget du er med (se <a href="#table">Bordet og stolene</a>). Hvor meget du faktisk har været med, kan du se som tal under ⚙ → <em>Dette bord</em> → <em>Målinger</em> → <strong>Din deltagelse</strong> (se <a href="#metrics">Målinger og overdragelse</a>).</p>
 <h3 id="participate-overblik-t-sted-for-det-der-kraever-dig"><a class="anchor" href="#participate-overblik-t-sted-for-det-der-kraever-dig" aria-hidden="true">#</a>Overblik: ét sted for det, der kræver dig</h3>
-<p>Øverst i topbaren står <strong>Overblik</strong>. Under knappen ligger fem ting samlet: <strong>Næste skridt</strong>, <strong>Tilbageblik</strong>, <strong>Uenigheder</strong>, <strong>Regning og priser</strong> og <strong>Jeg sidder fast</strong>. Hver række åbner det, den tidligere knap åbnede. På <em>Enkel</em> vises Næste skridt, regningen og Jeg sidder fast; <em>Mere</em> og <em>Avanceret</em> tilføjer Tilbageblik og Uenigheder.</p>
-<p><strong>Jeg sidder fast</strong> står også som en egen knap i topbaren på alle niveauer, så sikkerhedsnettet altid er ét klik væk.</p>
+<p>Øverst i topbaren står <strong>Overblik</strong>. Under knappen ligger fem ting samlet: <strong>Næste skridt</strong>, <strong>Tilbageblik</strong>, <strong>Uenigheder</strong>, <strong>Regning og priser</strong> og <strong>Jeg sidder fast</strong>. Hver række åbner det, den tidligere knap åbnede. </p>
+<p><strong>Jeg sidder fast</strong> står også som en egen knap i topbaren, så sikkerhedsnettet altid er ét klik væk.</p>
 <p>Tallet på knappen er <strong>kun det, appen ved kræver dig</strong>: ting, kun du kan afgøre, og en kørsel, der venter på dig. Står der intet tal, kræver intet dig lige nu. Menuen lukker, når du vælger noget, trykker Escape eller klikker udenfor.</p>
 <h3 id="participate-mandat-som-stop-koer-helt-faerdigt-eller-deltag-undervejs"><a class="anchor" href="#participate-mandat-som-stop-koer-helt-faerdigt-eller-deltag-undervejs" aria-hidden="true">#</a>Mandat som stop: kør helt færdigt, eller deltag undervejs</h3>
 <p>Mandat-ikonet på hver stol styrer, om bordet <strong>holder pause</strong> efter stolen. Det gælder, når <strong>Mandatet styrer forløbet</strong> er slået til under ⚙ → <em>Dette bord</em> (nye borde har det slået til; eksisterende borde er uændrede):</p>
@@ -743,7 +742,7 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <p>Svar, hvor stolen stiller <strong>dig</strong> et spørgsmål, får mærket <em>❓ Spørger dig</em>.</p>
 <h3 id="conversation-mens-et-svar-er-paa-vej"><a class="anchor" href="#conversation-mens-et-svar-er-paa-vej" aria-hidden="true">#</a>Mens et svar er på vej</h3>
 <p>Når bordet har sendt en forespørgsel til en model, og det første ord endnu ikke er kommet, står der i stolens boble et roligt <strong>ventelag</strong>: bløde farver i stolens farve med ét ord i midten. Ordet er <strong>stolens rolle</strong> (<em>Bygger</em>, <em>Gennemgår</em>, <em>Skriver</em> …), eller <em>Kontrollerer</em>, hvis stolen kontrollerer resultatet; en stol med et eget navn uden begreb siger <em>Svarer</em>. Ordet skifter aldrig af sig selv: det viser kun, hvad bordet ved. Laget forsvinder, når første ord kommer, og det findes aldrig, mens bolden ligger hos dig (fx når Beskyttelse venter på dit valg).</p>
-<p>Under ⚙ → <em>Hele programmet</em> → <em>Ventelag</em> (Avanceret) kan du vælge udtryk: <strong>Farvetone</strong> (standard), <strong>Pixelmosaik</strong>, <strong>Pixelsværm</strong>, <strong>Partikler (3D)</strong> eller <strong>Kun ordet</strong>. Har dit system <em>reducer bevægelse</em> slået til, står laget stille.</p>
+<p>Under ⚙ → <em>Hele programmet</em> → <em>Ventelag</em> (under <em>Flere valg til udseendet</em>) kan du vælge udtryk: <strong>Farvetone</strong> (standard), <strong>Pixelmosaik</strong>, <strong>Pixelsværm</strong>, <strong>Partikler (3D)</strong> eller <strong>Kun ordet</strong>. Har dit system <em>reducer bevægelse</em> slået til, står laget stille.</p>
 <h3 id="conversation-eksport-r-samtalen"><a class="anchor" href="#conversation-eksport-r-samtalen" aria-hidden="true">#</a>Eksportér samtalen</h3>
 <p>Under ⚙ → <em>Dette bord</em> → <strong>Eksportér samtale</strong> gemmer du hele samtalen som <strong>én Markdown-fil</strong>, fx til dokumentation eller en opgave. Filen indeholder:</p>
 <ul>
@@ -995,7 +994,8 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <h3 id="third-eye-saadan-bruger-du-det"><a class="anchor" href="#third-eye-saadan-bruger-du-det" aria-hidden="true">#</a>Sådan bruger du det</h3>
 <ol>
 <li>Klik <em>🔎 Tredje øje</em> over samtalen.</li>
-<li>Vælg efter <em>med</em>, hvilken <strong>Modelprofil API</strong> der skal give Tredje øje regnekraft. Tredje øje har sin egen forbindelse og behøver ikke en stol: automatisk bruges OpenRouter-profilen (en billig model som standard), ellers den første profil med en nøgle. Du kan også vælge en stols model og nøgle, som før. Et valgt Modelprofil API huskes.</li>
+<li><strong>Har du ingen nøgle endnu</strong>, står der et felt øverst i Tredje øje: indsæt din OpenRouter-nøgle og tryk <em>Gem og tjek nøglen</em>. Det er den samme nøgle, som stolene bruger: den tjekkes mod OpenRouter (der sendes ingen opgave), gemmes krypteret som standardprofil med en billig model, og så virker både Tredje øje og alle stole uden egen model. Du sætter den kun ét sted.</li>
+<li>Tredje øje bruger automatisk standardprofilen. Vil du en anden, åbner du <em>Vælg model til Tredje øje</em> ved siden af knappen og vælger en Modelprofil API (eller en stols model og nøgle). Et valg huskes.</li>
 <li>Vurderingen kommer i samtalen, mærket “vurderet af” med den valgte profil eller stol og model.</li>
 </ol>
 <p>Tredje øjes udgifter står i <strong>Regning og priser</strong> som en egen linje, <em>Tredje øje</em>, og er med i bordets samlede regning.</p>
@@ -1014,7 +1014,7 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <ul>
 <li>Vælg gerne en anden model end dem, der arbejder på opgaven; en uafhængig vurdering er mere værd.</li>
 <li>Det koster ét kald, og jo længere samtalen er, jo mere fylder den i kaldet.</li>
-<li>Knappen er slået fra, hvis ingen stol har en gemt API-nøgle.</li>
+<li>Har du ingen nøgle, beder Tredje øje om den i selve panelet (se ovenfor).</li>
 </ul>
 <h3 id="third-eye-observationer-regler-uden-modelkald"><a class="anchor" href="#third-eye-observationer-regler-uden-modelkald" aria-hidden="true">#</a>Observationer (regler uden modelkald)</h3>
 <p>Ud over vurderingen på knaptryk holder appen selv øje med hændelseslogen. Fundene står i <strong>📥 Næste skridt</strong>, under overskriften <em>Observationer</em>, og koster ingenting, fordi de er regler og ikke modelkald. Hvert fund kan åbnes med <strong>Vis beviser</strong>, som viser de hændelser, der udløste det, og kan skjules med <strong>Skjul</strong>.</p>
@@ -1312,10 +1312,6 @@ Reviewer -&gt; Builder [ved ikke bestået]
 <td>Du tjekkede for en ny version (kun udfaldet: ny, ens, nyere, ingen adgang, ingen forbindelse) og hentede den (kun om det lykkedes, og om checksummen stemte)</td>
 </tr>
 <tr>
-<td><code>ui.level</code></td>
-<td>Du skiftede visning (kun niveauet: Enkel, Mere eller Avanceret)</td>
-</tr>
-<tr>
 <td><code>proposal.rewritten</code></td>
 <td>En model blev bedt om at formulere et forslag som instruktion (kun om det lykkedes, ingen tekst)</td>
 </tr>
@@ -1519,19 +1515,28 @@ Reviewer -&gt; Builder [ved ikke bestået]
 <li><strong>Hver kørsel starter ren:</strong> stolene husker ikke tidligere kørsler.</li>
 </ul>
 <h3 id="settings-modelprofiler-api-udbyder-og-noegle-t-sted"><a class="anchor" href="#settings-modelprofiler-api-udbyder-og-noegle-t-sted" aria-hidden="true">#</a>Modelprofiler API: udbyder og nøgle ét sted</h3>
-<p>Under ⚙ → <em>Hele programmet</em> → <strong>Modelprofiler API …</strong> (den vises på alle niveauer, også Enkel) sætter du udbyder og nøgle op <strong>én gang</strong>. Hver stol vælger en profil i sit panel (<em>Modelprofil API</em>) og vælger selv sin <strong>model</strong>. Nøglen skrives aldrig på stolen.</p>
+<p>Under ⚙ → <em>Hele programmet</em> → <strong>Modelprofiler API …</strong> sætter du udbyder og nøgle op <strong>én gang</strong>. Hver stol vælger en profil i sit panel (<em>Modelprofil API</em>) og vælger selv sin <strong>model</strong>. Nøglen skrives aldrig på stolen.</p>
 <ul>
-<li><strong>Ændrer du profilen, følger alle stole med.</strong> Skifter du nøgle ét sted, gælder det alle de stole, der bruger profilen. Lader du nøglefeltet stå tomt ved en ændring, beholdes den gamle nøgle. Profilens <em>standardmodel</em> er valgfri og bruges kun af en stol, der ikke selv har en model.</li>
-<li><strong>Mangler API, starter bordet ikke.</strong> Før en kørsel tjekkes det, at alle stole har en profil med nøgle og en model. Ellers siger appen, hvad der mangler, og fører dig til stolen eller profilerne. Et banner over beskedfeltet viser det hele tiden, og der sendes intet til nogen model, før du selv trykker Start.</li>
-<li><strong>Fra stolens panel</strong> kan du sætte en profil op uden at miste det, du har skrevet dér; den nye profil vælges bagefter.</li>
-<li><strong>Nøglen ligger kun i profilen</strong>, krypteret på din computer, og stolen gemmes uden nøgle på disken. Den sendes kun til udbyderen.</li>
-<li><strong>Ældre stole:</strong> havde en stol sin egen nøgle, flyttes den ved første start af denne version til en profil (én pr. udbyder og nøgle, fx <em>OpenRouter</em>), og stolen peger på den. Stolens model bevares, og der tages en sikkerhedskopi af opsætningen først (<code>rundbordet-config.json.pre-v4.bak</code> i appens datamappe).</li>
-<li><strong>Sletter du en profil</strong>, beholder de stole, der brugte den, deres opsætning (udbyder, model og nøgle), og peger ikke længere på en profil. Første klik på <em>Slet</em> beder om en bekræftelse og siger, hvor mange stole det rammer.</li>
-<li>Bordfiler gemmer udbyder og model som før, aldrig nøglen.</li>
+<li><p><strong>Standardprofil: nøglen sættes kun ét sted.</strong> Har du en OpenRouter-profil (Hurtig start og velkomsten laver den, og Tredje øje kan lave den), bruges den af alle stole, der ikke selv har valgt noget, af nye stole og af Tredje øje. Så skal du ikke sætte nøglen på hver stol, og en ny stol har allerede en model. Uden en OpenRouter-profil bruges den eneste profil med en nøgle. Du kan altid vælge en anden profil på en stol.</p>
+</li>
+<li><p><strong>Ændrer du profilen, følger alle stole med.</strong> Skifter du nøgle ét sted, gælder det alle de stole, der bruger profilen. Lader du nøglefeltet stå tomt ved en ændring, beholdes den gamle nøgle. Profilens <em>standardmodel</em> er valgfri og bruges kun af en stol, der ikke selv har en model.</p>
+</li>
+<li><p><strong>Mangler API, starter bordet ikke.</strong> Før en kørsel tjekkes det, at alle stole har en profil med nøgle og en model. Ellers siger appen, hvad der mangler, og fører dig til stolen eller profilerne. Et banner over beskedfeltet viser det hele tiden, og der sendes intet til nogen model, før du selv trykker Start.</p>
+</li>
+<li><p><strong>Fra stolens panel</strong> kan du sætte en profil op uden at miste det, du har skrevet dér; den nye profil vælges bagefter.</p>
+</li>
+<li><p><strong>Nøglen ligger kun i profilen</strong>, krypteret på din computer, og stolen gemmes uden nøgle på disken. Den sendes kun til udbyderen.</p>
+</li>
+<li><p><strong>Ældre stole:</strong> havde en stol sin egen nøgle, flyttes den ved første start af denne version til en profil (én pr. udbyder og nøgle, fx <em>OpenRouter</em>), og stolen peger på den. Stolens model bevares, og der tages en sikkerhedskopi af opsætningen først (<code>rundbordet-config.json.pre-v4.bak</code> i appens datamappe).</p>
+</li>
+<li><p><strong>Sletter du en profil</strong>, beholder de stole, der brugte den, deres opsætning (udbyder, model og nøgle), og peger ikke længere på en profil. Første klik på <em>Slet</em> beder om en bekræftelse og siger, hvor mange stole det rammer.</p>
+</li>
+<li><p>Bordfiler gemmer udbyder og model som før, aldrig nøglen.</p>
+</li>
 </ul>
 <h3 id="settings-dine-roller-begreb-og-rollenavn"><a class="anchor" href="#settings-dine-roller-begreb-og-rollenavn" aria-hidden="true">#</a>Dine roller: begreb og rollenavn</h3>
 <p>En stol har et <strong>begreb</strong> (hvad den er, fx Builder eller OUT Writer) og et valgfrit <strong>rollenavn</strong>. Rollenavnet står lige under begrebet i stolens panel og er <strong>tomt som standard</strong>; skriver du et, bruges det i stedet for begrebet overalt på bordet. Begrebet virker stadig: en stol med begrebet <em>OUT Writer</em> afleverer i OUT, uanset hvad den hedder.</p>
-<p>Under ⚙ → <em>Hele programmet</em> → <strong>Dine roller</strong> gemmer du dine egne roller (rollenavn og begreb), så du kan vælge dem igen på alle stole og borde. De står også som en egen gruppe, <em>Dine roller</em>, i rollelisten og i vælgeren, når du tilføjer en stol, og i stolens panel kan du gemme den aktuelle rolle med <em>Gem rolle i biblioteket</em>. Det vises på alle niveauer.</p>
+<p>Under ⚙ → <em>Hele programmet</em> → <strong>Dine roller</strong> gemmer du dine egne roller (rollenavn og begreb), så du kan vælge dem igen på alle stole og borde. De står også som en egen gruppe, <em>Dine roller</em>, i rollelisten og i vælgeren, når du tilføjer en stol, og i stolens panel kan du gemme den aktuelle rolle med <em>Gem rolle i biblioteket</em>. </p>
 <h3 id="settings-dine-borde-omdoeb-dubl-r-backup-gendan-og-slet"><a class="anchor" href="#settings-dine-borde-omdoeb-dubl-r-backup-gendan-og-slet" aria-hidden="true">#</a>Dine borde: omdøb, dublér, backup, gendan og slet</h3>
 <p>Under ⚙ → <em>Hele programmet</em> → <strong>Dine borde</strong> ser du alle dine borde med antal stole, antal beskeder og hvornår hvert bord sidst blev brugt. Det vises på alle niveauer.</p>
 <ul>
@@ -1541,31 +1546,17 @@ Reviewer -&gt; Builder [ved ikke bestået]
 <li><strong>Dublér</strong> laver en kopi af opsætningen: stole, instrukser, kontrol, runder og Modelprofil API. Kopien har <strong>ingen samtale, ingen hukommelse, ingen målinger og ingen GitHub-adgang</strong>, og den bliver det åbne bord. Hedder bordet <em>Mit bord</em>, hedder kopien <em>Mit bord (kopi)</em>.</li>
 <li><strong>Slet …</strong> fjerner et bord for altid med stole, samtale, målinger og hukommelse. Du skal skrive bordets navn for at bekræfte, og <em>Gem backup først</em> står lige ved siden af. Filer i IN og OUT på disken røres ikke. Det sidste bord kan ikke slettes.</li>
 </ul>
-<h3 id="settings-visning-enkel-mere-eller-avanceret"><a class="anchor" href="#settings-visning-enkel-mere-eller-avanceret" aria-hidden="true">#</a>Visning: Enkel, Mere eller Avanceret</h3>
-<p>Vælgeren øverst til højre (ved siden af regningen) styrer, <strong>hvor meget der vises</strong>. Intet er fjernet; det er kun en anden standard.</p>
-<table>
-<thead>
-<tr>
-<th>Niveau</th>
-<th>Hvad der vises</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>Enkel</strong></td>
-<td>Samtalen, bordet, <strong>Næste skridt</strong>, regningen, Beskyttelse, Modelprofiler API, Dine borde (backup og sletning) og indstillingerne for navn, visning, sprog og udseende. Til dig, der bare vil i gang</td>
-</tr>
-<tr>
-<td><strong>Mere</strong></td>
-<td>Dertil Tilbageblik, ⚖ Uenigheder, Tredje øje, Hukommelse, Stemme, den fulde samtalevisning og indstillingerne for pauser, eget bud først, kuverten og hvem der tager næste</td>
-</tr>
-<tr>
-<td><strong>Avanceret</strong></td>
-<td>Alt, også dials, stolens historik, Pristabel, Målinger, Bordfil, eksport, varianter, runder, strategi og ren kontekst</td>
-</tr>
-</tbody></table>
-<p>Pauser, kontrol, spørgsmål og andre paneler, der åbner af sig selv, vises <strong>uanset niveau</strong>. Har du allerede brugt appen, står den på <strong>Avanceret</strong>, så intet forsvinder, når du opdaterer; kun en helt ny installation starter på <strong>Enkel</strong>. Valget gælder hele appen. Hændelsen <code>ui.level</code> har kun niveauet.</p>
+<h3 id="settings-ingen-niveauer-alt-er-med-og-det-sjaeldne-ligger-i-grupper"><a class="anchor" href="#settings-ingen-niveauer-alt-er-med-og-det-sjaeldne-ligger-i-grupper" aria-hidden="true">#</a>Ingen niveauer: alt er med, og det sjældne ligger i grupper</h3>
+<p>Rundbordet har ikke længere visningerne <em>Enkel</em>, <em>Mere</em> og <em>Avanceret</em>. Alt er med hele tiden, og det, du sjældnere bruger, ligger i en <strong>sammenfoldet gruppe lige dér, hvor det hører hjemme</strong>: tryk på gruppens overskrift for at åbne den.</p>
+<ul>
+<li><strong>Bordets indstillinger:</strong> navn, tabelvisning og prisgrænse står øverst. <em>Flere valg til kørslen</em> (rækkefølge, runder, kontrol, strategi, ren kontekst) og <em>Gem i GitHub</em> ligger i grupper under. Hukommelse, Beskyttelse, Målinger, Bordfil og eksport står som knapper under <em>Bordets data</em>.</li>
+<li><strong>Programmets indstillinger:</strong> tema og sprog står øverst; <em>Flere valg til udseendet</em> rummer ventelag og Tredje øje-ikonet. Modelprofiler API, Pristabel og Stemme står som knapper.</li>
+<li><strong>En stol:</strong> navnet står øverst; <em>Vælg et begreb</em>, stolens historik og dials er grupper, du kan åbne.</li>
+<li><strong>Tredje øje:</strong> knappen står ved samtalen; <em>Vælg model til Tredje øje</em> ligger i en lille gruppe og er som standard sat automatisk.</li>
+</ul>
+<p>Pauser, kontrol og spørgsmål åbner altid af sig selv, når de opstår.</p>
 <h3 id="settings-bordets-data-fire-paneler-som-faner"><a class="anchor" href="#settings-bordets-data-fire-paneler-som-faner" aria-hidden="true">#</a>Bordets data: fire paneler som faner</h3>
-<p><strong>Hukommelse</strong>, <strong>Beskyttelse</strong>, <strong>Målinger</strong> og <strong>Bordfil</strong> åbner som <strong>faner i ét sted</strong> i stedet for fire løse vinduer. Du åbner dem som før (⚙ → <em>Dette bord</em> → <em>Bordets data</em>), og fanelinjen over panelet lader dig skifte mellem dem med et klik eller med piletasterne. Kun ét er åbent ad gangen. Hvert panel virker som før og lukkes med sin ✕ (Beskyttelse med sin Luk-knap, da et klik udenfor ikke lukker den). I <strong>Enkel</strong> vises kun fanen Beskyttelse, i <strong>Mere</strong> også Hukommelse, og i <strong>Avanceret</strong> alle fire.</p>
+<p><strong>Hukommelse</strong>, <strong>Beskyttelse</strong>, <strong>Målinger</strong> og <strong>Bordfil</strong> åbner som <strong>faner i ét sted</strong> i stedet for fire løse vinduer. Du åbner dem som før (⚙ → <em>Dette bord</em> → <em>Bordets data</em>), og fanelinjen over panelet lader dig skifte mellem dem med et klik eller med piletasterne. Kun ét er åbent ad gangen. Hvert panel virker som før og lukkes med sin ✕ (Beskyttelse med sin Luk-knap, da et klik udenfor ikke lukker den).</p>
 <h3 id="settings-visning-af-bordet"><a class="anchor" href="#settings-visning-af-bordet" aria-hidden="true">#</a>Visning af bordet</h3>
 <p><em>Auto</em>, <em>Rundt</em>, <em>Kompakt</em> og <em>Liste</em> vælges under <strong>Dette bord</strong> og gælder <strong>kun det bord</strong>. Et bord kan altså stå som liste, mens et andet står rundt. Valget virker med det samme og gemmes sammen med bordet. Hvad de fire betyder, står i kapitlet <a href="#table">Bordet og stolene</a>.</p>
 <h3 id="settings-nyt-bord-og-hurtig-start"><a class="anchor" href="#settings-nyt-bord-og-hurtig-start" aria-hidden="true">#</a>Nyt bord og Hurtig start</h3>
@@ -1886,7 +1877,7 @@ sudo cp /opt/rundbordet/share/rundbordet.desktop /usr/share/applications/
 <section class="chapter" id="about" data-title="Om Rundbordet">
 <header class="chapter-head"><span class="chapter-n">26</span><h2>Om Rundbordet</h2><p class="chapter-summary">Version, privatliv og ændringer.</p></header>
 <h3 id="about-version"><a class="anchor" href="#about-version" aria-hidden="true">#</a>Version</h3>
-<p>Denne manual hører til <strong>Rundbordet 0.41.0</strong> (revision <code>005a873</code>). Versionen står også nederst under ⚙ → <em>Hele programmet</em> og i <em>Om Rundbordet</em>.</p>
+<p>Denne manual hører til <strong>Rundbordet 0.42.0</strong> (revision <code>c852136</code>). Versionen står også nederst under ⚙ → <em>Hele programmet</em> og i <em>Om Rundbordet</em>.</p>
 <p>Versionsnumre følger formen <strong>HOVED.MINDRE.RETTELSE</strong>: en ny <em>rettelse</em> fikser fejl, en ny <em>mindre</em> version tilføjer funktioner, og en ny <em>hovedversion</em> kan ændre, hvordan appen bruges. <em>Revisionen</em> peger på den præcise kode, versionen blev bygget af.</p>
 <h3 id="about-privatliv"><a class="anchor" href="#about-privatliv" aria-hidden="true">#</a>Privatliv</h3>
 <ul>
@@ -1898,6 +1889,13 @@ sudo cp /opt/rundbordet/share/rundbordet.desktop /usr/share/applications/
 <h3 id="about-aendringer"><a class="anchor" href="#about-aendringer" aria-hidden="true">#</a>Ændringer</h3>
 <p>Format følger <a href="https://keepachangelog.com/da/1.1.0/" class="external">Keep a Changelog</a>, versioner følger <a href="https://semver.org/lang/da/" class="external">SemVer</a>.</p>
 <h4 id="about-ikke-udgivet"><a class="anchor" href="#about-ikke-udgivet" aria-hidden="true">#</a>[Ikke udgivet]</h4>
+<h4 id="about-0-42-0-2026-11-09"><a class="anchor" href="#about-0-42-0-2026-11-09" aria-hidden="true">#</a>[0.42.0] – 2026-11-09</h4>
+<p><strong>Ændret</strong></p>
+<ul>
+<li><strong>Ingen visningsniveauer mere: alt er med, og det sjældne ligger i grupper.</strong> Vælgeren <em>Visning</em> (Enkel, Mere, Avanceret) er fjernet, og intet skjules længere. I stedet ligger det, du sjældnere bruger, i en <strong>sammenfoldet gruppe lige dér, hvor det hører hjemme</strong>: <em>Flere valg til kørslen</em> (rækkefølge, runder, kontrol, strategi, ren kontekst) og <em>Gem i GitHub</em> under bordets indstillinger, <em>Flere valg til udseendet</em> (ventelag, Tredje øje-ikon) under programmets, <em>Vælg et begreb</em> på en stol, <em>Færdige begreber</em> når du tilføjer en stol og <em>Vælg model til Tredje øje</em> ved Tredje øje. Værktøjerne (Tilbageblik, Uenigheder, Hukommelse, Målinger, Bordfil, Pristabel, Stemme, varianter) er altid med. En ny stol er stadig bare et navn og eventuelt <em>Skriver til OUT</em>. Startguiden spørger kun om, hvor vigtigt svaret er (spørgsmålene om erfaring og lyst til at styre er væk, og den foreslår ikke længere en visning). Hændelsen <code>ui.level</code> og <code>lib/uilevel.js</code> er fjernet; et gammelt <code>uiLevel</code> i en opsætning ignoreres.</li>
+<li><strong>Nøglen sættes ét sted, og alle stole bruger den.</strong> Velkomsten og Hurtig start gemmer din OpenRouter-nøgle som en <strong>standardprofil</strong> med en billig standardmodel (fra OpenRouters startforslag) i stedet for at skrive nøglen på hver stol. Stole uden egen nøgle og uden valgt profil peger automatisk på standardprofilen (OpenRouter, ellers den eneste profil med en nøgle), også nye stole og stole fra ældre borde. Det nye stolepanel har standardprofilen og dens model valgt på forhånd, så en ny stol kan gemmes uden at sætte API op. Rører ikke en stol med egen nøgle, en lokal model (Anden adresse) eller en anden udbyders model.</li>
+<li><strong>Tredje øje beder selv om nøglen, hvor den skal bruges.</strong> Mangler Tredje øje en nøgle, står der et felt øverst i Tredje øje: indsæt din OpenRouter-nøgle og tryk <em>Gem og tjek nøglen</em>. Den tjekkes mod OpenRouter (intet sendes), gemmes som standardprofil, og så virker både Tredje øje og alle stole. Nøgletrinnet i velkomsten siger nu, at den samme nøgle bruges af alle stole og af Tredje øje.</li>
+</ul>
 <h4 id="about-0-41-0-2026-11-09"><a class="anchor" href="#about-0-41-0-2026-11-09" aria-hidden="true">#</a>[0.41.0] – 2026-11-09</h4>
 <p><strong>Ændret</strong></p>
 <ul>
@@ -1911,15 +1909,7 @@ sudo cp /opt/rundbordet/share/rundbordet.desktop /usr/share/applications/
 <li><strong>Ny stol uden rolleknapper på Enkel og Mere.</strong> Panelet viser kun <em>+ Ny stol</em> og en afkrydsning <em>Skriver til OUT</em> (stolen gemmer sit svar som en fil i OUT). Rolleknapperne er kun under Avanceret.</li>
 <li><strong>Pilene viser kun den planlagte rækkefølge.</strong> En overdragelse, der gik et andet sted hen end rækkefølgen siger, tegnes som en mærket genvej (prik-streg-linje med navnene som tip), så en stol ikke ser ud til at have flere planlagte pile. En lille forklaring nederst til venstre på bordet viser, hvad linjerne betyder.</li>
 <li><strong>«+» ved bordvælgeren åbner valgene direkte</strong> (opgavekort, <em>Jeg har en anden opgave …</em>, <em>Hurtig start</em> og tomt bord) i stedet for en rullemenu. Der oprettes intet bord, før du selv har valgt og startet.</li>
-<li><strong>Dit gemte arbejde og din licens skrives nu sikkert.</strong> Opsætningen og licensfilen skrives først til en midlertidig fil og flyttes så på plads, så en afbrudt skrivning ikke kan ødelægge den eneste gyldige fil. En ulæselig fil bliver ikke længere til sikkerhedskopi oven på den gode kopi. Kan opsætningen ikke læses ved start, bruger programmet den forrige gemte version, eller starter tomt, og <strong>siger det med en besked</strong> og stedet for kopien af den ulæselige fil, i stedet for lydløst at se ud, som om dit arbejde er væk.</li>
-<li><strong>Licens og opdatering:</strong> umulige datoer (fx 30. februar) afvises, en installer til en forkert arkitektur vælges aldrig (Linux x64 er med), og en fejl ved gemning, fjernelse eller download låser ikke knapperne og sletter ikke den indtastede licenstekst.</li>
-<li><strong>Tredje øje er tydeligere.</strong> Første gang forklarer et lille kort, hvad Tredje øje er og at du altid vælger. Bagefter er det flydende øje, når intet kræver dig, grønt og blinker blidt (ikke ved <em>reducer bevægelse</em>), og et tryk åbner selve Tredje øje i stedet for Overblik. Kræver noget dig, skifter øjet farve og får sin markering som før.</li>
-<li><strong>Stolens ikoner (✓ ? ⏸, 🧠 ♥ 👣, ● ▤ ✂) har en tekst ved hover og tastaturfokus</strong> med det samme, i stedet for browserens forsinkede tip, som ikke altid kom frem (fx ved fødderne og saksen).</li>
-<li><strong>Ingen åbne behov</strong> vises som et lille ✓ med teksten som tip, der forsvinder af sig selv, i stedet for et kort oven på knapperne.</li>
-<li><strong>Tekstfeltet i startguiden</strong> har nu fuld bredde og en rimelig højde, så opgaven er let at skrive og læse.</li>
-<li><strong>Begrebslisten på stolen vises kun under Avanceret.</strong> På Enkel og Mere har en ny stol kun et navn (feltet hedder <em>Navn</em>, og uden navn gemmes intet); en eksisterende stol beholder sit begreb. Før fik en ny stol stiltiende begrebet <em>Builder</em>.</li>
 </ul>
-<p><strong>Tilføjet</strong></p>
 <h3 id="about-ophavsret"><a class="anchor" href="#about-ophavsret" aria-hidden="true">#</a>Ophavsret</h3>
 <p>© 2026 eterapeut.dk. Se <code>LICENSE</code> og <code>THIRD-PARTY-NOTICES.md</code> for licens og tredjepartskomponenter (bl.a. skrifttyperne Fraunces, Work Sans og JetBrains Mono, som følger med under SIL Open Font License).</p>
 

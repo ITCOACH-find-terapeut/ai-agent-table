@@ -400,12 +400,13 @@ button.btn-danger{color:var(--danger);border-color:var(--danger);background:var(
 .data-hub > .panel{margin-top:0;border-top-left-radius:0;box-shadow:0 1px 4px rgba(0,0,0,.08);}
 /* Hukommelse, Målinger og Bordfil har deres ✕ øverst; den nederste Luk-knap er overflødig i fanerne (den virker stadig, hvis ✕ eller et klik udenfor bruger den). Beskyttelse har ingen ✕ (den lukkes ikke af et klik udenfor), så dens Luk-knap bliver. */
 #closeMemoryBtn,#closeMetricsBtn,#closeTableBtn{display:none;}
-/* Visningsniveau: Enkel viser kun det nødvendige, Mere tilføjer værktøjerne, Avanceret viser alt. Intet er fjernet. */
-body[data-ui-level="simple"] [data-level="more"],
-body[data-ui-level="simple"] [data-level="advanced"],
-body[data-ui-level="more"] [data-level="advanced"]{display:none !important;}
-.ui-level-wrap{display:inline-flex;align-items:center;}
-.ui-level-select{font-family:var(--font-mono);font-size:11px;background:var(--surface);border:1px solid var(--surface-line);border-radius:6px;padding:.15rem .3rem;color:var(--ink-secondary);}
+/* Ingen visningsniveauer: alt er med, og det, der sjældnere bruges, ligger i en sammenfoldet gruppe lige dér, hvor det hører hjemme. */
+.more-group{margin:.2rem 0 1rem;border-top:1px solid var(--surface-line);padding-top:.5rem;}
+.more-group > summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:13px;padding:.2rem 0;}
+.more-group[open] > summary{margin-bottom:.6rem;}
+.more-group > .field:last-child{margin-bottom:0;}
+.more-inline{display:inline-block;font-size:12.5px;}
+.more-inline > summary{cursor:pointer;color:var(--accent);}
 /* Næste skridt-kortet under det seneste svar: ét kort, én handling, resten bag "Flere forslag" */
 .nextcard{margin:var(--space-2) 0;padding:var(--space-3);background:var(--surface);border:1px solid var(--accent);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);}
 .nextcard-eyebrow{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin:0 0 6px;}
@@ -960,24 +961,19 @@ body.drag-files .io-in .io-drop{display:block;}
       <button type="button" class="inbox-btn" id="overviewBtn" aria-haspopup="menu" aria-expanded="false" aria-controls="overviewMenu" data-i18n-title="overviewTitle"><span data-i18n="overviewBtn"></span><span id="overviewBadge" class="badge" hidden></span></button>
       <div class="overview-menu" id="overviewMenu" role="menu" hidden>
         <button type="button" class="overview-row" role="menuitem" data-ov="needs"><span class="ov-main"><span class="ov-title" data-i18n="overviewNeeds"></span><span class="ov-sub" id="ovSubNeeds"></span></span><span class="badge ov-mark" id="ovMarkNeeds" hidden></span></button>
-        <button type="button" class="overview-row" role="menuitem" data-ov="reflect" data-level="more"><span class="ov-main"><span class="ov-title" data-i18n="overviewReflect"></span><span class="ov-sub" data-i18n="overviewReflectSub"></span></span></button>
-        <button type="button" class="overview-row" role="menuitem" data-ov="diff" data-level="more"><span class="ov-main"><span class="ov-title" data-i18n="overviewDiff"></span><span class="ov-sub" data-i18n="overviewDiffSub"></span></span></button>
+        <button type="button" class="overview-row" role="menuitem" data-ov="reflect"><span class="ov-main"><span class="ov-title" data-i18n="overviewReflect"></span><span class="ov-sub" data-i18n="overviewReflectSub"></span></span></button>
+        <button type="button" class="overview-row" role="menuitem" data-ov="diff"><span class="ov-main"><span class="ov-title" data-i18n="overviewDiff"></span><span class="ov-sub" data-i18n="overviewDiffSub"></span></span></button>
         <button type="button" class="overview-row" role="menuitem" data-ov="spend"><span class="ov-main"><span class="ov-title" data-i18n="overviewSpend"></span><span class="ov-sub" id="ovSubSpend"></span></span></button>
         <button type="button" class="overview-row" role="menuitem" data-ov="stuck"><span class="ov-main"><span class="ov-title" data-i18n="overviewStuck"></span><span class="ov-sub" data-i18n="overviewStuckSub"></span></span></button>
       </div>
       <button type="button" class="inbox-btn" id="openNeedsToggleBtn" hidden></button>
       <div class="open-needs-panel" id="openNeedsPanel" hidden></div>
     </div>
-    <button type="button" class="inbox-btn" id="reflectBtn" hidden data-i18n="reflectBtn" data-i18n-title="reflectBtnTitle" data-level="more"></button>
-    <button type="button" class="inbox-btn" id="diffBtn" hidden data-i18n="diffBtn" data-i18n-title="diffBtnTitle" data-level="more"></button>
+    <button type="button" class="inbox-btn" id="reflectBtn" hidden data-i18n="reflectBtn" data-i18n-title="reflectBtnTitle"></button>
+    <button type="button" class="inbox-btn" id="diffBtn" hidden data-i18n="diffBtn" data-i18n-title="diffBtnTitle"></button>
     <button type="button" class="inbox-btn" id="openProposalsBtn" hidden><span data-i18n="openProposalsBtn"></span><span id="proposalBadge" class="badge" hidden></span></button>
     <button type="button" class="spend-btn" id="boardSpend"></button>
     <div class="spend-popover" id="spendPopover" hidden></div>
-    <label class="ui-level-wrap"><span class="sr-only" data-i18n="uiLevelLabel"></span><select id="uiLevelSelect" class="ui-level-select" data-i18n-title="uiLevelTitle">
-      <option value="simple" data-i18n="uiLevelSimple"></option>
-      <option value="more" data-i18n="uiLevelMore"></option>
-      <option value="advanced" data-i18n="uiLevelAdvanced"></option>
-    </select></label>
     <button type="button" class="inbox-btn" id="stuckBtn" data-i18n="stuckBtn" data-i18n-title="stuckBtnTitle"></button>
     <button type="button" class="help-btn" id="openHelpBtn" data-i18n-title="helpBtnTitle" data-i18n-aria-label="helpBtnTitle">?</button>
     <div class="project-menu-wrap">
@@ -1038,7 +1034,11 @@ body.drag-files .io-in .io-drop{display:block;}
     <p class="help-more"><a href="#" class="help-link" data-help="roles" data-i18n="helpReadMore"></a></p>
     <p class="note" id="addSeatDesc" data-i18n="addSeatPanelDesc"></p>
     <div id="roleGroups"></div>
-    <div class="field" id="addSeatOutField" hidden>
+    <details class="more-group" id="addSeatMoreDetails">
+      <summary data-i18n="addSeatMoreRoles"></summary>
+      <div id="roleGroupsMore"></div>
+    </details>
+    <div class="field" id="addSeatOutField">
       <label class="check-row"><input type="checkbox" id="addSeatOutCheck"> <span data-i18n="addSeatOutLabel"></span></label>
       <p class="note" data-i18n="addSeatOutHint"></p>
     </div>
@@ -1269,10 +1269,10 @@ body.drag-files .io-in .io-drop{display:block;}
 
   <div class="data-hub" id="dataHub" hidden>
     <div class="data-tabs" id="dataTabs" role="tablist" data-i18n-aria-label="dataHubLabel">
-      <button type="button" class="data-tab" role="tab" id="dataTabMemory" data-panel="memoryPanel" data-open="openMemoryBtn" data-level="more" data-i18n="memoryBtn"></button>
+      <button type="button" class="data-tab" role="tab" id="dataTabMemory" data-panel="memoryPanel" data-open="openMemoryBtn" data-i18n="memoryBtn"></button>
       <button type="button" class="data-tab" role="tab" id="dataTabShield" data-panel="shieldPanel" data-open="openShieldBtn" data-i18n="shieldBtn"></button>
-      <button type="button" class="data-tab" role="tab" id="dataTabMetrics" data-panel="metricsPanel" data-open="openMetricsBtn" data-level="advanced" data-i18n="metricsBtn"></button>
-      <button type="button" class="data-tab" role="tab" id="dataTabTable" data-panel="tablePanel" data-open="openTableBtn" data-level="advanced" data-i18n="tableBtn"></button>
+      <button type="button" class="data-tab" role="tab" id="dataTabMetrics" data-panel="metricsPanel" data-open="openMetricsBtn" data-i18n="metricsBtn"></button>
+      <button type="button" class="data-tab" role="tab" id="dataTabTable" data-panel="tablePanel" data-open="openTableBtn" data-i18n="tableBtn"></button>
     </div>
     <div class="panel" id="memoryPanel" hidden>
       <h2 data-i18n="memoryTitle"></h2>
@@ -1417,6 +1417,16 @@ body.drag-files .io-in .io-drop{display:block;}
     </div>
     <div class="te-obs" id="talkObservations"></div>
     <p class="thirdeye-with" id="talkWith"></p>
+    <div class="key-explain" id="talkKeyBox" hidden>
+      <strong id="talkKeyLabel" data-i18n="talkKeyTitle"></strong>
+      <p class="note" data-i18n="talkKeyText"></p>
+      <div class="row">
+        <input type="password" id="talkKeyInput" autocomplete="off" spellcheck="false" data-i18n-placeholder="quickStartKeyPlaceholder" aria-labelledby="talkKeyLabel">
+        <button type="button" class="btn btn-primary" id="talkKeySaveBtn" data-i18n="talkKeySaveBtn"></button>
+      </div>
+      <p class="note"><a href="#" id="talkKeyLink" data-i18n="quickStartGetKey"></a></p>
+      <p class="note" id="talkKeyStatus" role="status"></p>
+    </div>
     <div class="talk-thread" id="talkThread" aria-live="polite"></div>
     <p class="note" id="talkError" hidden></p>
     <div class="row">
@@ -1584,7 +1594,6 @@ body.drag-files .io-in .io-drop{display:block;}
         </div>
         <div class="guide-row"><label for="guideTemplateSelect" data-i18n="guideRowTemplate"></label><select id="guideTemplateSelect" class="locale-select"></select><p class="note" id="guideWhyTemplate"></p></div>
         <div class="guide-row"><label for="guidePresetSelect" data-i18n="guideRowPreset"></label><select id="guidePresetSelect" class="locale-select"></select><p class="note" id="guideWhyPreset"></p></div>
-        <div class="guide-row"><label for="guideLevelSelect" data-i18n="guideRowLevel"></label><select id="guideLevelSelect" class="locale-select"></select><p class="note" id="guideWhyLevel"></p></div>
         <p class="note" id="guideSource"></p>
         <div class="row"><button type="button" class="btn" id="guideAskBtn" data-i18n="guideAskBtn"></button></div>
         <div id="guideAskPreview" class="guide-preview" hidden>
@@ -1687,13 +1696,16 @@ body.drag-files .io-in .io-drop{display:block;}
       <div class="nextcard" id="nextCard" hidden></div>
       <div class="log-foot">
         <button type="button" class="btn log-view-toggle-btn" id="logViewToggleBtn"></button>
-        <span class="thirdeye-controls" data-level="more">
+        <span class="thirdeye-controls">
           <button type="button" class="btn" id="thirdEyeBtn" data-i18n="thirdEyeBtn" data-i18n-title="thirdEyeBtnTitle"></button>
-          <span class="thirdeye-with" data-i18n="thirdEyeWith"></span>
-          <select class="thirdeye-select" id="thirdEyeSeatSelect" data-i18n-title="thirdEyeSelectTitle"></select>
+          <details class="more-inline">
+            <summary data-i18n="thirdEyeModelMore"></summary>
+            <span class="thirdeye-with" data-i18n="thirdEyeWith"></span>
+            <select class="thirdeye-select" id="thirdEyeSeatSelect" data-i18n-title="thirdEyeSelectTitle"></select>
+          </details>
         </span>
       </div>
-      <p class="thirdeye-explain" data-i18n="thirdEyeExplainLine" data-level="more"></p> <a href="#" class="help-link" data-help="third-eye" data-i18n="helpReadMore"></a>
+      <p class="thirdeye-explain" data-i18n="thirdEyeExplainLine"></p> <a href="#" class="help-link" data-help="third-eye" data-i18n="helpReadMore"></a>
     </div>
   </div>
 
@@ -1718,7 +1730,7 @@ body.drag-files .io-in .io-drop{display:block;}
     </div>
     <div class="ask-tools">
       <button type="button" class="btn tool-btn variant-toggle-btn" id="openResultBtn" data-i18n="resultBtn" hidden></button>
-      <button type="button" class="btn tool-btn variant-toggle-btn" id="variantToggleBtn" data-i18n="variantToggleBtn" data-level="advanced"></button>
+      <button type="button" class="btn tool-btn variant-toggle-btn" id="variantToggleBtn" data-i18n="variantToggleBtn"></button>
       <button type="button" class="btn tool-btn variant-toggle-btn shield-chip" id="shieldBtn" aria-pressed="false" data-i18n="shieldChip"></button>
       <span class="shield-state" id="shieldStateNote"></span>
       <a href="#" class="help-link help-circle" data-help="run" data-i18n-title="helpBtnTitle" data-i18n-aria-label="helpBtnTitle">?</a>
@@ -1788,7 +1800,14 @@ body.drag-files .io-in .io-drop{display:block;}
         <div class="view-switch" id="tableViewSwitch" role="group" data-i18n-aria-label="tableViewLabel"></div>
         <p class="note" data-i18n="settingsViewHint"></p>
       </div>
-      <div class="field" data-level="more">
+      <div class="field">
+        <label for="maxRunCostInput" data-i18n="maxRunCostLabel"></label>
+        <input type="number" id="maxRunCostInput" min="0" step="0.01" inputmode="decimal" data-i18n-placeholder="maxRunCostPlaceholder">
+        <p class="note" data-i18n="maxRunCostHint"></p>
+      </div>
+      <details class="more-group" id="boardRunDetails">
+      <summary data-i18n="settingsRunMore"></summary>
+      <div class="field">
         <label for="handoffModeSelect" data-i18n="handoffModeLabel"></label>
         <select id="handoffModeSelect">
           <option value="full" data-i18n="handoffModeFull"></option>
@@ -1803,43 +1822,41 @@ body.drag-files .io-in .io-drop{display:block;}
         <label class="check-row" id="autopilotRow"><input type="checkbox" id="autopilotCheckbox"> <span data-i18n="autopilotLabel"></span></label>
         <p class="note" id="routingModeHint" data-i18n="routingModeHint"></p>
       </div>
-      <div class="field" id="evidenceField" data-level="advanced" hidden>
+      <div class="field" id="evidenceField" hidden>
         <label class="check-row"><input type="checkbox" id="requireEvidenceCheckbox"> <span data-i18n="requireEvidenceLabel"></span> <span class="kind-tag" data-kind="rule" data-i18n="kindRule" data-i18n-title="kindRuleTitle"></span></label>
         <p class="note" data-i18n="requireEvidenceHint"></p>
       </div>
-      <div class="field" id="roundsField" data-level="advanced">
+      <div class="field" id="roundsField">
         <label for="roundsMaxInput" data-i18n="roundsLabel"></label>
         <input type="number" id="roundsMaxInput" min="1" max="10" step="1" inputmode="numeric">
         <label class="check-row"><input type="checkbox" id="roundsAutoCheckbox"> <span data-i18n="roundsAutoLabel"></span></label>
         <p class="note" data-i18n="roundsHint"></p>
       </div>
-      <div class="field" data-level="more">
+      <div class="field">
         <label class="check-row"><input type="checkbox" id="mandateGateCheckbox"> <span data-i18n="mandateGateLabel"></span> <span class="kind-tag" data-kind="rule" data-i18n="kindRule" data-i18n-title="kindRuleTitle"></span></label>
         <p class="note" data-i18n="mandateGateHint"></p>
       </div>
-      <div class="field" data-level="more">
+      <div class="field">
         <label class="check-row"><input type="checkbox" id="ownTakeFirstCheckbox"> <span data-i18n="ownTakeFirstLabel"></span> <span class="kind-tag" data-kind="rule" data-i18n="kindRule" data-i18n-title="kindRuleTitle"></span></label>
         <p class="note" data-i18n="ownTakeFirstHint"></p>
       </div>
-      <div class="field" data-level="more">
+      <div class="field">
         <label class="check-row"><input type="checkbox" id="envelopePreviewCheckbox"> <span data-i18n="envelopePreviewLabel"></span> <span class="kind-tag" data-kind="rule" data-i18n="kindRule" data-i18n-title="kindRuleTitle"></span></label>
         <p class="note" data-i18n="envelopePreviewHint"></p>
       </div>
-      <div class="field" data-level="advanced">
+      <div class="field">
         <label class="check-row"><input type="checkbox" id="freshRunsCheckbox"> <span data-i18n="freshRunsLabel"></span></label>
         <p class="note" data-i18n="freshRunsHint"></p>
       </div>
-      <div class="field" id="strategyField" data-level="advanced">
+      <div class="field" id="strategyField">
         <label for="strategySelect" data-i18n="strategyLabel"></label>
         <select id="strategySelect"></select>
         <p class="note" data-i18n="strategyHint"></p>
         <div class="row"><button type="button" class="btn" id="openStrategyBtn" data-i18n="strategyOpenBtn"></button></div>
       </div>
-      <div class="field">
-        <label for="maxRunCostInput" data-i18n="maxRunCostLabel"></label>
-        <input type="number" id="maxRunCostInput" min="0" step="0.01" inputmode="decimal" data-i18n-placeholder="maxRunCostPlaceholder">
-        <p class="note" data-i18n="maxRunCostHint"></p>
-      </div>
+      </details>
+      <details class="more-group" id="boardGithubDetails">
+      <summary data-i18n="settingsGithubMore"></summary>
       <div class="field">
         <div class="field-label-row">
           <label for="githubInput" data-i18n="githubRepoLabel"></label>
@@ -1856,6 +1873,7 @@ body.drag-files .io-in .io-drop{display:block;}
         <input type="password" id="githubTokenInput" data-i18n-placeholder="githubTokenPlaceholder">
         <p class="note" data-i18n="githubTokenHint"></p>
       </div>
+      </details>
       <div class="row">
         <button type="button" class="btn btn-primary" id="saveBoardBtn" data-i18n="save"></button>
         <button type="button" class="btn" id="cancelBoardBtn" data-i18n="cancel"></button>
@@ -1863,11 +1881,11 @@ body.drag-files .io-in .io-drop{display:block;}
 
       <h3 class="eyebrow settings-heading" data-i18n="settingsDataHeading"></h3>
       <div class="settings-tools">
-        <button type="button" class="btn" id="openMemoryBtn" data-i18n="memoryBtn" data-level="more"></button>
+        <button type="button" class="btn" id="openMemoryBtn" data-i18n="memoryBtn"></button>
         <button type="button" class="btn" id="openShieldBtn" data-i18n="shieldBtn"></button>
-        <button type="button" class="btn" id="openMetricsBtn" data-i18n="metricsBtn" data-level="advanced"></button>
-        <button type="button" class="btn" id="openTableBtn" data-i18n="tableBtn" data-level="advanced"></button>
-        <button type="button" class="btn" id="exportConvoBtn" data-i18n="exportConvoBtn" data-i18n-title="exportConvoTitle" data-level="advanced"></button>
+        <button type="button" class="btn" id="openMetricsBtn" data-i18n="metricsBtn"></button>
+        <button type="button" class="btn" id="openTableBtn" data-i18n="tableBtn"></button>
+        <button type="button" class="btn" id="exportConvoBtn" data-i18n="exportConvoBtn" data-i18n-title="exportConvoTitle"></button>
       </div>
       <p class="note" id="exportConvoStatus"></p>
       <div class="field" id="inboxField">
@@ -1914,7 +1932,9 @@ body.drag-files .io-in .io-drop{display:block;}
           <option value="en">English</option>
         </select>
       </div>
-      <div class="field" data-level="advanced">
+      <details class="more-group" id="lookMoreDetails">
+      <summary data-i18n="settingsLookMore"></summary>
+      <div class="field">
         <label for="waitStyleSelect" data-i18n="waitStyleLabel"></label>
         <select id="waitStyleSelect" class="locale-select">
           <option value="wash" data-i18n="waitStyleWash"></option>
@@ -1925,7 +1945,7 @@ body.drag-files .io-in .io-drop{display:block;}
         </select>
         <p class="note" data-i18n="waitStyleHint"></p>
       </div>
-      <div class="field" data-level="more">
+      <div class="field">
         <label for="eyeFloatSelect" data-i18n="eyeFloatLabel"></label>
         <select id="eyeFloatSelect" class="locale-select">
           <option value="on" data-i18n="eyeFloatOn"></option>
@@ -1933,11 +1953,12 @@ body.drag-files .io-in .io-drop{display:block;}
         </select>
         <p class="note" data-i18n="eyeFloatHint"></p>
       </div>
+      </details>
       <h3 class="eyebrow settings-heading" data-i18n="settingsToolsHeading"></h3>
       <div class="settings-tools">
         <button type="button" class="btn" id="openModelsBtn" data-i18n="openModelsBtn"></button>
-        <button type="button" class="btn" id="openPricesBtn" data-i18n="openPricesBtn" data-level="advanced"></button>
-        <button type="button" class="btn" id="openVoiceBtn" data-i18n="voiceBtn" data-level="more"></button>
+        <button type="button" class="btn" id="openPricesBtn" data-i18n="openPricesBtn"></button>
+        <button type="button" class="btn" id="openVoiceBtn" data-i18n="voiceBtn"></button>
         <button type="button" class="btn" id="openManualBtn" data-i18n="helpMenuBtn"></button>
       </div>
       <h3 class="eyebrow settings-heading" data-i18n="settingsBoardsHeading"></h3>
@@ -2008,10 +2029,14 @@ body.drag-files .io-in .io-drop{display:block;}
   <div class="panel side-panel" id="seatPanel" hidden>
     <h2 id="seatPanelTitle" data-i18n="seatPanelTitleNew"></h2>
     <p class="help-more"><a href="#" class="help-link" data-help="roles" data-i18n="helpReadMore"></a></p>
-    <div class="field" data-level="advanced">
-      <label for="roleSelect" data-i18n="roleLabel"></label>
-      <select id="roleSelect"></select>
-    </div>
+    <details class="more-group" id="roleConceptDetails">
+      <summary data-i18n="roleConceptMore"></summary>
+      <div class="field">
+        <label for="roleSelect" data-i18n="roleLabel"></label>
+        <select id="roleSelect"></select>
+      </div>
+      <p class="note" data-i18n="roleNameHint"></p>
+    </details>
     <div class="field seat-order-field" id="seatOrderField" hidden>
       <label data-i18n="seatOrderLabel"></label>
       <div class="seat-order-row">
@@ -2024,7 +2049,6 @@ body.drag-files .io-in .io-drop{display:block;}
     <div class="field" id="roleCustomField">
       <label for="roleCustomInput" id="roleCustomLabel" data-i18n="roleCustomLabel"></label>
       <input type="text" id="roleCustomInput" data-i18n-placeholder="roleCustomPlaceholder" maxlength="40" autocomplete="off">
-      <p class="note" data-level="advanced" data-i18n="roleNameHint"></p>
       <p class="error-text" id="roleError" hidden></p>
       <div class="row"><button type="button" class="btn btn-small" id="roleSaveLibBtn" data-i18n="roleSaveLibBtn"></button></div>
       <p class="note" id="roleSaveLibNote" role="status"></p>
@@ -2145,19 +2169,19 @@ body.drag-files .io-in .io-drop{display:block;}
       </details>
       <p class="note" data-i18n="iconsHint"></p>
     </section>
-    <details class="seat-adv" id="seatChangesDetails" data-level="advanced">
+    <details class="seat-adv" id="seatChangesDetails">
       <summary data-i18n="changesTitle"></summary>
       <p class="note" data-i18n="changesIntro"></p>
       <h4 class="seat-sub-h" data-i18n="additionsTitle"></h4>
       <p class="note" data-i18n="additionsDesc"></p>
       <div id="seatAdditionsList"></div>
-      <details class="seat-history" id="seatHistoryDetails" hidden data-level="advanced">
+      <details class="seat-history" id="seatHistoryDetails" hidden>
         <summary data-i18n="histTitle"></summary>
         <p class="note" data-i18n="histDesc"></p>
         <div id="seatHistoryList"></div>
       </details>
     </details>
-    <details class="seat-adv dials-details" data-level="advanced">
+    <details class="seat-adv dials-details">
       <summary data-i18n="fullInstructionTitle"></summary>
       <p class="note" data-i18n="fullInstructionDesc"></p>
       <pre class="instruction-preview" id="instructionPreview"></pre>
@@ -2199,7 +2223,6 @@ body.drag-files .io-in .io-drop{display:block;}
 <script src="lib/models.js"></script>
 <script src="lib/diffview.js"></script>
 <script src="lib/proposaltext.js"></script>
-<script src="lib/uilevel.js"></script>
 <script src="lib/updatecheck.js"></script>
 <script src="lib/addons.js"></script>
 <script src="lib/convoexport.js"></script>
@@ -2266,7 +2289,6 @@ body.drag-files .io-in .io-drop{display:block;}
 <script src="renderer/34-reflection.js"></script>
 <script src="renderer/36-models.js"></script>
 <script src="renderer/35-diffview.js"></script>
-<script src="renderer/37-ui-level.js"></script>
 <script src="renderer/38-update.js"></script>
 <script src="renderer/39-data-hub.js"></script>
 <script src="renderer/40-addons.js"></script>

@@ -318,6 +318,14 @@
       document.getElementById("talkPanel").hidden = true;
     });
     document.getElementById("talkSendBtn").addEventListener("click", talkSubmit);
+    document.getElementById("talkKeySaveBtn").addEventListener("click", saveTalkKey);
+    document.getElementById("talkKeyInput").addEventListener("keydown", function (ev) {
+      if (ev.key === "Enter") saveTalkKey();
+    });
+    document.getElementById("talkKeyLink").addEventListener("click", function (ev) {
+      ev.preventDefault();
+      window.rundbord.openLink(PROVIDER_KEY_URL.openrouter);
+    });
     document.getElementById("talkClearBtn").addEventListener("click", talkClear);
     document.getElementById("talkInput").addEventListener("keydown", function (e) {
       if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
@@ -383,7 +391,7 @@
       });
     });
     document.getElementById("addCustomRoleBtn").addEventListener("click", function () {
-      var outChecked = currentUiLevel() !== "advanced" && document.getElementById("addSeatOutCheck").checked;
+      var outChecked = document.getElementById("addSeatOutCheck").checked;
       closeAddSeatPanel();
       openSeatPanel(null, outChecked ? "OUT Writer" : "__custom");
     });
@@ -407,7 +415,6 @@
     bindEnvelope();
     bindReflection();
     bindModels();
-    bindUiLevel();
     bindUpdate();
     bindDataHub();
     bindAddons();

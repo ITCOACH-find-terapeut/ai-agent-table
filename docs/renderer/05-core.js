@@ -52,7 +52,6 @@
     });
     var localeSelect = document.getElementById("localeSelect");
     if (localeSelect) localeSelect.value = store.locale === "en" ? "en" : "da";
-    if (typeof applyUiLevel === "function") applyUiLevel();
   }
 
   // Til Date#toLocaleString/-TimeString — ikke selve UI-teksten, kun

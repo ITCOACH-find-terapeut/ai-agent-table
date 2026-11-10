@@ -55,8 +55,39 @@
     return Object.assign({}, seat, { provider: p.provider, model: str(seat.model, 120) || p.model, baseUrl: p.baseUrl, apiKey: p.apiKey });
   }
 
+  // Standardprofilen: den, stole uden eget valg bruger. Først den, du har valgt (store.defaultModelId), ellers OpenRouter (én nøgle til mange modeller),
+  // ellers den eneste profil med en nøgle. Uden nøgle i profilen er der ingen standard. → profilen eller null
+  function defaultProfile(store) {
+    var list = normalize(store && store.models).filter(function (m) { return m.apiKey; });
+    var chosen = get(list, store && store.defaultModelId);
+    if (chosen) return chosen;
+    var openrouter = list.filter(function (m) { return m.provider === "openrouter"; })[0];
+    if (openrouter) return openrouter;
+    return list.length === 1 ? list[0] : null;
+  }
+
+  // En stol uden egen nøgle og uden valgt profil peger på standardprofilen, så man ikke skal sætte API på hver stol. Rører ikke en stol, der selv har en nøgle,
+  // en lokal model (Anden adresse), eller en model, som standardprofilens udbyder ikke kan køre (fx en stol, der har valgt en anden udbyders model). → antal stole
+  function linkToDefault(store) {
+    var def = defaultProfile(store);
+    var n = 0;
+    if (!def) return n;
+    Object.keys(store.boards || {}).forEach(function (bid) {
+      (store.boards[bid].seats || []).forEach(function (s) {
+        if (!s || s.modelId) return;
+        if (typeof s.apiKey === "string" && s.apiKey.trim()) return;
+        if (s.provider === "custom") return;
+        if (str(s.model, 120) && s.provider !== def.provider) return;
+        s.modelId = def.id;
+        n += 1;
+      });
+    });
+    return n;
+  }
+
   // Lægger profilerne over alle stole i alle borde (på stedet). Bruges, når data hentes.
   function applyToStore(store) {
+    linkToDefault(store);
     var models = normalize(store.models);
     Object.keys(store.boards || {}).forEach(function (bid) {
       var seats = store.boards[bid].seats || [];
@@ -208,5 +239,5 @@
       .filter(Boolean);
   }
 
-  return { PROVIDERS: PROVIDERS, normalize: normalize, get: get, overlay: overlay, applyToStore: applyToStore, stripForSave: stripForSave, detachAndRemove: detachAndRemove, usage: usage, upsert: upsert, ensureProfile: ensureProfile, migrateSeatKeys: migrateSeatKeys, missingApi: missingApi, profileName: profileName };
+  return { PROVIDERS: PROVIDERS, normalize: normalize, get: get, defaultProfile: defaultProfile, linkToDefault: linkToDefault, overlay: overlay, applyToStore: applyToStore, stripForSave: stripForSave, detachAndRemove: detachAndRemove, usage: usage, upsert: upsert, ensureProfile: ensureProfile, migrateSeatKeys: migrateSeatKeys, missingApi: missingApi, profileName: profileName };
 });

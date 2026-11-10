@@ -164,13 +164,53 @@
     box.innerHTML = html;
   }
 
+  // Har Tredje øje ingen nøgle, sættes den her: den samme OpenRouter-nøgle som stolene bruger, gemt én gang som standardprofil.
+  function saveTalkKey() {
+    var input = document.getElementById("talkKeyInput");
+    var status = document.getElementById("talkKeyStatus");
+    var key = input.value.trim();
+    if (!key) {
+      status.textContent = t("talkKeyMissing");
+      return;
+    }
+    var btn = document.getElementById("talkKeySaveBtn");
+    btn.disabled = true;
+    status.textContent = t("talkKeyChecking");
+    window.rundbord
+      .openrouterStarter(key)
+      .then(function (res) {
+        if (!res || !res.ok) {
+          status.textContent = (res && res.message) || t("unknownError");
+          return null;
+        }
+        return ensureDefaultOpenRouter(key, res.starter).then(function () {
+          input.value = "";
+          return window.rundbord.getStore().then(function (s) {
+            store = s;
+            render();
+            openTalkPanel();
+            document.getElementById("talkKeyStatus").textContent = "";
+            document.getElementById("talkWith").textContent = t("talkKeyOk") + " " + document.getElementById("talkWith").textContent;
+          });
+        });
+      })
+      .catch(function () {
+        status.textContent = t("unknownError");
+      })
+      .then(function () {
+        btn.disabled = false;
+      });
+  }
+
   function openTalkPanel() {
     ["settingsPanel", "seatPanel", "pricePanel", "turnPanel", "proposalsPanel", "addSeatPanel", "startConfirmPanel", "projectMenu", "metricsPanel", "ioPanel", "memoryPanel", "voicePanel", "shieldPanel", "tablePanel"].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.hidden = true;
     });
     var seat = thirdEyeSeat();
-    document.getElementById("talkWith").textContent = seat ? t("talkWith", { seat: seat.name, model: seat.model || "" }) : t("thirdEyeBtnTitleDisabled");
+    document.getElementById("talkWith").textContent = seat ? t("talkWith", { seat: seat.name, model: seat.model || "" }) : "";
+    document.getElementById("talkKeyBox").hidden = Boolean(seat);
+    document.getElementById("talkKeyStatus").textContent = "";
     document.getElementById("talkSendBtn").disabled = !seat;
     document.getElementById("talkReviewBtn").disabled = !seat;
     document.getElementById("talkError").hidden = true;

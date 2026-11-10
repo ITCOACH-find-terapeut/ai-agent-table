@@ -261,14 +261,14 @@
   function buildAddSeatPanel() {
     var wrap = document.getElementById("roleGroups");
     wrap.innerHTML = "";
-    // Under Avanceret vælges et begreb her. Ellers er en ny stol bare en stol med et navn; kun «Skriver til OUT» kan vælges. Dine egne roller fra biblioteket står altid her.
-    var advanced = currentUiLevel() === "advanced";
-    document.getElementById("addSeatDesc").textContent = t(advanced ? "addSeatPanelDesc" : "addSeatPanelDescSimple");
-    document.getElementById("addCustomRoleBtn").textContent = t(advanced ? "addCustomRoleBtn" : "addSeatNewBtn");
-    document.getElementById("addSeatOutField").hidden = advanced;
+    // En ny stol er først og fremmest en stol med et navn; «Skriver til OUT» kan vælges. Dine egne roller står her, og de færdige begreber ligger i en sammenfoldet gruppe.
+    document.getElementById("addSeatDesc").textContent = t("addSeatPanelDescSimple");
+    document.getElementById("addCustomRoleBtn").textContent = t("addSeatNewBtn");
     document.getElementById("addSeatOutCheck").checked = false;
+    var more = document.getElementById("roleGroupsMore");
+    more.innerHTML = "";
+    document.getElementById("addSeatMoreDetails").open = false;
     ROLE_CATALOG.forEach(function (section) {
-      if (!advanced) return;
       var group = document.createElement("div");
       group.className = "role-group";
       var heading = document.createElement("p");
@@ -289,7 +289,7 @@
         row.appendChild(btn);
       });
       group.appendChild(row);
-      wrap.appendChild(group);
+      more.appendChild(group);
     });
     var mine = (store && store.roles) || [];
     if (mine.length) {

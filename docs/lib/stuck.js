@@ -86,7 +86,7 @@
 
   // input: {
   //   now (ms),
-  //   app: { version, revision, platform, locale, uiLevel },
+  //   app: { version, revision, platform, locale },
   //   where: { panels: [id], dead: [id], running, inputUsable, frozen },
   //   board: { seats: [{ provider, model, hasKey }], messages, tasks, welcomeSeen },
   //   steps: [{ at (ms), kind: "click"|"open"|"close"|"change", id }],
@@ -106,7 +106,7 @@
     out.push("");
     out.push(line("Version", (app.version || "?") + (app.revision ? " (revision " + app.revision + ")" : "")));
     out.push(line("System", String(app.platform || "?")));
-    out.push(line("Sprog", String(app.locale || "?")) + " · " + line("Niveau", String(app.uiLevel || "?")));
+    out.push(line("Sprog", String(app.locale || "?")));
     out.push(line("Tidspunkt", new Date(now).toISOString()));
     out.push("");
     out.push("## Hvor var brugeren");

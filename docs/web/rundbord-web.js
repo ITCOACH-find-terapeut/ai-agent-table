@@ -49,7 +49,6 @@
     if (!s.boards[s.activeBoardId]) s.activeBoardId = Object.keys(s.boards)[0];
     if (!s.priceTable || typeof s.priceTable !== "object") s.priceTable = {};
     if (s.locale !== "da") s.locale = "en"; // webudgavens standardsprog er engelsk
-    s.uiLevel = window.RundbordUiLevel.normalize(s.uiLevel, "advanced"); // webudgaven viser som standard alt (demoen skal kunne vise det hele)
     if (THEMES.indexOf(s.theme) < 0) s.theme = "system";
     if (typeof s.elevenLabsKey !== "string") s.elevenLabsKey = "";
     s.models = window.RundbordModels.normalize(s.models);
@@ -444,11 +443,6 @@
       var s = load();
       s.theme = THEMES.indexOf(t) >= 0 ? t : "system";
       applyTheme(s.theme);
-      return Promise.resolve(save(s));
-    },
-    setUiLevel: function (level) {
-      var s = load();
-      s.uiLevel = window.RundbordUiLevel.normalize(level, "advanced");
       return Promise.resolve(save(s));
     },
     setEyeFloat: function (value) {

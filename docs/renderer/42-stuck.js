@@ -89,7 +89,6 @@
         revision: appInfo ? appInfo.revision : "",
         platform: appInfo ? appInfo.platform : "",
         locale: store ? store.locale : "",
-        uiLevel: typeof currentUiLevel === "function" ? currentUiLevel() : "",
       },
       where: snap.where,
       board: snap.board,

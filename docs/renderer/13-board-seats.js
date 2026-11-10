@@ -717,15 +717,18 @@
       applyLibraryRole(presetRoleName.slice(4));
     } else {
       // Begrebslisten vises kun under Avanceret. Uden den vælges intet begreb i det skjulte, så en ny stol får det navn, brugeren skriver (eller det begreb, en knap eller et forslag udtrykkeligt gav).
-      roleSelect.value = presetRoleName || (currentUiLevel() === "advanced" ? "Builder" : "__custom");
+      roleSelect.value = presetRoleName || "__custom";
       roleCustomInput.value = "";
     }
-    document.getElementById("roleCustomLabel").textContent = t(currentUiLevel() === "advanced" ? "roleCustomLabel" : "roleNameLabel");
+    document.getElementById("roleCustomLabel").textContent = t("roleNameLabel");
+    // Begrebet ligger i en sammenfoldet gruppe; den står åben, når stolen har et begreb (ikke bare et navn).
+    document.getElementById("roleConceptDetails").open = roleSelect.value !== "__custom";
     document.getElementById("roleError").hidden = true;
     document.getElementById("roleSaveLibNote").textContent = "";
     var keySeat = pendingNewSeat && pendingNewSeat.keyFromSeatId ? seatById(pendingNewSeat.keyFromSeatId) : null;
     // Nøglen ligger kun i en Modelprofil API. En ny stol foreslået af Tredje øje får samme profil som den stol, den lånte fra; findes der kun én profil, vælges den.
-    var profileId = seat ? seat.modelId : keySeat ? keySeat.modelId : modelProfiles().length === 1 ? modelProfiles()[0].id : "";
+    var defaultProfile = window.RundbordModels.defaultProfile(store);
+    var profileId = seat ? seat.modelId : keySeat ? keySeat.modelId : defaultProfile ? defaultProfile.id : modelProfiles().length === 1 ? modelProfiles()[0].id : "";
     fillSeatModelSelect(null, profileId);
     var chosen = seatModelProfile();
     document.getElementById("modelInput").value = seat ? seat.model : keySeat ? keySeat.model : chosen ? chosen.model || DEFAULT_MODEL[chosen.provider] || "" : "";
@@ -744,7 +747,7 @@
     document.getElementById("testResult").hidden = true;
     document.getElementById("deleteSeatBtn").hidden = !seat;
     document.getElementById("seatPanel").hidden = false;
-    if (!seat && (presetRoleName === "__custom" || currentUiLevel() !== "advanced")) {
+    if (!seat && (!presetRoleName || presetRoleName === "__custom")) {
       document.getElementById("roleCustomInput").focus();
     } else {
       document.getElementById("roleSelect").focus();
@@ -852,7 +855,7 @@
     var role = selectedRoleName();
     if (!role) {
       var roleErr = document.getElementById("roleError");
-      roleErr.textContent = t(currentUiLevel() === "advanced" ? "roleErrorMsg" : "roleErrorNameOnly");
+      roleErr.textContent = t("roleErrorNameOnly");
       roleErr.hidden = false;
       document.getElementById("roleCustomInput").focus();
       return;

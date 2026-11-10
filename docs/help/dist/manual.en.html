@@ -129,7 +129,7 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <body data-lang="en" data-other="manual.da.html" data-nohits="No chapters match.">
 <div class="shell">
 <aside class="sidebar" id="sidebar">
-  <div class="brand"><span class="brand-mark">◯</span><div><div class="brand-name">Rundbordet</div><div class="brand-sub">Version 0.41.0 · rev 005a873</div></div></div>
+  <div class="brand"><span class="brand-mark">◯</span><div><div class="brand-name">Rundbordet</div><div class="brand-sub">Version 0.42.0 · rev c852136</div></div></div>
   <input type="search" id="search" placeholder="Search the manual …" aria-label="Search the manual …">
   <nav aria-label="Contents"><ol class="toc" id="toc">
 <li><a href="#getting-started" data-ch="getting-started"><span class="toc-n">01</span>Getting started in five minutes</a></li>
@@ -192,7 +192,6 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <li><strong>How it goes:</strong> in plain words, what the table does (the table type&#39;s own description), how many seats are called, and what you get out of it. There are no more seats or calls than the table type requires.</li>
 <li><strong>Table:</strong> one of the table types (Learning, Decision, Facts, Letter, two seats for building, Scrum), chosen from the words in your task. If the app cannot see a particular type, it suggests <em>Learning</em>, because then you think first, and says that this is a starting point.</li>
 <li><strong>Thinking:</strong> <em>Quick</em>, <em>Thorough</em> or <em>Critical</em>, based on how important it is that the answer is right. The preset is laid on top of the table&#39;s own setup and never turns off anything the table has turned on. These are wishes to the model, not a guarantee.</li>
-<li><strong>View:</strong> <em>Simple</em>, <em>More</em> or <em>Advanced</em>, based on your experience and how much you want to steer. This is always decided by your own answers. You can switch at the top at any time.</li>
 </ul>
 <p><strong>You can change all three</strong> before anything is created; it then says <em>You chose this yourself</em>. The suggestion is made by fixed rules in the app, and <strong>nothing is sent anywhere in that part</strong>.</p>
 <p>If you want the Third Eye to read the task and adjust the table and thinking, press <em>Let the Third Eye read the task</em> (after you have checked the key and seen the models). You first see <strong>exactly what is sent</strong> (your task and a short list of the table types; your answers to the three questions are not sent), which model is used, and an <strong>estimate of the price</strong>. Only when you press <em>Send</em> is one request made. The answer is accepted only if it is one of the known choices; otherwise nothing changes. The request is included in the table&#39;s bill as the Third Eye&#39;s expense. The Third Eye never touches the view.</p>
@@ -204,7 +203,7 @@ mark.hit{background:var(--mark);border-radius:3px;}
 </ul>
 <h3 id="getting-started-how-to-do-it"><a class="anchor" href="#getting-started-how-to-do-it" aria-hidden="true">#</a>How to do it</h3>
 <ol>
-<li><strong>Add a seat.</strong> Click the dashed circle with <strong>+</strong> at the table. Under <em>Advanced</em> you pick a role, for example <em>Orchestrator</em>; otherwise press <em>+ New seat</em> and give the seat a name.</li>
+<li><strong>Add a seat.</strong> Click the dashed circle with <strong>+</strong> at the table. Press <em>+ New seat</em> and give the seat a name; to pick a ready-made concept (for example <em>Orchestrator</em>), open the group <em>Ready-made concepts</em>.</li>
 <li><strong>Choose an API model profile and a model.</strong> If you have no profile yet, set one up with provider and key (the button is in the seat panel). Then choose the model on the seat (type the name or click <em>Fetch models</em>).</li>
 <li><strong>Test.</strong> Click <em>Test API</em>. If you are told the connection works, key and model are fine.</li>
 <li><strong>Save.</strong> The seat takes its place at the table.</li>
@@ -363,7 +362,7 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <p>When you pick a role, the seat gets that name as its identity (&quot;You are Clarifier.&quot;). The role is <strong>not</strong> a ready-written personality; how the seat works is decided by the settings under <a href="#dials">Behaviour and icons</a>. Pick the role by what you want to use the seat for.</p>
 <h3 id="roles-concept-and-role-name"><a class="anchor" href="#roles-concept-and-role-name" aria-hidden="true">#</a>Concept and role name</h3>
 <p>The role in the list is the seat&#39;s <strong>concept</strong>. <em>Role name</em> is right below it and is empty by default; if you type a name there, it is used instead of the concept everywhere on the table (in the conversation, on the seat and in the recipient list). The concept still applies: a seat with the concept <em>OUT Writer</em> delivers to OUT, whatever it is called. Your own roles can be saved under ⚙ → <em>Whole app</em> → <em>Your roles</em> (see <a href="#settings">Settings</a>).</p>
-<p>The list of concepts, and the role buttons when you add a seat, are only shown in the <strong>Advanced</strong> view. In <strong>Simple</strong> and <strong>More</strong> you press <em>+ New seat</em> and give the seat a name; if the seat should save its answer as a file in OUT, tick <em>Writes to OUT</em> first. So you just give a new seat a name, and an existing seat keeps its concept. If you change the concept in Advanced, it appears in the seat&#39;s history (<em>Concept: Builder → Reviewer</em>) and you can roll it back.</p>
+<p>When you add a seat you press <em>+ New seat</em> and give the seat a name; the ready-made concepts are in the collapsed group <em>Ready-made concepts</em>, and on the seat itself in the group <em>Choose a concept</em>; if the seat should save its answer as a file in OUT, tick <em>Writes to OUT</em> first. So you just give a new seat a name, and an existing seat keeps its concept. If you change the concept in Advanced, it appears in the seat&#39;s history (<em>Concept: Builder → Reviewer</em>) and you can roll it back.</p>
 <h3 id="roles-starting-settings-for-roles"><a class="anchor" href="#roles-starting-settings-for-roles" aria-hidden="true">#</a>Starting settings for roles</h3>
 <p>A concept is otherwise just a name, but each concept can get <strong>starting settings</strong>: how thorough and critical the seat is (dials), own instructions, whether it is a checking seat, and whether it reads the IN folder. The app has suggestions for the most important roles (Orchestrator, Clarifier, Researcher, Builder, Tester, Reviewer, Documenter and OUT Writer).</p>
 <ul>
@@ -535,8 +534,8 @@ mark.hit{background:var(--mark);border-radius:3px;}
 </tbody></table>
 <p>The ready-made tables under <em>Templates</em> are set up by how much you take part (see <a href="#table">The table and the seats</a>). How much you actually took part you can see as numbers under ⚙ → <em>This table</em> → <em>Metrics</em> → <strong>Your participation</strong> (see <a href="#metrics">Metrics and handoff</a>).</p>
 <h3 id="participate-overview-one-place-for-what-needs-you"><a class="anchor" href="#participate-overview-one-place-for-what-needs-you" aria-hidden="true">#</a>Overview: one place for what needs you</h3>
-<p>At the top of the bar is <strong>Overview</strong>. Under the button, five things are gathered: <strong>Next steps</strong>, <strong>Look-back</strong>, <strong>Disagreements</strong>, <strong>Cost and prices</strong> and <strong>I&#39;m stuck</strong>. Each row opens what the earlier button opened. On <em>Simple</em>, Next steps, the cost and I&#39;m stuck are shown; <em>More</em> and <em>Advanced</em> add Look-back and Disagreements.</p>
-<p><strong>I&#39;m stuck</strong> also stays as a button of its own in the top bar at every level, so the safety net is always one click away.</p>
+<p>At the top of the bar is <strong>Overview</strong>. Under the button, five things are gathered: <strong>Next steps</strong>, <strong>Look-back</strong>, <strong>Disagreements</strong>, <strong>Cost and prices</strong> and <strong>I&#39;m stuck</strong>. Each row opens what the earlier button opened. </p>
+<p><strong>I&#39;m stuck</strong> also stays as a button of its own in the top bar so the safety net is always one click away.</p>
 <p>The number on the button is <strong>only what the app knows needs you</strong>: things only you can decide, and a run that is waiting for you. With no number, nothing needs you right now. The menu closes when you pick something, press Escape or click outside it.</p>
 <h3 id="participate-mandate-as-a-stop-run-to-the-end-or-take-part-along-the-way"><a class="anchor" href="#participate-mandate-as-a-stop-run-to-the-end-or-take-part-along-the-way" aria-hidden="true">#</a>Mandate as a stop: run to the end, or take part along the way</h3>
 <p>The mandate icon on each seat controls whether the table <strong>pauses</strong> after the seat. It applies when <strong>The mandate steers the run</strong> is switched on under ⚙ → <em>This table</em> (new tables have it on; existing tables are unchanged):</p>
@@ -743,7 +742,7 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <p>Replies where the seat asks <strong>you</strong> a question get the label <em>❓ Asking you</em>.</p>
 <h3 id="conversation-while-an-answer-is-on-its-way"><a class="anchor" href="#conversation-while-an-answer-is-on-its-way" aria-hidden="true">#</a>While an answer is on its way</h3>
 <p>When the table has sent a request to a model and the first word has not arrived yet, the seat&#39;s bubble shows a calm <strong>waiting layer</strong>: soft colours in the seat&#39;s colour with one word in the middle. The word is the <strong>seat&#39;s role</strong> (<em>Building</em>, <em>Reviewing</em>, <em>Writing</em> …), or <em>Checking</em> if the seat checks the result; a seat with its own name and no concept says <em>Answering</em>. The word never changes by itself: it only shows what the table knows. The layer disappears when the first word arrives, and it never shows while the ball is with you (for example when Protection waits for your choice).</p>
-<p>Under ⚙ → <em>Whole app</em> → <em>Waiting layer</em> (Advanced) you can choose the look: <strong>Colour wash</strong> (default), <strong>Pixel mosaic</strong>, <strong>Pixel swarm</strong>, <strong>Particles (3D)</strong> or <strong>Word only</strong>. If your system has <em>reduce motion</em> on, the layer stands still.</p>
+<p>Under ⚙ → <em>Whole app</em> → <em>Waiting layer</em> (under <em>More appearance options</em>) you can choose the look: <strong>Colour wash</strong> (default), <strong>Pixel mosaic</strong>, <strong>Pixel swarm</strong>, <strong>Particles (3D)</strong> or <strong>Word only</strong>. If your system has <em>reduce motion</em> on, the layer stands still.</p>
 <h3 id="conversation-export-the-conversation"><a class="anchor" href="#conversation-export-the-conversation" aria-hidden="true">#</a>Export the conversation</h3>
 <p>Under ⚙ → <em>This table</em> → <strong>Export conversation</strong> you save the whole conversation as <strong>one Markdown file</strong>, for example for documentation or an assignment. The file contains:</p>
 <ul>
@@ -995,7 +994,8 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <h3 id="third-eye-how-to-use-it"><a class="anchor" href="#third-eye-how-to-use-it" aria-hidden="true">#</a>How to use it</h3>
 <ol>
 <li>Click <em>🔎 Third eye</em> above the conversation.</li>
-<li>After <em>with</em>, choose which <strong>API model profile</strong> should give the Third eye its computing power. The Third eye has its own connection and does not need a seat: automatically it uses the OpenRouter profile (a cheap model by default), otherwise the first profile with a key. You can also choose a seat&#39;s model and key, as before. A chosen API model profile is remembered.</li>
+<li><strong>If you have no key yet</strong>, there is a field at the top of the Third eye: paste your OpenRouter key and press <em>Save and check the key</em>. It is the same key the seats use: it is checked with OpenRouter (no task is sent), stored encrypted as the default profile with a cheap model, and then both the Third eye and every seat without its own model work. You set it in one place only.</li>
+<li>The Third eye uses the default profile automatically. To use another, open <em>Choose a model for the Third eye</em> next to the button and pick an API model profile (or a seat&#39;s model and key). A choice is remembered.</li>
 <li>The assessment appears in the conversation, labelled &quot;assessed by&quot; with the chosen profile or seat and model.</li>
 </ol>
 <p>The Third eye&#39;s costs appear in <strong>Cost and prices</strong> as a line of their own, <em>Third Eye</em>, and are part of the table&#39;s total cost.</p>
@@ -1014,7 +1014,7 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <ul>
 <li>Preferably choose a different model from those working on the task; an independent assessment is worth more.</li>
 <li>It costs one call, and the longer the conversation, the more it fills in the call.</li>
-<li>The button is disabled if no seat has a saved API key.</li>
+<li>If you have no key, the Third eye asks for it in the panel itself (see above).</li>
 </ul>
 <h3 id="third-eye-observations-rules-no-model-calls"><a class="anchor" href="#third-eye-observations-rules-no-model-calls" aria-hidden="true">#</a>Observations (rules, no model calls)</h3>
 <p>Besides the assessment on request, the app itself watches the event log. The findings appear in <strong>📥 Next steps</strong>, under the heading <em>Observations</em>, and cost nothing because they are rules, not model calls. Each finding can be opened with <strong>Show evidence</strong>, which lists the events that triggered it, and hidden with <strong>Hide</strong>.</p>
@@ -1312,10 +1312,6 @@ Reviewer -&gt; Builder [on fail]
 <td>You checked for a new version (only the outcome: new, same, ahead, no access, no connection) and downloaded it (only whether it worked and whether the checksum matched)</td>
 </tr>
 <tr>
-<td><code>ui.level</code></td>
-<td>You changed the view (only the level: Simple, More or Advanced)</td>
-</tr>
-<tr>
 <td><code>proposal.rewritten</code></td>
 <td>A model was asked to phrase a suggestion as an instruction (only whether it worked, no text)</td>
 </tr>
@@ -1519,19 +1515,28 @@ Reviewer -&gt; Builder [on fail]
 <li><strong>Every run starts clean:</strong> the seats do not remember earlier runs.</li>
 </ul>
 <h3 id="settings-api-model-profiles-provider-and-key-in-one-place"><a class="anchor" href="#settings-api-model-profiles-provider-and-key-in-one-place" aria-hidden="true">#</a>API model profiles: provider and key in one place</h3>
-<p>Under ⚙ → <em>Whole app</em> → <strong>API model profiles …</strong> (shown at every level, Simple too) you set up provider and key <strong>once</strong>. Each seat picks a profile in its panel (<em>API model profile</em>) and chooses its own <strong>model</strong>. The key is never written on the seat.</p>
+<p>Under ⚙ → <em>Whole app</em> → <strong>API model profiles …</strong> you set up provider and key <strong>once</strong>. Each seat picks a profile in its panel (<em>API model profile</em>) and chooses its own <strong>model</strong>. The key is never written on the seat.</p>
 <ul>
-<li><strong>If you change the profile, all seats follow.</strong> Change the key in one place, and it applies to every seat that uses the profile. If you leave the key field empty when editing, the old key is kept. The profile&#39;s <em>default model</em> is optional and is only used by a seat that has no model of its own.</li>
-<li><strong>If an API is missing, the table does not start.</strong> Before a run it checks that every seat has a profile with a key and a model. Otherwise the app says what is missing and takes you to the seat or the profiles. A banner above the message field shows it all the time, and nothing is sent to any model until you press Start yourself.</li>
-<li><strong>From the seat panel</strong> you can set up a profile without losing what you typed there; the new profile is chosen afterwards.</li>
-<li><strong>The key lives only in the profile</strong>, encrypted on your computer, and the seat is saved without a key on disk. It is only sent to the provider.</li>
-<li><strong>Older seats:</strong> if a seat had its own key, it is moved to a profile the first time this version starts (one per provider and key, for example <em>OpenRouter</em>), and the seat points at it. The seat&#39;s model is kept, and a backup of the setup is made first (<code>rundbordet-config.json.pre-v4.bak</code> in the app&#39;s data folder).</li>
-<li><strong>If you delete a profile</strong>, the seats that used it keep their setup (provider, model and key) and no longer point at a profile. The first click on <em>Delete</em> asks for confirmation and says how many seats are affected.</li>
-<li>Table files save provider and model as before, never the key.</li>
+<li><p><strong>Default profile: the key is set in one place only.</strong> If you have an OpenRouter profile (Quick start and the welcome screen create it, and the Third eye can create it), it is used by every seat that has not chosen anything itself, by new seats and by the Third eye. So you do not set the key on each seat, and a new seat already has a model. Without an OpenRouter profile, the only profile with a key is used. You can always pick another profile on a seat.</p>
+</li>
+<li><p><strong>If you change the profile, all seats follow.</strong> Change the key in one place, and it applies to every seat that uses the profile. If you leave the key field empty when editing, the old key is kept. The profile&#39;s <em>default model</em> is optional and is only used by a seat that has no model of its own.</p>
+</li>
+<li><p><strong>If an API is missing, the table does not start.</strong> Before a run it checks that every seat has a profile with a key and a model. Otherwise the app says what is missing and takes you to the seat or the profiles. A banner above the message field shows it all the time, and nothing is sent to any model until you press Start yourself.</p>
+</li>
+<li><p><strong>From the seat panel</strong> you can set up a profile without losing what you typed there; the new profile is chosen afterwards.</p>
+</li>
+<li><p><strong>The key lives only in the profile</strong>, encrypted on your computer, and the seat is saved without a key on disk. It is only sent to the provider.</p>
+</li>
+<li><p><strong>Older seats:</strong> if a seat had its own key, it is moved to a profile the first time this version starts (one per provider and key, for example <em>OpenRouter</em>), and the seat points at it. The seat&#39;s model is kept, and a backup of the setup is made first (<code>rundbordet-config.json.pre-v4.bak</code> in the app&#39;s data folder).</p>
+</li>
+<li><p><strong>If you delete a profile</strong>, the seats that used it keep their setup (provider, model and key) and no longer point at a profile. The first click on <em>Delete</em> asks for confirmation and says how many seats are affected.</p>
+</li>
+<li><p>Table files save provider and model as before, never the key.</p>
+</li>
 </ul>
 <h3 id="settings-your-roles-concept-and-role-name"><a class="anchor" href="#settings-your-roles-concept-and-role-name" aria-hidden="true">#</a>Your roles: concept and role name</h3>
 <p>A seat has a <strong>concept</strong> (what it is, for example Builder or OUT Writer) and an optional <strong>role name</strong>. The role name is right below the concept in the seat panel and is <strong>empty by default</strong>; if you type one, it is used instead of the concept everywhere on the table. The concept still works: a seat with the concept <em>OUT Writer</em> delivers to OUT, whatever it is called.</p>
-<p>Under ⚙ → <em>Whole app</em> → <strong>Your roles</strong> you save your own roles (role name and concept) so you can choose them again on all seats and tables. They also appear as their own group, <em>Your roles</em>, in the role list and in the picker when you add a seat, and in the seat panel you can save the current role with <em>Save role in the library</em>. It is shown at every level.</p>
+<p>Under ⚙ → <em>Whole app</em> → <strong>Your roles</strong> you save your own roles (role name and concept) so you can choose them again on all seats and tables. They also appear as their own group, <em>Your roles</em>, in the role list and in the picker when you add a seat, and in the seat panel you can save the current role with <em>Save role in the library</em>.</p>
 <h3 id="settings-your-tables-rename-duplicate-backup-restore-and-delete"><a class="anchor" href="#settings-your-tables-rename-duplicate-backup-restore-and-delete" aria-hidden="true">#</a>Your tables: rename, duplicate, backup, restore and delete</h3>
 <p>Under ⚙ → <em>Whole app</em> → <strong>Your tables</strong> you see all your tables, with the number of seats, the number of messages and when each was last used. It is shown at every level.</p>
 <ul>
@@ -1541,31 +1546,17 @@ Reviewer -&gt; Builder [on fail]
 <li><strong>Duplicate</strong> makes a copy of the setup: seats, instructions, checks, rounds and API model profile. The copy has <strong>no conversation, no memory, no metrics and no GitHub access</strong>, and it becomes the open table. If the table is called <em>My table</em>, the copy is called <em>My table (copy)</em>.</li>
 <li><strong>Delete …</strong> removes a table for good, with its seats, conversation, metrics and memory. You must type the table&#39;s name to confirm, and <em>Save a backup first</em> is right there. Files in IN and OUT on disk are not touched. The last table cannot be deleted.</li>
 </ul>
-<h3 id="settings-view-simple-more-or-advanced"><a class="anchor" href="#settings-view-simple-more-or-advanced" aria-hidden="true">#</a>View: Simple, More or Advanced</h3>
-<p>The selector at the top right (next to the cost) controls <strong>how much is shown</strong>. Nothing is removed; it is only a different default.</p>
-<table>
-<thead>
-<tr>
-<th>Level</th>
-<th>What is shown</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>Simple</strong></td>
-<td>The conversation, the table, <strong>Next step</strong>, the cost, Protection, API model profiles, Your tables (backup and delete) and the settings for name, view, language and appearance. For you who just want to get going</td>
-</tr>
-<tr>
-<td><strong>More</strong></td>
-<td>Plus Look back, ⚖ Disagreements, Third Eye, Memory, Voice, the full conversation view and the settings for pauses, own take first, the envelope and who takes the next turn</td>
-</tr>
-<tr>
-<td><strong>Advanced</strong></td>
-<td>Everything, including dials, a seat&#39;s history, Price table, Measurements, Table file, export, variants, rounds, strategy and clean context</td>
-</tr>
-</tbody></table>
-<p>Pauses, checks, questions and other panels that open by themselves are shown <strong>at every level</strong>. If you have already used the app, it stands on <strong>Advanced</strong>, so nothing disappears when you update; only a brand-new installation starts on <strong>Simple</strong>. The choice applies to the whole app. The <code>ui.level</code> event has only the level.</p>
+<h3 id="settings-no-levels-everything-is-there-and-the-rarer-things-sit-in-groups"><a class="anchor" href="#settings-no-levels-everything-is-there-and-the-rarer-things-sit-in-groups" aria-hidden="true">#</a>No levels: everything is there, and the rarer things sit in groups</h3>
+<p>Rundbordet no longer has the views <em>Simple</em>, <em>More</em> and <em>Advanced</em>. Everything is there all the time, and what you use less often sits in a <strong>collapsed group right where it belongs</strong>: click the group&#39;s heading to open it.</p>
+<ul>
+<li><strong>Table settings:</strong> name, table view and cost limit are at the top. <em>More options for runs</em> (order, rounds, checks, strategy, clean context) and <em>Save to GitHub</em> are groups below. Memory, Protection, Measurements, Table file and export are buttons under <em>Table data</em>.</li>
+<li><strong>App settings:</strong> theme and language are at the top; <em>More appearance options</em> holds the waiting layer and the Third eye icon. API model profiles, Price table and Voice are buttons.</li>
+<li><strong>A seat:</strong> the name is at the top; <em>Choose a concept</em>, the seat&#39;s history and the dials are groups you can open.</li>
+<li><strong>Third eye:</strong> the button sits by the conversation; <em>Choose a model for the Third eye</em> is in a small group and is set automatically by default.</li>
+</ul>
+<p>Pauses, checks and questions always open by themselves when they occur.</p>
 <h3 id="settings-the-table-39-s-data-four-panels-as-tabs"><a class="anchor" href="#settings-the-table-39-s-data-four-panels-as-tabs" aria-hidden="true">#</a>The table&#39;s data: four panels as tabs</h3>
-<p><strong>Memory</strong>, <strong>Protection</strong>, <strong>Measurements</strong> and <strong>Table file</strong> open as <strong>tabs in one place</strong> instead of four separate windows. You open them as before (⚙ → <em>This table</em> → <em>The table&#39;s data</em>), and the tab bar above the panel lets you switch between them with a click or the arrow keys. Only one is open at a time. Each panel works as before and is closed with its ✕ (Protection with its Close button, since a click outside does not close it). In <strong>Simple</strong> only the Protection tab is shown, in <strong>More</strong> Memory as well, and in <strong>Advanced</strong> all four.</p>
+<p><strong>Memory</strong>, <strong>Protection</strong>, <strong>Measurements</strong> and <strong>Table file</strong> open as <strong>tabs in one place</strong> instead of four separate windows. You open them as before (⚙ → <em>This table</em> → <em>The table&#39;s data</em>), and the tab bar above the panel lets you switch between them with a click or the arrow keys. Only one is open at a time. Each panel works as before and is closed with its ✕ (Protection with its Close button, since a click outside does not close it).</p>
 <h3 id="settings-how-the-table-is-shown"><a class="anchor" href="#settings-how-the-table-is-shown" aria-hidden="true">#</a>How the table is shown</h3>
 <p><em>Auto</em>, <em>Round</em>, <em>Compact</em> and <em>List</em> are chosen under <strong>This table</strong> and apply to <strong>that table only</strong>. One table can be a list while another is round. The choice takes effect at once and is saved with the table. What the four mean is in the chapter <a href="#table">The table and the seats</a>.</p>
 <h3 id="settings-new-table-and-quick-start"><a class="anchor" href="#settings-new-table-and-quick-start" aria-hidden="true">#</a>New table and Quick start</h3>
@@ -1886,7 +1877,7 @@ sudo cp /opt/rundbordet/share/rundbordet.desktop /usr/share/applications/
 <section class="chapter" id="about" data-title="About Rundbordet">
 <header class="chapter-head"><span class="chapter-n">26</span><h2>About Rundbordet</h2><p class="chapter-summary">Version, privacy and changes.</p></header>
 <h3 id="about-version"><a class="anchor" href="#about-version" aria-hidden="true">#</a>Version</h3>
-<p>This manual belongs to <strong>Rundbordet 0.41.0</strong> (revision <code>005a873</code>). The version is also shown at the bottom of ⚙ → <em>Whole app</em> and in <em>About Rundbordet</em>.</p>
+<p>This manual belongs to <strong>Rundbordet 0.42.0</strong> (revision <code>c852136</code>). The version is also shown at the bottom of ⚙ → <em>Whole app</em> and in <em>About Rundbordet</em>.</p>
 <p>Version numbers take the form <strong>MAJOR.MINOR.PATCH</strong>: a new <em>patch</em> fixes bugs, a new <em>minor</em> version adds features, and a new <em>major</em> version may change how the app is used. The <em>revision</em> points to the exact code the version was built from.</p>
 <h3 id="about-privacy"><a class="anchor" href="#about-privacy" aria-hidden="true">#</a>Privacy</h3>
 <ul>
@@ -1899,6 +1890,13 @@ sudo cp /opt/rundbordet/share/rundbordet.desktop /usr/share/applications/
 <p>The list of changes is kept in Danish:</p>
 <p>Format følger <a href="https://keepachangelog.com/da/1.1.0/" class="external">Keep a Changelog</a>, versioner følger <a href="https://semver.org/lang/da/" class="external">SemVer</a>.</p>
 <h4 id="about-ikke-udgivet"><a class="anchor" href="#about-ikke-udgivet" aria-hidden="true">#</a>[Ikke udgivet]</h4>
+<h4 id="about-0-42-0-2026-11-09"><a class="anchor" href="#about-0-42-0-2026-11-09" aria-hidden="true">#</a>[0.42.0] – 2026-11-09</h4>
+<p><strong>Ændret</strong></p>
+<ul>
+<li><strong>Ingen visningsniveauer mere: alt er med, og det sjældne ligger i grupper.</strong> Vælgeren <em>Visning</em> (Enkel, Mere, Avanceret) er fjernet, og intet skjules længere. I stedet ligger det, du sjældnere bruger, i en <strong>sammenfoldet gruppe lige dér, hvor det hører hjemme</strong>: <em>Flere valg til kørslen</em> (rækkefølge, runder, kontrol, strategi, ren kontekst) og <em>Gem i GitHub</em> under bordets indstillinger, <em>Flere valg til udseendet</em> (ventelag, Tredje øje-ikon) under programmets, <em>Vælg et begreb</em> på en stol, <em>Færdige begreber</em> når du tilføjer en stol og <em>Vælg model til Tredje øje</em> ved Tredje øje. Værktøjerne (Tilbageblik, Uenigheder, Hukommelse, Målinger, Bordfil, Pristabel, Stemme, varianter) er altid med. En ny stol er stadig bare et navn og eventuelt <em>Skriver til OUT</em>. Startguiden spørger kun om, hvor vigtigt svaret er (spørgsmålene om erfaring og lyst til at styre er væk, og den foreslår ikke længere en visning). Hændelsen <code>ui.level</code> og <code>lib/uilevel.js</code> er fjernet; et gammelt <code>uiLevel</code> i en opsætning ignoreres.</li>
+<li><strong>Nøglen sættes ét sted, og alle stole bruger den.</strong> Velkomsten og Hurtig start gemmer din OpenRouter-nøgle som en <strong>standardprofil</strong> med en billig standardmodel (fra OpenRouters startforslag) i stedet for at skrive nøglen på hver stol. Stole uden egen nøgle og uden valgt profil peger automatisk på standardprofilen (OpenRouter, ellers den eneste profil med en nøgle), også nye stole og stole fra ældre borde. Det nye stolepanel har standardprofilen og dens model valgt på forhånd, så en ny stol kan gemmes uden at sætte API op. Rører ikke en stol med egen nøgle, en lokal model (Anden adresse) eller en anden udbyders model.</li>
+<li><strong>Tredje øje beder selv om nøglen, hvor den skal bruges.</strong> Mangler Tredje øje en nøgle, står der et felt øverst i Tredje øje: indsæt din OpenRouter-nøgle og tryk <em>Gem og tjek nøglen</em>. Den tjekkes mod OpenRouter (intet sendes), gemmes som standardprofil, og så virker både Tredje øje og alle stole. Nøgletrinnet i velkomsten siger nu, at den samme nøgle bruges af alle stole og af Tredje øje.</li>
+</ul>
 <h4 id="about-0-41-0-2026-11-09"><a class="anchor" href="#about-0-41-0-2026-11-09" aria-hidden="true">#</a>[0.41.0] – 2026-11-09</h4>
 <p><strong>Ændret</strong></p>
 <ul>
@@ -1912,15 +1910,7 @@ sudo cp /opt/rundbordet/share/rundbordet.desktop /usr/share/applications/
 <li><strong>Ny stol uden rolleknapper på Enkel og Mere.</strong> Panelet viser kun <em>+ Ny stol</em> og en afkrydsning <em>Skriver til OUT</em> (stolen gemmer sit svar som en fil i OUT). Rolleknapperne er kun under Avanceret.</li>
 <li><strong>Pilene viser kun den planlagte rækkefølge.</strong> En overdragelse, der gik et andet sted hen end rækkefølgen siger, tegnes som en mærket genvej (prik-streg-linje med navnene som tip), så en stol ikke ser ud til at have flere planlagte pile. En lille forklaring nederst til venstre på bordet viser, hvad linjerne betyder.</li>
 <li><strong>«+» ved bordvælgeren åbner valgene direkte</strong> (opgavekort, <em>Jeg har en anden opgave …</em>, <em>Hurtig start</em> og tomt bord) i stedet for en rullemenu. Der oprettes intet bord, før du selv har valgt og startet.</li>
-<li><strong>Dit gemte arbejde og din licens skrives nu sikkert.</strong> Opsætningen og licensfilen skrives først til en midlertidig fil og flyttes så på plads, så en afbrudt skrivning ikke kan ødelægge den eneste gyldige fil. En ulæselig fil bliver ikke længere til sikkerhedskopi oven på den gode kopi. Kan opsætningen ikke læses ved start, bruger programmet den forrige gemte version, eller starter tomt, og <strong>siger det med en besked</strong> og stedet for kopien af den ulæselige fil, i stedet for lydløst at se ud, som om dit arbejde er væk.</li>
-<li><strong>Licens og opdatering:</strong> umulige datoer (fx 30. februar) afvises, en installer til en forkert arkitektur vælges aldrig (Linux x64 er med), og en fejl ved gemning, fjernelse eller download låser ikke knapperne og sletter ikke den indtastede licenstekst.</li>
-<li><strong>Tredje øje er tydeligere.</strong> Første gang forklarer et lille kort, hvad Tredje øje er og at du altid vælger. Bagefter er det flydende øje, når intet kræver dig, grønt og blinker blidt (ikke ved <em>reducer bevægelse</em>), og et tryk åbner selve Tredje øje i stedet for Overblik. Kræver noget dig, skifter øjet farve og får sin markering som før.</li>
-<li><strong>Stolens ikoner (✓ ? ⏸, 🧠 ♥ 👣, ● ▤ ✂) har en tekst ved hover og tastaturfokus</strong> med det samme, i stedet for browserens forsinkede tip, som ikke altid kom frem (fx ved fødderne og saksen).</li>
-<li><strong>Ingen åbne behov</strong> vises som et lille ✓ med teksten som tip, der forsvinder af sig selv, i stedet for et kort oven på knapperne.</li>
-<li><strong>Tekstfeltet i startguiden</strong> har nu fuld bredde og en rimelig højde, så opgaven er let at skrive og læse.</li>
-<li><strong>Begrebslisten på stolen vises kun under Avanceret.</strong> På Enkel og Mere har en ny stol kun et navn (feltet hedder <em>Navn</em>, og uden navn gemmes intet); en eksisterende stol beholder sit begreb. Før fik en ny stol stiltiende begrebet <em>Builder</em>.</li>
 </ul>
-<p><strong>Tilføjet</strong></p>
 <h3 id="about-copyright"><a class="anchor" href="#about-copyright" aria-hidden="true">#</a>Copyright</h3>
 <p>© 2026 eterapeut.dk. See <code>LICENSE</code> and <code>THIRD-PARTY-NOTICES.md</code> for the licence and third-party components (including the fonts Fraunces, Work Sans and JetBrains Mono, which are bundled under the SIL Open Font License).</p>
 

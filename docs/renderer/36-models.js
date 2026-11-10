@@ -165,6 +165,23 @@
     });
   }
 
+  // Den ene OpenRouter-nøgle, brugeren sætter op første gang: gemmes som Modelprofil API med en billig standardmodel (fra OpenRouters startforslag).
+  // Alle stole uden eget valg og Tredje øje bruger den, så nøglen aldrig skal sættes på hver stol. Har profilen allerede en model, rører vi den ikke.
+  // → løfte med profilens id
+  function ensureDefaultOpenRouter(key, starter) {
+    return ensureModelProfile({ provider: "openrouter", baseUrl: "", apiKey: key }).then(function (id) {
+      var p = id ? modelProfileById(id) : null;
+      if (!p || p.model) return id;
+      var list = Array.isArray(starter) ? starter : [];
+      var cheap = list.filter(function (r) { return r.tier === "cheap" && r.model; })[0] || list.filter(function (r) { return r.model; })[0];
+      if (!cheap) return id;
+      return window.rundbord.saveModel(Object.assign({}, p, { model: cheap.model })).then(function (s) {
+        store = s;
+        return id;
+      });
+    });
+  }
+
   // ---- Valget på stolen ----
   // Stolen har kun et valg af Modelprofil API (udbyder, adresse og nøgle) og en model; nøglefeltet findes ikke på stolen.
   function fillSeatModelSelect(seat, preselectId) {

@@ -26,6 +26,8 @@
         provider ? t("keyExplainSent", { provider: provider }) : t("keyExplainSentGeneric"),
         t("keyExplainNothing"),
       ];
+      // OpenRouter giver adgang til mange modeller med én nøgle, så den bruges af alle stole og af Tredje øje: den skal kun sættes én gang.
+      if (provider === "OpenRouter") lines.splice(2, 0, t("keyExplainShared"));
       box.innerHTML = "<strong>" + escapeHtml(t("keyExplainTitle")) + "</strong><ul>" + lines.map(function (l) { return "<li>" + escapeHtml(l) + "</li>"; }).join("") + "</ul>";
     });
   }
@@ -216,7 +218,10 @@
     var setup = st.setup;
     if (!setup.maxRunCostUsd) setup.maxRunCostUsd = WELCOME_RUN_LIMIT_USD;
     var models = window.RundbordWelcome.assignModels(setup.seats, st.starter);
-    createBoardFromSetup(setup, { provider: "openrouter", apiKey: st.key, models: models })
+    ensureDefaultOpenRouter(st.key, st.starter)
+      .then(function () {
+        return createBoardFromSetup(setup, { provider: "openrouter", apiKey: st.key, models: models });
+      })
       .then(function () {
         // priserne fra OpenRouters egen liste (mærket som sådan), så forbrug kan regnes fra første kald
         return st.starter.reduce(function (p, r) {
@@ -238,7 +243,7 @@
       .then(function () {
         closeWelcome();
         render();
-        emitEvent("welcome.created", null, {}, Object.assign({ card: st.card.key, seats: setup.seats.length }, st.guide ? { template: st.guide.sug.template, preset: st.guide.sug.preset, level: st.guide.sug.level, source: st.guide.sug.source } : {}));
+        emitEvent("welcome.created", null, {}, Object.assign({ card: st.card.key, seats: setup.seats.length }, st.guide ? { template: st.guide.sug.template, preset: st.guide.sug.preset, source: st.guide.sug.source } : {}));
         var input = welcomeEl("msgInput");
         input.value = st.card.task;
         input.focus();
