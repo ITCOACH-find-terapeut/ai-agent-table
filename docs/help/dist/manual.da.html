@@ -129,7 +129,7 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <body data-lang="da" data-other="manual.en.html" data-nohits="Ingen kapitler matcher.">
 <div class="shell">
 <aside class="sidebar" id="sidebar">
-  <div class="brand"><span class="brand-mark">◯</span><div><div class="brand-name">Rundbordet</div><div class="brand-sub">Version 0.45.0 · rev dev</div></div></div>
+  <div class="brand"><span class="brand-mark">◯</span><div><div class="brand-name">Rundbordet</div><div class="brand-sub">Version 0.46.0 · rev dev</div></div></div>
   <input type="search" id="search" placeholder="Søg i manualen …" aria-label="Søg i manualen …">
   <nav aria-label="Indhold"><ol class="toc" id="toc">
 <li><a href="#getting-started" data-ch="getting-started"><span class="toc-n">01</span>Kom i gang på fem minutter</a></li>
@@ -180,7 +180,7 @@ mark.hit{background:var(--mark);border-radius:3px;}
 <h3 id="getting-started-foerste-gang-vaelg-en-opgave"><a class="anchor" href="#getting-started-foerste-gang-vaelg-en-opgave" aria-hidden="true">#</a>Første gang: vælg en opgave</h3>
 <p>Første gang du åbner Rundbordet, spørger appen: <em>Hvad vil du gerne have hjælp til?</em> Du kan skrive din egen opgave i feltet øverst (se næste afsnit) eller vælge et eksempel. Der er fire eksempler: <em>Forstå noget svært</em>, <em>Vælg mellem to muligheder</em>, <em>Er det her rigtigt?</em> og <em>Forstå et brev, jeg har fået</em>. Vælg en, og du ser opgaven, et eksempel på, hvordan et svar kan se ud, og hvilke modeller bordet vil bruge. Eksemplet er skrevet på forhånd; det er ikke et svar fra en model, og dit eget svar bliver anderledes.</p>
 <ol>
-<li>Indsæt din OpenRouter-nøgle (der er et link til at hente en), og tryk <em>Tjek nøglen og vis modellerne</em>. Under feltet står, at <strong>et ChatGPT- eller Claude-abonnement ikke i sig selv giver en API-nøgle</strong>, at du betaler udbyderen direkte, hvor nøglen gemmes, og hvem der modtager opgaven. Nøgletjekket sender ingen opgave.</li>
+<li>Indsæt din OpenRouter-nøgle (der er et link til at hente en; sæt en kreditgrænse på nøglen, når du laver den), og tryk <em>Tjek nøglen og vis modellerne</em>. Under feltet står, at <strong>et ChatGPT- eller Claude-abonnement ikke i sig selv giver en API-nøgle</strong>, at du betaler udbyderen direkte, hvor nøglen gemmes, og hvem der modtager opgaven. Nøgletjekket sender ingen opgave.</li>
 <li>Se modellerne og listepriserne, og tryk <em>Opret bordet</em>.</li>
 <li>Opgaven står nu i beskedfeltet. Der er <strong>ikke sendt noget til nogen model endnu.</strong> Ret opgaven, hvis du vil, og tryk <em>Send til bordet</em>, når du er klar.</li>
 </ol>
@@ -1879,7 +1879,7 @@ sudo cp /opt/rundbordet/share/rundbordet.desktop /usr/share/applications/
 <section class="chapter" id="about" data-title="Om Rundbordet">
 <header class="chapter-head"><span class="chapter-n">26</span><h2>Om Rundbordet</h2><p class="chapter-summary">Version, privatliv og ændringer.</p></header>
 <h3 id="about-version"><a class="anchor" href="#about-version" aria-hidden="true">#</a>Version</h3>
-<p>Denne manual hører til <strong>Rundbordet 0.45.0</strong> (revision <code>dev</code>). Versionen står også nederst under ⚙ → <em>Hele programmet</em> og i <em>Om Rundbordet</em>.</p>
+<p>Denne manual hører til <strong>Rundbordet 0.46.0</strong> (revision <code>dev</code>). Versionen står også nederst under ⚙ → <em>Hele programmet</em> og i <em>Om Rundbordet</em>.</p>
 <p>Versionsnumre følger formen <strong>HOVED.MINDRE.RETTELSE</strong>: en ny <em>rettelse</em> fikser fejl, en ny <em>mindre</em> version tilføjer funktioner, og en ny <em>hovedversion</em> kan ændre, hvordan appen bruges. <em>Revisionen</em> peger på den præcise kode, versionen blev bygget af.</p>
 <h3 id="about-privatliv"><a class="anchor" href="#about-privatliv" aria-hidden="true">#</a>Privatliv</h3>
 <ul>
@@ -1891,6 +1891,12 @@ sudo cp /opt/rundbordet/share/rundbordet.desktop /usr/share/applications/
 <h3 id="about-aendringer"><a class="anchor" href="#about-aendringer" aria-hidden="true">#</a>Ændringer</h3>
 <p>Format følger <a href="https://keepachangelog.com/da/1.1.0/" class="external">Keep a Changelog</a>, versioner følger <a href="https://semver.org/lang/da/" class="external">SemVer</a>.</p>
 <h4 id="about-ikke-udgivet"><a class="anchor" href="#about-ikke-udgivet" aria-hidden="true">#</a>[Ikke udgivet]</h4>
+<h4 id="about-0-46-0-2026-11-11"><a class="anchor" href="#about-0-46-0-2026-11-11" aria-hidden="true">#</a>[0.46.0] – 2026-11-11</h4>
+<p><strong>Ændret</strong>
+Kun tekst. Appens funktion er uændret.</p>
+<ul>
+<li><strong>Rådet om en kreditgrænse på nøglen.</strong> Ved linket til OpenRouter står nu, at man giver nøglen et navn og sætter en kreditgrænse, så den højst kan bruge det beløb. OpenRouters egen dokumentation anbefaler en grænse på hver nøgle, fordi en nøgle uden grænse kan bruge hele saldoen, hvis den lækker. Samme råd står i trin 4 på Hent-siden og i «Kom i gang». Der er ikke nævnt et beløb, fordi vi ikke kender brugerens behov. OpenRouters oprettelsesskærm bag login er ikke gennemgået; ordene «navn» og «kreditgrænse» følger deres dokumentation.</li>
+</ul>
 <h4 id="about-0-45-0-2026-11-10"><a class="anchor" href="#about-0-45-0-2026-11-10" aria-hidden="true">#</a>[0.45.0] – 2026-11-10</h4>
 <p><strong>Ændret</strong>
 Kun tekst og layout (efter en gennemgang som ny bruger, se <code>brugertest/GENNEMGANG-NY-BRUGER.md</code>). Appens funktion er uændret. Den usignerede app og nøglen hos en ekstern udbyder er stadig friktion, der bevidst ikke er skjult.</p>
@@ -1918,10 +1924,7 @@ Kun tekst og layout (efter en gennemgang som ny bruger, se <code>brugertest/GENN
 <p><strong>Rettet</strong></p>
 <ul>
 <li><strong>Forklaringen til pilene (Planlagt rækkefølge, Overdragelse sket, Genvej uden for rækkefølgen) lagde sig oven i sig selv</strong> for hver gentegning af bordet, så teksten blev dobbelt med streger henover, og den lå oven på bordets «+». Nu tegnes den kun én gang og ligger over bordet. En test sikrer, at der kun er én forklaring efter flere gentegninger.</li>
-<li><strong>GitHub-tokenet står ikke længere i git-adressen.</strong> «Gem i git» brugte <code>https://&lt;token&gt;@github.com/…</code> i <code>git clone</code> og <code>remote set-url</code>, så tokenet stod i git-processens argumenter (synlige for andre brugere på maskinen) og i klartekst i <code>.git/config</code> i arbejdskopien. Nu gives det kun som en HTTP-header i git-processens miljø og kun til den ene vært, og adressen er uden token. En ældre arbejdskopi, hvor tokenet stod i adressen, ryddes ved næste «Gem i git». Kræver git 2.31 eller nyere. En test kører ægte git mod en lokal server og tjekker, at headeren når frem, og at tokenet ikke står i argumenterne.</li>
 </ul>
-<h4 id="about-0-42-0-2026-11-09"><a class="anchor" href="#about-0-42-0-2026-11-09" aria-hidden="true">#</a>[0.42.0] – 2026-11-09</h4>
-<p><strong>Ændret</strong></p>
 <h3 id="about-ophavsret"><a class="anchor" href="#about-ophavsret" aria-hidden="true">#</a>Ophavsret</h3>
 <p>© 2026 eterapeut.dk. Se <code>LICENSE</code> og <code>THIRD-PARTY-NOTICES.md</code> for licens og tredjepartskomponenter (bl.a. skrifttyperne Fraunces, Work Sans og JetBrains Mono, som følger med under SIL Open Font License).</p>
 

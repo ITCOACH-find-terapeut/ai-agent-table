@@ -16,27 +16,27 @@ code{font:12px ui-monospace,monospace;word-break:break-all;color:var(--ink2);}
 </style></head><body><main>
 <p class="top"><a href="./">← Try Rundbordet in the browser</a><a href="hent.da.html" hreflang="da">Dansk</a></p>
 <h1>Get Rundbordet for your computer</h1>
-<p>Rundbordet lets several AI models work together on your task, so you can follow along and decide along the way. The program lives on your own computer. <span class="small">Version 0.45.0.</span></p>
+<p>Rundbordet lets several AI models work together on your task, so you can follow along and decide along the way. The program lives on your own computer. <span class="small">Version 0.46.0.</span></p>
 <h2>How to get started</h2>
 <div class="card"><ol><li>Find your computer in the table below and press Get. On a Mac and not sure about the chip: choose the Apple menu → About This Mac. If it says Apple M (for example M1 or M2), choose Apple silicon; if it says Intel, choose Intel.</li>
 <li>Mac: open the downloaded file and drag Rundbordet to the Applications folder. Windows: run the installer.</li>
 <li>Open Rundbordet. The programs are not signed yet, so Mac or Windows shows a warning the first time. Mac: on macOS 15 or later open System Settings → Privacy &amp; Security and choose Open Anyway; on older versions right-click the app and choose Open. Windows (SmartScreen): choose More info and Run anyway.</li>
-<li>You will need a key for an AI service, a kind of password. It is not part of the program, and you pay the service for what you use. The program has a link to get one. If you want to see it first, use the demo: it needs no key.</li></ol></div>
+<li>You will need a key for an AI service, a kind of password. It is not part of the program, and you pay the service for what you use. The program has a link to get one; when you make it, set a credit limit on the key so it can never spend more than that. If you want to see it first, use the demo: it needs no key.</li></ol></div>
 <div class="card"><table><thead><tr><th>For</th><th>Size</th><th></th></tr></thead><tbody>
-<tr data-os="mac"><td>Mac (Apple silicon)</td><td>130 MB</td><td><a class="btn" href="https://github.com/ITCOACH-find-terapeut/ai-agent-table/releases/download/v0.45.0/Rundbordet-0.45.0-arm64.dmg" download>Get</a></td></tr>
-<tr data-os="mac"><td>Mac (Intel)</td><td>134 MB</td><td><a class="btn" href="https://github.com/ITCOACH-find-terapeut/ai-agent-table/releases/download/v0.45.0/Rundbordet-0.45.0-x64.dmg" download>Get</a></td></tr>
-<tr data-os="win"><td>Windows (installer)</td><td>113 MB</td><td><a class="btn" href="https://github.com/ITCOACH-find-terapeut/ai-agent-table/releases/download/v0.45.0/Rundbordet-0.45.0-x64.exe" download>Get</a></td></tr>
-<tr data-os="win"><td>Windows (zip, no installer)</td><td>159 MB</td><td><a class="btn" href="https://github.com/ITCOACH-find-terapeut/ai-agent-table/releases/download/v0.45.0/Rundbordet-0.45.0-win-x64-uden-installer.zip" download>Get</a></td></tr>
-<tr data-os="linux"><td>Linux (archive)</td><td>89 MB</td><td><a class="btn" href="https://github.com/ITCOACH-find-terapeut/ai-agent-table/releases/download/v0.45.0/Rundbordet-0.45.0-x64.tar.xz" download>Get</a></td></tr>
+<tr data-os="mac"><td>Mac (Apple silicon)</td><td>130 MB</td><td><a class="btn" href="https://github.com/ITCOACH-find-terapeut/ai-agent-table/releases/download/v0.46.0/Rundbordet-0.46.0-arm64.dmg" download>Get</a></td></tr>
+<tr data-os="mac"><td>Mac (Intel)</td><td>134 MB</td><td><a class="btn" href="https://github.com/ITCOACH-find-terapeut/ai-agent-table/releases/download/v0.46.0/Rundbordet-0.46.0-x64.dmg" download>Get</a></td></tr>
+<tr data-os="win"><td>Windows (installer)</td><td>113 MB</td><td><a class="btn" href="https://github.com/ITCOACH-find-terapeut/ai-agent-table/releases/download/v0.46.0/Rundbordet-0.46.0-x64.exe" download>Get</a></td></tr>
+<tr data-os="win"><td>Windows (zip, no installer)</td><td>159 MB</td><td><a class="btn" href="https://github.com/ITCOACH-find-terapeut/ai-agent-table/releases/download/v0.46.0/Rundbordet-0.46.0-win-x64-uden-installer.zip" download>Get</a></td></tr>
+<tr data-os="linux"><td>Linux (archive)</td><td>89 MB</td><td><a class="btn" href="https://github.com/ITCOACH-find-terapeut/ai-agent-table/releases/download/v0.46.0/Rundbordet-0.46.0-x64.tar.xz" download>Get</a></td></tr>
 </tbody></table></div>
 <h2>Read before you install</h2>
 <div class="card"><p><b class="warn">The programs are not signed yet.</b> That is why Mac and Windows show a warning the first time (see step 3). <b class="warn">The Windows version has not been tested by us on a Windows machine yet.</b> The Linux archive (x64) has been tried on Omarchy (Arch with Hyprland) and works there. That is not proof for other Linux distributions.</p>
 <p class="small">The desktop version has what the browser does not: your own folders (IN and OUT), keys in the computer's keyring, Save to git and read-aloud.</p>
-<details><summary>For the curious: check the file</summary><p>The checksum (SHA-256) shows that the file is the one we published. On a Mac: open Terminal and type shasum -a 256 followed by a space and the file's path (drag the file into the window), then compare with the number here. On Windows: certutil -hashfile &lt;file&gt; SHA256.</p><p><b>Mac (Apple silicon)</b><br><code>Rundbordet-0.45.0-arm64.dmg<br>ff7a08a5ccbc7ede296fa5f4c8b093d7fb26ae08fc5db91c4233f2a1a33eb5da</code></p>
-<p><b>Mac (Intel)</b><br><code>Rundbordet-0.45.0-x64.dmg<br>d3d2fa894257326003bfc2f7bc6b1e0d29c2c22aa31e4e107e677a00c22d027c</code></p>
-<p><b>Windows (installer)</b><br><code>Rundbordet-0.45.0-x64.exe<br>a4729a375a08cffb1e795456a6ef66e8576732018a2e2feb3edde52d6c65b9a9</code></p>
-<p><b>Windows (zip, no installer)</b><br><code>Rundbordet-0.45.0-win-x64-uden-installer.zip<br>db98c2f7d8b2a46161aafa1d44d60f386aa38fffde0afefae704ca1149f7ce00</code></p>
-<p><b>Linux (archive)</b><br><code>Rundbordet-0.45.0-x64.tar.xz<br>0387c324f9bb0c62bd359a222529bc6c60983be269c7264e0febc0a1d08802b7</code></p></details></div>
+<details><summary>For the curious: check the file</summary><p>The checksum (SHA-256) shows that the file is the one we published. On a Mac: open Terminal and type shasum -a 256 followed by a space and the file's path (drag the file into the window), then compare with the number here. On Windows: certutil -hashfile &lt;file&gt; SHA256.</p><p><b>Mac (Apple silicon)</b><br><code>Rundbordet-0.46.0-arm64.dmg<br>45725fcab727490b6912ff8f288316f8f2d9558412b05891609e3db4cbb9dd6d</code></p>
+<p><b>Mac (Intel)</b><br><code>Rundbordet-0.46.0-x64.dmg<br>5740609909be9c032e6eea6694013781dff7708be3d66eddcb267dafc57566a8</code></p>
+<p><b>Windows (installer)</b><br><code>Rundbordet-0.46.0-x64.exe<br>e57da779eafdc2ddea7ad40bfa922aa64a54654b462d4b6fc45742568a4341e4</code></p>
+<p><b>Windows (zip, no installer)</b><br><code>Rundbordet-0.46.0-win-x64-uden-installer.zip<br>d51793470b62eb96b376c63a7ea6619fb72c2f9ec541c8cbcd5c268e3f89bac2</code></p>
+<p><b>Linux (archive)</b><br><code>Rundbordet-0.46.0-x64.tar.xz<br>851a8e2c822446568b1e4bf85e97d33be830376eedbc34acd6221fa489de985c</code></p></details></div>
 <h2>Free use, your own costs, licence and introductory courses</h2>
 <div class="card"><p><b>Free to download and use.</b> The program can be downloaded and used for free, also without a licence. There is a recorded demo that needs no key.</p>
 <p><b>Your own API key and costs.</b> You use your own API key and pay the model provider directly for the usage. A ChatGPT or Claude subscription does not in itself give an API key. The price depends on the model, the material and the number of calls; more seats and repeats can raise it.</p>

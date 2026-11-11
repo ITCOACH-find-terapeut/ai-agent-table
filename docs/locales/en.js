@@ -88,7 +88,7 @@ window.RUNDBORD_LOCALES.en = {
   sendsCustomHost: "an address of your own ({host})",
   sendsCustom: "an address of your own",
   keyExplainMore: "Where is the key stored, and what is sent where?",
-  keyGetHint: "You create an account with OpenRouter and make a key there (the account normally needs some credit). Then come back here and paste it.",
+  keyGetHint: "You create an account with OpenRouter and make a key there (the account normally needs some credit). Give the key a name and set a credit limit, so it can never spend more than that. Then come back here and paste it.",
   keyExplainTitle: "About the key and the price",
   keyExplainSubscription: "A ChatGPT or Claude subscription does not in itself give an API key. You get an API key from the provider, and it is billed separately by usage.",
   keyExplainPays: "You pay the provider directly for what the table uses. Rundbordet takes no payment for the usage, and the price depends on the model, the material and the number of calls; more seats and repeats can raise it.",

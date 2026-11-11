@@ -100,7 +100,7 @@ window.RUNDBORD_LOCALES.da = {
   sendsCustom: "en egen adresse",
   keyExplainTitle: "Om nøglen og prisen",
   keyExplainMore: "Hvor gemmes nøglen, og hvad sendes hvorhen?",
-  keyGetHint: "Du opretter en konto hos OpenRouter og laver en nøgle der (der skal normalt lidt kredit på kontoen). Kom så tilbage hertil, og indsæt den.",
+  keyGetHint: "Du opretter en konto hos OpenRouter og laver en nøgle der (der skal normalt lidt kredit på kontoen). Giv nøglen et navn, og sæt en kreditgrænse, så den højst kan bruge det beløb. Kom så tilbage hertil, og indsæt den.",
   keyExplainSubscription: "Et ChatGPT- eller Claude-abonnement giver ikke i sig selv en API-nøgle. En API-nøgle får du hos udbyderen, og den afregnes særskilt efter forbrug.",
   keyExplainPays: "Du betaler udbyderen direkte for det, bordet bruger. Rundbordet tager ingen betaling for forbruget, og prisen afhænger af model, materiale og antal kald; flere stole og gentagelser kan øge den.",
   keyExplainShared: "Den samme nøgle bruges af alle stole og af Tredje øje (som hjælper dig undervejs), så du kun sætter den én gang. Nye stole får automatisk en model, du ikke selv skal vælge.",
